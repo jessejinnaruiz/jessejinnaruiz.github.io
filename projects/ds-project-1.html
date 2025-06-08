@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Domestic Violence Prevention Analysis - Jesse J Ruiz</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        nav {
+            padding: 1rem 0;
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .nav-container h1 {
+            color: #764ba2;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 0.2rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: #764ba2;
+        }
+        
+        main {
+            padding: 2rem 0;
+        }
+        
+        .project-hero {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .project-hero h1 {
+            font-size: 2.5rem;
+            color: #764ba2;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        
+        .project-hero .subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+        
+        .project-tags {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+        
+        .tag {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .project-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .content-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .content-card h2 {
+            color: #764ba2;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        
+        .content-card p {
+            margin-bottom: 1rem;
+            color: #555;
+            line-height: 1.7;
+        }
+        
+        .full-width-card {
+            grid-column: 1 / -1;
+        }
+        
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .tech-item {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.9);
+            color: #764ba2;
+            border: 2px solid #764ba2;
+        }
+        
+        .btn-secondary:hover {
+            background: #764ba2;
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .highlights {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+        }
+        
+        .highlights h3 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+        
+        .highlights ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .highlights li {
+            margin-bottom: 0.8rem;
+            padding-left: 1.5rem;
+            position: relative;
+            color: #555;
+        }
+        
+        .highlights li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        footer {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        
+        .social-links {
+            margin-top: 1rem;
+        }
+        
+        .social-links a {
+            margin: 0 1rem;
+            color: #764ba2;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .social-links a:hover {
+            text-decoration: underline;
+        }
+        
+        .back-button {
+            display: inline-block;
+            margin-bottom: 2rem;
+            color: white;
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+            transition: background 0.3s ease;
+        }
+        
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        @media (max-width: 768px) {
+            .project-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .nav-links {
+                gap: 1rem;
+            }
+            
+            .project-hero h1 {
+                font-size: 2rem;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="nav-container">
+                <div>
+                    <h1>Jesse J Ruiz</h1>
+                    <p class="subtitle">Data Engineer, Visualization Specialist</p>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="../visualizations/visualization.html">Visualizations</a></li>
+                    <li><a href="ds-project-1.html">Projects</a></li>
+                    <li><a href="../blog/first-post.html">Blog</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <a href="ds-project-1.html" class="back-button">← Back to Projects</a>
+            
+            <section class="project-hero">
+                <h1>Domestic Violence Prevention Analysis</h1>
+                <p class="subtitle">Predictive Modeling for Repeat Victimization Risk Assessment</p>
+                <div class="project-tags">
+                    <span class="tag">Machine Learning</span>
+                    <span class="tag">Predictive Analytics</span>
+                    <span class="tag">Social Impact</span>
+                    <span class="tag">Python</span>
+                    <span class="tag">Data Science</span>
+                </div>
+                <div class="cta-buttons">
+                    <a href="https://github.com/codeup-capstone-one/domestic-violence" class="btn btn-primary" target="_blank">View on GitHub</a>
+                    <a href="https://ddfloww.com/domestic-violence" class="btn btn-secondary" target="_blank">Live Demo</a>
+                </div>
+            </section>
+
+            <div class="project-content">
+                <div class="content-card">
+                    <h2>Project Overview</h2>
+                    <p>This capstone project leverages data from the Chicago Women's Health Risk Study to develop a predictive model for assessing the probability of repeat victimization in domestic abuse cases.</p>
+                    <p>The model provides crucial insights that can help social workers, law enforcement, and support organizations make more informed decisions when allocating resources and providing protection to victims.</p>
+                </div>
+
+                <div class="content-card">
+                    <h2>Problem Statement</h2>
+                    <p>Domestic violence affects millions of people worldwide, with repeat victimization being a critical concern for victim safety and resource allocation.</p>
+                    <p>Traditional assessment methods often rely on subjective judgment. This project aims to provide a data-driven approach to risk assessment, helping identify victims at higher risk of repeat abuse.</p>
+                </div>
+
+                <div class="content-card full-width-card">
+                    <h2>Technical Implementation</h2>
+                    <div class="tech-stack">
+                        <div class="tech-item">Python & Pandas</div>
+                        <div class="tech-item">Scikit-learn</div>
+                        <div class="tech-item">Statistical Analysis</div>
+                        <div class="tech-item">Machine Learning</div>
+                        <div class="tech-item">Data Visualization</div>
+                        <div class="tech-item">Web Interface</div>
+                    </div>
+                    <p style="margin-top: 1rem;">The project utilizes advanced machine learning techniques to analyze patterns in the Chicago Women's Health Risk Study dataset, implementing feature engineering and model validation to ensure reliable predictions.</p>
+                </div>
+
+                <div class="content-card">
+                    <h2>Data Source</h2>
+                    <p>The analysis is based on the comprehensive Chicago Women's Health Risk Study, a longitudinal study examining factors associated with intimate partner violence.</p>
+                    <p>This dataset provides rich information about victim demographics, relationship characteristics, and incident details that inform our predictive model.</p>
+                </div>
+
+                <div class="content-card">
+                    <h2>Impact & Applications</h2>
+                    <p>The web-based tool enables:</p>
+                    <p>• Social workers to assess risk factors quickly and objectively<br>
+                    • Law enforcement to prioritize cases requiring immediate attention<br>
+                    • Support organizations to allocate resources more effectively<br>
+                    • Researchers to identify key patterns in domestic violence cases</p>
+                </div>
+            </div>
+
+            <div class="highlights">
+                <h3>Key Features & Achievements</h3>
+                <ul>
+                    <li>Developed predictive model using machine learning algorithms to assess repeat victimization risk</li>
+                    <li>Created interactive web interface for real-time risk assessment</li>
+                    <li>Analyzed complex social and demographic factors contributing to domestic violence patterns</li>
+                    <li>Implemented statistical validation techniques to ensure model reliability</li>
+                    <li>Designed user-friendly tool for non-technical stakeholders in social services</li>
+                    <li>Collaborated with interdisciplinary team to address real-world social challenges</li>
+                </ul>
+            </div>
+
+            <div class="content-card">
+                <h2>Repository Links</h2>
+                <p><strong>Main Project Repository:</strong> <a href="https://github.com/codeup-capstone-one/domestic-violence" target="_blank">domestic-violence</a></p>
+                <p><strong>Web Interface Repository:</strong> <a href="https://github.com/ecdedios/ddfloww-site" target="_blank">ddfloww-site</a></p>
+                <p><strong>Original Study:</strong> <a href="https://www.icpsr.umich.edu/icpsrweb/NACJD/studies/3002" target="_blank">Chicago Women's Health Risk Study</a></p>
+                <p><strong>Live Application:</strong> <a href="https://ddfloww.com/domestic-violence" target="_blank">Risk Assessment Tool</a></p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Jesse J Ruiz. Built with GitHub Pages.</p>
+            <div class="social-links">
+                <a href="https://github.com/yourusername">GitHub</a>
+                <a href="https://linkedin.com/in/yourprofile">LinkedIn</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

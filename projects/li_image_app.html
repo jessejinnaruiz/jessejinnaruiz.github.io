@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkedIn Profile Pic Callout Web App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .upload-section {
+            margin-bottom: 30px;
+        }
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+        .file-input {
+            display: none;
+        }
+        .file-input-button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: transform 0.2s;
+        }
+        .file-input-button:hover {
+            transform: translateY(-2px);
+        }
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .control-group {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+        input[type="text"], input[type="color"], input[type="range"] {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        input[type="text"]:focus, input[type="color"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .canvas-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        #canvas {
+            max-width: 100%;
+            border: 3px solid #ddd;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        .download-btn {
+            display: block;
+            width: 200px;
+            margin: 0 auto;
+            padding: 15px;
+            background: linear-gradient(45deg, #11998e, #38ef7d);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .download-btn:hover {
+            transform: translateY(-2px);
+        }
+        .download-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Profile Photo Text Overlay</h1>
+        
+        <div class="upload-section">
+            <div class="file-input-wrapper">
+                <input type="file" id="imageInput" class="file-input" accept="image/*">
+                <button class="file-input-button" onclick="document.getElementById('imageInput').click()">
+                    Choose Profile Photo
+                </button>
+            </div>
+        </div>
+        <div class="controls">
+            <div class="control-group">
+                <label for="textInput">Text to overlay:</label>
+                <input type="text" id="textInput" placeholder="Enter your text here" value="YOUR NAME">
+            </div>
+            <div class="control-group">
+                <label for="textColor">Text Color:</label>
+                <input type="color" id="textColor" value="#ffffff">
+            </div>
+            <div class="control-group">
+                <label for="bgColor">Background Color:</label>
+                <input type="color" id="bgColor" value="#667eea">
+            </div>
+            <div class="control-group">
+                <label for="fontSize">Font Size: <span id="fontSizeValue">40</span></label>
+                <input type="range" id="fontSize" min="20" max="80" value="40">
+            </div>
+        </div>
+        <div class="canvas-container">
+            <canvas id="canvas" width="400" height="400"></canvas>
+        </div>
+        <button id="downloadBtn" class="download-btn" disabled>Download Profile Photo</button>
+    </div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const imageInput = document.getElementById('imageInput');
+        const textInput = document.getElementById('textInput');
+        const textColor = document.getElementById('textColor');
+        const bgColor = document.getElementById('bgColor');
+        const fontSize = document.getElementById('fontSize');
+        const fontSizeValue = document.getElementById('fontSizeValue');
+        const downloadBtn = document.getElementById('downloadBtn');
+        let uploadedImage = null;
+        // Update font size display
+        fontSize.addEventListener('input', () => {
+            fontSizeValue.textContent = fontSize.value;
+            drawCanvas();
+        });
+        // Handle image upload
+        imageInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        uploadedImage = img;
+                        drawCanvas();
+                        downloadBtn.disabled = false;
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        // Handle text and color changes
+        textInput.addEventListener('input', drawCanvas);
+        textColor.addEventListener('input', drawCanvas);
+        bgColor.addEventListener('input', drawCanvas);
+        function drawCanvas() {
+            if (!uploadedImage) return;
+            const size = 400;
+            canvas.width = size;
+            canvas.height = size;
+            ctx.clearRect(0, 0, size, size);
+            // Create circular clipping mask
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(size/2, size/2, size/2, 0, Math.PI * 2);
+            ctx.clip();
+            // Draw image to fill the circle
+            const imgSize = Math.max(uploadedImage.width, uploadedImage.height);
+            const scale = size / imgSize;
+            const scaledWidth = uploadedImage.width * scale;
+            const scaledHeight = uploadedImage.height * scale;
+            const x = (size - scaledWidth) / 2;
+            const y = (size - scaledHeight) / 2;
+            ctx.drawImage(uploadedImage, x, y, scaledWidth, scaledHeight);
+            ctx.restore();
+            // Draw the text overlay
+            drawTextOverlay();
+        }
+        function drawTextOverlay() {
+            const text = textInput.value || 'YOUR NAME';
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const circleRadius = canvas.width / 2;
+            
+            const fontSizeVal = parseInt(fontSize.value);
+            ctx.font = `bold ${fontSizeVal}px Arial`;
+            
+            // Calculate natural text width and required arc span
+            const textMetrics = ctx.measureText(text);
+            const textWidth = textMetrics.width;
+            const midRadius = circleRadius - 20; // Middle of color box
+            
+            // Calculate the arc span needed for natural text spacing
+            const arcLength = textWidth * 1.2; // Add some padding
+            const angleSpan = arcLength / midRadius;
+            
+            // Center the text arc at the bottom of the circle
+            const centerAngle = Math.PI; // Bottom of circle
+            const startAngle = centerAngle - angleSpan / 2;
+            const endAngle = centerAngle + angleSpan / 2;
+            
+            // Color box dimensions - make it wide enough for the text
+            const outerRadius = circleRadius; // Top edge touches circle edge exactly
+            const innerRadius = circleRadius - 40; // Bottom edge inside circle
+            
+            // Create gradient that fades at the left and right ends
+            const gradient = ctx.createLinearGradient(
+                centerX + Math.cos(startAngle) * circleRadius,
+                centerY + Math.sin(startAngle) * circleRadius,
+                centerX + Math.cos(endAngle) * circleRadius,
+                centerY + Math.sin(endAngle) * circleRadius
+            );
+            gradient.addColorStop(0, 'transparent');
+            gradient.addColorStop(0.15, bgColor.value);
+            gradient.addColorStop(0.85, bgColor.value);
+            gradient.addColorStop(1, 'transparent');
+            
+            // Draw background arc - sized to fit the text
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, outerRadius, startAngle, endAngle);
+            ctx.arc(centerX, centerY, innerRadius, endAngle, startAngle, true);
+            ctx.closePath();
+            ctx.fillStyle = gradient;
+            ctx.fill();
+            ctx.restore();
+            
+            // Draw text with natural spacing along the arc
+            ctx.save();
+            ctx.fillStyle = textColor.value;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            
+            // Calculate character positions with natural spacing
+            let currentAngle = startAngle;
+            for (let i = 0; i < text.length; i++) {
+                const char = text[i];
+                const charWidth = ctx.measureText(char).width;
+                
+                // Move to the center of this character
+                currentAngle += (charWidth / 2) / midRadius;
+                
+                const x = centerX + Math.cos(currentAngle) * midRadius;
+                const y = centerY + Math.sin(currentAngle) * midRadius;
+                
+                ctx.save();
+                ctx.translate(x, y);
+                ctx.rotate(currentAngle + Math.PI/2);
+                ctx.fillText(char, 0, 0);
+                ctx.restore();
+                
+                // Move past this character
+                currentAngle += (charWidth / 2) / midRadius;
+            }
+            ctx.restore();
+        }
+        // Download functionality
+        downloadBtn.addEventListener('click', () => {
+            const link = document.createElement('a');
+            link.download = 'profile-photo.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        });
+        // Initialize with default text
+        setTimeout(() => {
+            if (uploadedImage) drawCanvas();
+        }, 100);
+    </script>
+</body>
+</html>

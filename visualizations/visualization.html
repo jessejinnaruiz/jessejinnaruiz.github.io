@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Austin Displacement Analysis - Data Visualization</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <header class="page-header">
+        <div class="container">
+            <h1>Austin Displacement Analysis</h1>
+            <p>Interactive visualization of displacement patterns in Austin, Texas</p>
+        </div>
+    </header>
+
+    <main class="page-content">
+        <a href="../index.html" class="back-link">← Back to Portfolio</a>
+        
+        <section>
+            <h2>Project Overview</h2>
+            <p>This analysis examines displacement patterns in Austin, Texas through 2020, visualizing how urban development and gentrification have affected different neighborhoods. The interactive dashboard allows users to explore demographic changes, housing costs, and displacement indicators across the city.</p>
+            
+            <div class="metrics-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 2rem 0;">
+                <div class="metric-card" style="background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center;">
+                    <h4 style="color: #3498db; font-size: 1.8em; margin: 0;">Austin</h4>
+                    <p>Focus Area</p>
+                </div>
+                <div class="metric-card" style="background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center;">
+                    <h4 style="color: #27ae60; font-size: 1.8em; margin: 0;">2020</h4>
+                    <p>Analysis Year</p>
+                </div>
+                <div class="metric-card" style="background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center;">
+                    <h4 style="color: #e74c3c; font-size: 1.8em; margin: 0;">Multi-Layer</h4>
+                    <p>Data Analysis</p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Interactive Dashboard</h2>
+            <div class="tableau-container" style="background: white; padding: 1rem; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); margin: 2rem 0;">
+                <div class='tableauPlaceholder' id='viz1709677890123' style='position: relative'>
+                    <noscript>
+                        <a href='#'>
+                            <img alt='Austin Displacement 2020 Map' src='https://public.tableau.com/static/images/Au/AustinDisplacementWorkbook2/AustinDisplacement2020Map/1_rss.png' style='border: none' />
+                        </a>
+                    </noscript>
+                    <object class='tableauViz' style='display:none;'>
+                        <param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' />
+                        <param name='embed_code_version' value='3' />
+                        <param name='site_root' value='' />
+                        <param name='name' value='AustinDisplacementWorkbook2/AustinDisplacement2020Map' />
+                        <param name='tabs' value='no' />
+                        <param name='toolbar' value='yes' />
+                        <param name='static_image' value='https://public.tableau.com/static/images/Au/AustinDisplacementWorkbook2/AustinDisplacement2020Map/1.png' />
+                        <param name='animate_transition' value='yes' />
+                        <param name='display_static_image' value='yes' />
+                        <param name='display_spinner' value='yes' />
+                        <param name='display_overlay' value='yes' />
+                        <param name='display_count' value='yes' />
+                        <param name='language' value='en-US' />
+                    </object>
+                </div>
+                <script type='text/javascript'>
+                    var divElement = document.getElementById('viz1709677890123');
+                    var vizElement = divElement.getElementsByTagName('object')[0];
+                    if (divElement.offsetWidth > 800) {
+                        vizElement.style.width = '100%';
+                        vizElement.style.height = (divElement.offsetWidth * 0.75) + 'px';
+                    } else if (divElement.offsetWidth > 500) {
+                        vizElement.style.width = '100%';
+                        vizElement.style.height = (divElement.offsetWidth * 0.75) + 'px';
+                    } else {
+                        vizElement.style.width = '100%';
+                        vizElement.style.height = '777px';
+                    }
+                    var scriptElement = document.createElement('script');
+                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';
+                    vizElement.parentNode.insertBefore(scriptElement, vizElement);
+                </script>
+            </div>
+        </section>
+
+        <section>
+            <h2>Key Insights</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin: 2rem 0;">
+                <div style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                    <h3 style="color: #3498db; margin-bottom: 1rem;">Geographic Patterns</h3>
+                    <p>The visualization reveals clear geographic clustering of displacement, with certain neighborhoods showing significantly higher risk factors than others.</p>
+                </div>
+                <div style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                    <h3 style="color: #27ae60; margin-bottom: 1rem;">Demographic Impact</h3>
+                    <p>Analysis shows disproportionate effects on specific demographic groups, highlighting the intersection of housing and social equity issues.</p>
+                </div>
+                <div style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                    <h3 style="color: #e74c3c; margin-bottom: 1rem;">Policy Implications</h3>
+                    <p>The data provides actionable insights for urban planning and policy decisions to address displacement concerns proactively.</p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Data Sources & Methodology</h2>
+            <p>This analysis combines multiple data sources to create a comprehensive view of displacement patterns:</p>
+            <ul style="margin: 1rem 0; padding-left: 2rem;">
+                <li><strong>Census Data:</strong> American Community Survey demographic and housing data</li>
+                <li><strong>Housing Records:</strong> Property assessments and sales data from Travis County</li>
+                <li><strong>Economic Indicators:</strong> Income, employment, and cost of living metrics</li>
+                <li><strong>Geographic Data:</strong> Austin city boundaries and neighborhood classifications</li>
+            </ul>
+            
+            <h3>Analysis Framework</h3>
+            <p>The displacement analysis uses a multi-factor approach examining:</p>
+            <ul style="margin: 1rem 0; padding-left: 2rem;">
+                <li>Housing cost burden and affordability ratios</li>
+                <li>Demographic composition changes over time</li>
+                <li>Economic mobility and income displacement</li>
+                <li>Geographic accessibility to resources and services</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Technical Implementation</h2>
+            <p>This visualization was built using:</p>
+            <ul style="margin: 1rem 0; padding-left: 2rem;">
+                <li><strong>Tableau Public:</strong> Interactive dashboard development and hosting</li>
+                <li><strong>Data Processing:</strong> Python pandas for data cleaning and preparation</li>
+                <li><strong>Geospatial Analysis:</strong> PostGIS for geographic calculations and spatial joins</li>
+                <li><strong>Data Integration:</strong> Custom ETL pipeline to combine multiple data sources</li>
+            </ul>
+            
+            <p>The interactive features allow users to filter by time period, demographic groups, and geographic areas to explore specific aspects of the displacement patterns in detail.</p>
+        </section>
+    </main>
+
+    <footer style="background: #f8f9fa; padding: 2rem 0; margin-top: 3rem; border-top: 1px solid #e9ecef;">
+        <div class="container" style="text-align: center;">
+            <p>View the full dashboard on <a href="https://public.tableau.com/app/profile/jesse.ruiz/viz/AustinDisplacementWorkbook2/AustinDisplacement2020Map" target="_blank">Tableau Public</a></p>
+        </div>
+    </footer>
+</body>
+</html>
