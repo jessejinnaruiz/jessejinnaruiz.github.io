@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Artists' Days</title>
+    <style>
+      :root {
+        --paper: #f5edda;
+        --ink: #20201d;
+        --red: #ba3b2f;
+        --blue: #315b96;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font:
+          16px/1.45 Georgia,
+          serif;
+      }
+      header,
+      main,
+      footer {
+        max-width: 1180px;
+        margin: auto;
+        padding: 24px;
+      }
+      nav {
+        display: flex;
+        justify-content: space-between;
+        font: 700 12px Arial;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+      }
+      a {
+        color: var(--blue);
+      }
+      h1 {
+        font-size: clamp(3rem, 9vw, 7rem);
+        letter-spacing: -0.055em;
+        line-height: 0.85;
+        margin: 11vh 0 20px;
+      }
+      .lede {
+        font-size: 1.2rem;
+        max-width: 680px;
+      }
+      .picker {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 42px 0 22px;
+      }
+      .picker button {
+        min-height: 44px;
+        padding: 0 16px;
+        border: 1px solid var(--ink);
+        background: transparent;
+        font-weight: 700;
+      }
+      .picker button[aria-pressed="true"] {
+        background: var(--ink);
+        color: var(--paper);
+      }
+      .compare {
+        display: grid;
+        grid-template-columns: 80px 1fr 1fr;
+        border: 1px solid var(--ink);
+        background: #fffaf0;
+      }
+      .axis,
+      .lane {
+        display: grid;
+        grid-template-rows: repeat(8, 60px);
+      }
+      .axis div {
+        font: 11px Arial;
+        padding: 6px;
+        border-bottom: 1px solid #d7cfbd;
+      }
+      .lane {
+        position: relative;
+        border-left: 1px solid var(--ink);
+        background: repeating-linear-gradient(
+          to bottom,
+          transparent 0 59px,
+          #ddd3bf 59px 60px
+        );
+      }
+      .lane h2 {
+        position: absolute;
+        z-index: 3;
+        top: -40px;
+        font-size: 1rem;
+      }
+      .block {
+        position: absolute;
+        left: 8px;
+        right: 8px;
+        padding: 8px;
+        border: 1px solid #2228;
+        font: 700 12px/1.2 Arial;
+        overflow: hidden;
+      }
+      .artist .block {
+        background: #315b96;
+        color: #fff;
+      }
+      .you .block {
+        background: #efc85c;
+      }
+      .editor {
+        display: flex;
+        gap: 12px;
+        align-items: end;
+        flex-wrap: wrap;
+        margin: 26px 0;
+      }
+      .editor label {
+        font: 700 12px Arial;
+      }
+      .editor input {
+        display: block;
+        min-height: 44px;
+        padding: 8px;
+        border: 1px solid;
+      }
+      .summary {
+        background: var(--red);
+        color: #fff;
+        padding: 22px;
+        margin-top: 24px;
+        font-size: 1.15rem;
+      }
+      .source {
+        margin-top: 50px;
+        border-top: 1px solid;
+        padding-top: 22px;
+      }
+      .source p {
+        max-width: 850px;
+      }
+      .source small {
+        font-family: Arial;
+      }
+      footer {
+        font: 12px Arial;
+        color: #625d53;
+        padding-bottom: 50px;
+      }
+      @media (max-width: 650px) {
+        .compare {
+          grid-template-columns: 48px 1fr 1fr;
+        }
+        .axis,
+        .lane {
+          grid-template-rows: repeat(8, 52px);
+        }
+        .lane h2 {
+          font-size: 0.8rem;
+        }
+        .block {
+          font-size: 10px;
+          padding: 5px;
+        }
+        h1 {
+          margin-top: 65px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav><a href="../index.html">← Jesse J Ruiz</a><span>Day 02 · Book-based</span></nav>
+      <h1>Artists' Days</h1>
+      <p class="lede">
+        Put your working day beside twelve routines documented in Mason Currey’s
+        <em>Daily Rituals: How Artists Work</em>.
+      </p>
+    </header>
+    <main>
+      <div class="picker" role="group" aria-label="Choose artist"></div>
+      <div class="editor">
+        <label>Your start<input id="start" type="time" value="09:00" /></label
+        ><label>Your finish<input id="end" type="time" value="17:00" /></label>
+      </div>
+      <section class="compare" aria-label="Schedule comparison">
+        <div class="axis" id="axis"></div>
+        <div class="lane you" id="you"><h2>Your day</h2></div>
+        <div class="lane artist" id="artist">
+          <h2 id="artistName">Artist</h2>
+        </div>
+      </section>
+      <div class="summary" id="summary" aria-live="polite"></div>
+      <section class="source">
+        <h2>About the source</h2>
+        <p>
+          These are compact visual summaries derived from Mason Currey’s
+          profiles, not reproductions of the book’s prose. Historical routines
+          vary by period and source; they describe reported practice, not
+          prescriptions for better work.
+        </p>
+        <p>
+          <a href="https://www.masoncurrey.com/daily-rituals"
+            ><em>Daily Rituals: How Artists Work</em> by Mason Currey</a
+          >
+        </p>
+        <small
+          >Source edition supplied by the project owner. Schedule facts
+          paraphrased August 2026.</small
+        >
+      </section>
+    </main>
+    <footer>
+      No book text is stored or shown beyond the title and attribution.
+    </footer>
+    <script>
+      const people = [
+          {
+            name: "Ludwig van Beethoven",
+            note: "A dawn start, a long working morning, then walking and an early night.",
+            blocks: [
+              [5, 6, "Coffee & prepare"],
+              [6, 14.5, "Compose"],
+              [15, 19, "Long walk"],
+              [22, 24, "Sleep"],
+            ],
+          },
+          {
+            name: "Haruki Murakami",
+            note: "During novel writing: repetition, long predawn work, afternoon exercise, early sleep.",
+            blocks: [
+              [4, 10, "Write"],
+              [13, 15, "Run / swim"],
+              [15, 18, "Read & errands"],
+              [21, 24, "Sleep"],
+            ],
+          },
+          {
+            name: "Toni Morrison",
+            note: "Her hours changed across life; this view reflects the later predawn ritual described in the book.",
+            blocks: [
+              [5, 8, "Coffee, light & write"],
+              [9, 17, "Editorial / teaching work"],
+              [20, 22, "Family & reading"],
+            ],
+          },
+          {
+            name: "Maya Angelou",
+            note: "A deliberately plain hotel room separated concentrated writing from home.",
+            blocks: [
+              [5.5, 7, "Wake, coffee, travel"],
+              [7, 14, "Write in hotel room"],
+              [14, 17, "Review & home"],
+              [18, 21, "Dinner & reading aloud"],
+            ],
+          },
+          {
+            name: "Charles Darwin",
+            note: "A tightly paced day alternated short work periods with walking, meals, correspondence, and rest.",
+            blocks: [
+              [7.5, 9.5, "Focused work"],
+              [10.5, 12, "Letters & work"],
+              [12, 13, "Walk"],
+              [16, 17.5, "Work & reading"],
+            ],
+          },
+          {
+            name: "Franz Kafka",
+            note: "While employed at an insurance institute, he reserved late nights for literary work.",
+            blocks: [
+              [8, 14, "Office work"],
+              [15, 19.5, "Sleep & walk"],
+              [22.5, 24, "Write"],
+            ],
+          },
+          {
+            name: "Virginia Woolf",
+            note: "Her reported routine concentrated fiction in the morning and shifted to lighter work later.",
+            blocks: [
+              [9.5, 13, "Write fiction"],
+              [14.5, 16, "Walk"],
+              [16, 18, "Journal & letters"],
+            ],
+          },
+          {
+            name: "Thomas Mann",
+            note: "He protected the morning for demanding literary work and used afternoons for reading and correspondence.",
+            blocks: [
+              [8.5, 12, "Write"],
+              [12, 13, "Lunch"],
+              [16, 18, "Read & correspondence"],
+            ],
+          },
+          {
+            name: "Gustav Mahler",
+            note: "During summer composing periods, he began before breakfast and treated the morning as protected work time.",
+            blocks: [
+              [6, 7, "Wake & walk to studio"],
+              [7, 12, "Compose"],
+              [12, 14, "Breakfast & swim"],
+              [15, 18, "Walk & conversation"],
+            ],
+          },
+          {
+            name: "Georgia O’Keeffe",
+            note: "In New Mexico she often rose near dawn, walked, and worked through the cooler morning hours.",
+            blocks: [
+              [6, 7, "Walk"],
+              [7, 12, "Paint"],
+              [13, 15, "Lunch & rest"],
+              [16, 18, "Outdoor work"],
+            ],
+          },
+          {
+            name: "Stephen King",
+            note: "His described practice favors a consistent daily start and a fixed writing target before afternoon life begins.",
+            blocks: [
+              [8, 8.5, "Prepare"],
+              [8.5, 12, "Write"],
+              [13, 16, "Rest & reading"],
+            ],
+          },
+          {
+            name: "Louise Bourgeois",
+            note: "A regular studio day followed a morning departure from home and continued into late afternoon.",
+            blocks: [
+              [9, 10, "Prepare & travel"],
+              [10, 17, "Studio work"],
+              [17, 18, "Return home"],
+            ],
+          },
+        ],
+        min = 4,
+        max = 24,
+        px = 60 / 2.5;
+      const picker = document.querySelector(".picker");
+      people.forEach((p, i) => {
+        let b = document.createElement("button");
+        b.textContent = p.name;
+        b.setAttribute("aria-pressed", i === 0);
+        b.onclick = () => select(i);
+        picker.append(b);
+      });
+      for (let h = 4; h < 24; h += 2.5) {
+        let d = document.createElement("div");
+        d.textContent = `${String(Math.floor(h)).padStart(2, "0")}:${h % 1 ? "30" : "00"}`;
+        axis.append(d);
+      }
+      function add(lane, s, e, label) {
+        let b = document.createElement("div");
+        b.className = "block";
+        b.style.top = ((s - min) / (max - min)) * 100 + "%";
+        b.style.height = ((e - s) / (max - min)) * 100 + "%";
+        b.textContent = label;
+        lane.append(b);
+      }
+      function select(i) {
+        [...picker.children].forEach((b, j) =>
+          b.setAttribute("aria-pressed", i === j),
+        );
+        render(i);
+      }
+      function render(
+        i = +[...picker.children].findIndex(
+          (b) => b.getAttribute("aria-pressed") === "true",
+        ),
+      ) {
+        artist.querySelectorAll(".block").forEach((x) => x.remove());
+        you.querySelectorAll(".block").forEach((x) => x.remove());
+        let p = people[Math.max(0, i)],
+          s = +start.value.split(":")[0] + +start.value.split(":")[1] / 60,
+          e = +end.value.split(":")[0] + +end.value.split(":")[1] / 60;
+        add(you, s, e, "Focused / working time");
+        p.blocks.forEach((x) => add(artist, ...x));
+        artistName.textContent = p.name;
+        summary.textContent =
+          p.note +
+          ` Your selected work window is ${Math.max(0, e - s).toFixed(1)} hours.`;
+      }
+      start.oninput = end.oninput = () => render();
+      render(0);
+    </script>
+    <script data-goatcounter="https://jessejinnaruiz.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
