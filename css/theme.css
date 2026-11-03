@@ -1,0 +1,341 @@
+/* Restyles the legacy inline-styled pages (projects, blog) to match the site aesthetic.
+   Load after the page's own <style> block. */
+:root {
+  --paper: #f1eee5;
+  --card: #f8f6ef;
+  --ink: #191915;
+  --red: #d54b2f;
+  --line: #c9c3b5;
+  --muted: #67655f;
+}
+
+body {
+  background: var(--paper) !important;
+  color: var(--ink) !important;
+  font-family: Georgia, "Times New Roman", serif !important;
+}
+
+/* Header and nav */
+header {
+  background: var(--paper) !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+  border-bottom: 1px solid var(--ink);
+}
+
+.nav-container h1 {
+  color: var(--ink) !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.03em;
+}
+
+header .subtitle {
+  color: var(--muted) !important;
+  font-family: "Arial Narrow", Arial, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.72rem !important;
+  font-weight: 700;
+}
+
+.nav-links a,
+.read-more,
+.back-button,
+.btn-primary,
+.btn-secondary,
+.download-btn,
+.file-input-button,
+.project-type,
+.tag,
+.tech-tag,
+.tech-item,
+.blog-category,
+.blog-date,
+.featured-badge,
+.interactive-badge {
+  font-family: "Arial Narrow", Arial, sans-serif !important;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700 !important;
+}
+
+.nav-links a {
+  color: var(--ink) !important;
+  font-size: 0.78rem;
+}
+
+.nav-links a:hover {
+  color: var(--red) !important;
+}
+
+/* Hero blocks */
+.projects-hero,
+.project-hero,
+.blog-hero {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--ink) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  text-align: left !important;
+  color: var(--ink) !important;
+}
+
+.projects-hero h1,
+.project-hero h1,
+.blog-hero h1,
+.upload-section h1,
+.container > h1 {
+  color: var(--ink) !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.045em;
+  line-height: 0.98;
+  -webkit-text-fill-color: currentColor !important;
+  background: none !important;
+}
+
+.projects-hero p,
+.project-hero .subtitle,
+.blog-hero p {
+  color: var(--muted) !important;
+  margin-left: 0 !important;
+  opacity: 1 !important;
+}
+
+/* Cards */
+.project-card,
+.content-card,
+.full-width-card,
+.blog-post,
+.featured-post,
+.upload-section,
+.canvas-container,
+.controls,
+.highlights {
+  background: var(--card) !important;
+  backdrop-filter: none !important;
+  border: 1px solid var(--ink) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  color: var(--ink) !important;
+  transform: none !important;
+  transition: background 0.2s, color 0.2s !important;
+}
+
+.project-card::before {
+  display: none !important;
+}
+
+.project-card:hover,
+.blog-post:hover {
+  background: #176b87 !important;
+  color: #fff !important;
+}
+
+.project-card:hover h2,
+.blog-post:hover h2,
+.project-card:hover .project-description,
+.blog-post:hover .blog-excerpt {
+  color: #fff !important;
+}
+
+.project-card h2,
+.content-card h2,
+.blog-post h2,
+.highlights h3,
+.full-width-card h2,
+.full-width-card h3 {
+  color: var(--ink) !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.03em;
+}
+
+.project-description,
+.content-card p,
+.blog-excerpt,
+.blog-meta,
+.highlights li,
+.full-width-card p {
+  color: var(--muted) !important;
+}
+
+.highlights li:before {
+  color: var(--red) !important;
+}
+
+/* Badges and tags */
+.project-type,
+.tag,
+.tech-tag,
+.tech-item,
+.blog-category,
+.blog-date,
+.featured-badge,
+.interactive-badge {
+  background: transparent !important;
+  color: inherit !important;
+  border: 1px solid currentColor !important;
+  border-radius: 0 !important;
+  font-size: 0.68rem !important;
+  box-shadow: none !important;
+}
+
+/* Buttons */
+.btn-primary,
+.download-btn,
+.file-input-button,
+.read-more {
+  background: var(--ink) !important;
+  color: var(--paper) !important;
+  border: 1px solid var(--ink) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  transform: none !important;
+  font-size: 0.74rem;
+  background-image: none !important;
+}
+
+.btn-primary:hover,
+.download-btn:hover:not(:disabled),
+.file-input-button:hover,
+.read-more:hover {
+  background: var(--red) !important;
+  border-color: var(--red) !important;
+  color: #fff !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.download-btn:disabled {
+  background: var(--line) !important;
+  border-color: var(--line) !important;
+  color: var(--muted) !important;
+}
+
+.btn-secondary,
+.back-button {
+  background: transparent !important;
+  color: var(--ink) !important;
+  border: 1px solid var(--ink) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  transform: none !important;
+  font-size: 0.74rem;
+}
+
+.btn-secondary:hover,
+.back-button:hover {
+  background: var(--ink) !important;
+  color: var(--paper) !important;
+  transform: none !important;
+}
+
+.project-card:hover .btn-primary {
+  background: #fff !important;
+  color: #176b87 !important;
+  border-color: #fff !important;
+}
+
+.project-card:hover .btn-secondary {
+  color: #fff !important;
+  border-color: #fff !important;
+}
+
+.read-more {
+  margin-top: 1rem;
+}
+
+.btn-secondary,
+.back-button {
+  padding: 0.7rem 1.2rem !important;
+  line-height: 1.2;
+}
+
+.btn-primary {
+  padding: 0.7rem 1.2rem !important;
+  line-height: 1.2;
+}
+
+.nav-container {
+  padding-left: clamp(20px, 4vw, 56px);
+  padding-right: clamp(20px, 4vw, 56px);
+}
+
+.project-tags,
+.cta-buttons {
+  justify-content: flex-start !important;
+}
+
+/* Form controls (image app) */
+input[type="text"],
+input[type="color"],
+input[type="range"],
+select,
+textarea {
+  border: 1px solid var(--ink) !important;
+  border-radius: 0 !important;
+  background: #fff !important;
+  font-family: Arial, sans-serif;
+}
+
+input[type="text"]:focus,
+input[type="color"]:focus {
+  border-color: var(--red) !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+label {
+  color: var(--ink) !important;
+  font-family: "Arial Narrow", Arial, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  font-size: 0.78rem;
+}
+
+#canvas {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Footer */
+footer {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  border-top: 1px solid var(--ink);
+  color: var(--muted) !important;
+}
+
+.social-links a {
+  color: var(--ink) !important;
+}
+
+.social-links a:hover {
+  color: var(--red) !important;
+  text-decoration: none !important;
+}
+
+a {
+  text-decoration-color: var(--line);
+}
+
+body > .container {
+  background: var(--card) !important;
+  border: 1px solid var(--ink);
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  margin-top: 28px;
+  margin-bottom: 28px;
+}
+
+body > .container a {
+  color: var(--ink);
+}
+
+.upload-section,
+.controls,
+.canvas-container {
+  background: transparent !important;
+}

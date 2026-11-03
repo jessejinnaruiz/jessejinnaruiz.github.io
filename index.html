@@ -3,17 +3,21 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Jesse J Ruiz - Data Engineer, Visualization Specialist</title>
+    <title>Jesse J. Ruiz - Data Engineer and Artist</title>
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
-    <header>
-      <nav>
-        <div class="nav-container">
-          <h1>Jesse J Ruiz</h1>
-          <p class="subtitle">Data Engineer, Visualization Specialist</p>
+    <header class="site-header">
+      <section class="hero">
+        <div>
+          <span class="kicker">Austin, TX</span>
+          <h1>Jesse J. Ruiz</h1>
+          <p class="intro">
+            Data engineer and artist.
+          </p>
           <ul class="nav-links">
             <li><a href="#about">About</a></li>
+            <li><a href="#featured">Work</a></li>
             <li>
               <a href="visualizations/visualization.html">Visualizations</a>
             </li>
@@ -21,162 +25,191 @@
             <li><a href="blog/first-post.html">Blog</a></li>
           </ul>
         </div>
-      </nav>
+      </section>
+      <aside class="manifesto" id="about">
+        <strong>About Me</strong>
+        <p>
+          I'm a data engineer with 7+ years of experience building production
+          data platforms across manufacturing, financial services, and retail.
+          My strength is in building dimensional models, pipelines that serve ML, 
+          and reliable data infrastructure.
+          
+        </p>
+        <p>
+          I'm based in Austin, TX, where I build data platforms and agentic AI at
+          Dell Technologies. I also run Asios, a small company building private
+          communication and AI products. Asios Rooms and Asios Standup are live,
+          and all three Asios apps are in development for Android. And I'm an
+          artist.
+        </p>
+        <p>
+          Read more at
+          <a href="https://jessejruiz.com/">jessejruiz.com</a>.
+        </p>
+      </aside>
     </header>
 
-    <main>
-      <section id="hero">
-        <div class="container">
-          <h4>Building Data Pipelines & Insights</h4>
-          <p>Austin, TX</p>
-          <a href="#featured" class="cta-button">View My Work</a>
-        </div>
-      </section>
-
-      <section id="about">
-        <div class="container">
-          <h3>About Me</h3>
+    <main class="site-main" id="featured">
+      <div class="section-head">
+        <h2>Featured work</h2>
+        <span class="meta">10 projects</span>
+      </div>
+      <section class="featured-grid" aria-label="Featured work">
+        <div class="featured-item">
+          <span class="label">Web app</span>
+          <span class="mark"></span>
+          <h4>Artists' Days</h4>
           <p>
-            I'm a data engineer & visualization specialist building scalable
-            data infrastructure and extracting meaningful insights from complex
-            datasets. I specialize in ETL pipelines, data warehousing, hybrid
-            OLTP/OLAP databases, data visualization and creating tools that make
-            data accessible to teams.
+            Lay your day beside twelve working routines documented by Mason
+            Currey.
           </p>
-          <p>
-            Read more here:
-            <a href="https://jessejruiz.com/">https://jessejruiz.com/</a>
-          </p>
+          <div class="actions">
+            <a href="projects/artists-days.html" class="btn">Compare your day</a>
+          </div>
         </div>
-      </section>
-
-      <section id="featured">
-        <div class="container">
-          <h3>Featured Work</h3>
-          <div class="featured-grid">
-            <div class="featured-item">
-              <h4>Artists' Days</h4>
-              <p>
-                Lay your day beside twelve working routines documented by Mason
-                Currey.
-              </p>
-              <a href="projects/artists-days.html" class="btn">Compare Your Day</a>
-            </div>
-            <div class="featured-item">
-              <h4>Miyawaki Forest Field Lab</h4>
-              <p>
-                Build a site brief and stewardship plan, with local ecology and
-                maintenance questions made visible.
-              </p>
-              <a href="projects/miyawaki-forest-field-lab.html" class="btn"
-                >Open the Lab</a
-              >
-            </div>
-            <div class="featured-item">
-              <h4>Asios</h4>
-              <p>
-                My AI startup. Social AI for groups: ephemeral, self-serve
-                rooms where AI joins the people in your life instead of
-                replacing them.
-              </p>
-              <a href="https://asios.app" class="btn">Visit Asios</a>
-              <a href="https://rooms.asios.app/" class="btn">Try Rooms</a>
-            </div>
-            <div class="featured-item">
-              <h4>Serious Game: Miyawaki Forests</h4>
-              <p>
-                A serious game and data visualization exploring the Miyawaki
-                method of accelerated native forest restoration.
-              </p>
-              <a
-                href="https://jessejinnaruiz.github.io/dv_miyawakiforest/"
-                class="btn"
-                >View Visualization</a
-              >
-              <a
-                href="https://github.com/jessejinnaruiz/dv_miyawakiforest"
-                class="btn"
-                >View Code</a
-              >
-            </div>
-            <div class="featured-item">
-              <h4>Data Story: Evolution of Data Storage</h4>
-              <p>
-                An educational visualization exploring the history of data
-                storage.
-              </p>
-              <a
-                href="https://jessejinnaruiz.github.io/dv_databasehistory/"
-                class="btn"
-                >View Visualization</a
-              >
-              <a
-                href="https://github.com/jessejinnaruiz/dv_databasehistory"
-                class="btn"
-                >View Code</a
-              >
-            </div>
-            <div class="featured-item">
-              <h4>Dog Seizure Tracking App</h4>
-              <p>
-                A web application for tracking and analyzing canine seizure
-                episodes.
-              </p>
-              <a
-                href="https://jessejinnaruiz.github.io/proj_dog_seizure_tracking_app/"
-                class="btn"
-                >View App</a
-              >
-              <a
-                href="https://github.com/jessejinnaruiz/proj_dog_seizure_tracking_app"
-                class="btn"
-                >View Code</a
-              >
-            </div>
-            <div class="featured-item">
-              <h4>Austin Displacement Risk Visualization</h4>
-              <p>
-                A data-driven exploration of displacement patterns in Austin.
-              </p>
-              <a href="visualizations/visualization.html" class="btn"
-                >View Visualization</a
-              >
-            </div>
-            <div class="featured-item">
-              <h4>LinkedIn Profile Pic Callout Web App</h4>
-              <p>
-                A fully interactive web application allowing users to create
-                their own profile picture with custom call out text.
-              </p>
-              <a href="projects/li_image_app.html" class="btn">Try the App</a>
-            </div>
-            <div class="featured-item">
-              <h4>Domestic Violence Recidivism Prediction</h4>
-              <p>
-                End-to-end data science project predicting recidivism in
-                domestic violence cases.
-              </p>
-              <a href="projects/ds-project-1.html" class="btn">View Project</a>
-            </div>
-            <div class="featured-item">
-              <h4>Blog: Lessons Learned from My First 1.5 Years in Industry</h4>
-              <p>
-                An honest reflection on my first 1.5 years in the tech industry.
-              </p>
-              <a href="blog/first-post.html" class="btn">Read Post</a>
-            </div>
+        <div class="featured-item">
+          <span class="label">Web app</span>
+          <span class="mark"></span>
+          <h4>Miyawaki Forest Field Lab</h4>
+          <p>
+            Build a site brief and stewardship plan, with local ecology and
+            maintenance questions made visible.
+          </p>
+          <div class="actions">
+            <a href="projects/miyawaki-forest-field-lab.html" class="btn"
+              >Open the lab</a
+            >
+          </div>
+        </div>
+        <div class="featured-item">
+          <span class="label">Startup</span>
+          <span class="mark"></span>
+          <h4>Asios</h4>
+          <p>
+            My AI startup. Secure Social AI for groups and highly secure messaging.
+          </p>
+          <div class="actions">
+            <a href="https://asios.app" class="btn">Visit Asios</a>
+            <a href="https://rooms.asios.app/" class="btn">Try Rooms</a>
+          </div>
+        </div>
+        <div class="featured-item">
+          <span class="label">Serious game</span>
+          <span class="mark"></span>
+          <h4>Miyawaki Forests</h4>
+          <p>
+            A serious game and data visualization exploring the Miyawaki method
+            of accelerated native forest restoration.
+          </p>
+          <div class="actions">
+            <a
+              href="https://jessejinnaruiz.github.io/dv_miyawakiforest/"
+              class="btn"
+              >View visualization</a
+            >
+            <a
+              href="https://github.com/jessejinnaruiz/dv_miyawakiforest"
+              class="btn"
+              >View code</a
+            >
+          </div>
+        </div>
+        <div class="featured-item">
+          <span class="label">Data story</span>
+          <span class="mark"></span>
+          <h4>Evolution of Data Storage</h4>
+          <p>
+            An educational visualization exploring the history of data storage.
+          </p>
+          <div class="actions">
+            <a
+              href="https://jessejinnaruiz.github.io/dv_databasehistory/"
+              class="btn"
+              >View visualization</a
+            >
+            <a
+              href="https://github.com/jessejinnaruiz/dv_databasehistory"
+              class="btn"
+              >View code</a
+            >
+          </div>
+        </div>
+        <div class="featured-item">
+          <span class="label">Web app</span>
+          <span class="mark"></span>
+          <h4>Dog Seizure Tracking App</h4>
+          <p>
+            A web application for tracking and analyzing canine seizure
+            episodes.
+          </p>
+          <div class="actions">
+            <a
+              href="https://jessejinnaruiz.github.io/proj_dog_seizure_tracking_app/"
+              class="btn"
+              >View app</a
+            >
+            <a
+              href="https://github.com/jessejinnaruiz/proj_dog_seizure_tracking_app"
+              class="btn"
+              >View code</a
+            >
+          </div>
+        </div>
+        <div class="featured-item">
+          <span class="label">Visualization</span>
+          <span class="mark"></span>
+          <h4>Austin Displacement Risk</h4>
+          <p>A data-driven exploration of displacement patterns in Austin.</p>
+          <div class="actions">
+            <a href="visualizations/visualization.html" class="btn"
+              >View visualization</a
+            >
+          </div>
+        </div>
+        <div class="featured-item">
+          <span class="label">Web app</span>
+          <span class="mark"></span>
+          <h4>LinkedIn Profile Pic Callout</h4>
+          <p>
+            A fully interactive web application allowing users to create their
+            own profile picture with custom call out text.
+          </p>
+          <div class="actions">
+            <a href="projects/li_image_app.html" class="btn">Try the app</a>
+          </div>
+        </div>
+        <div class="featured-item">
+          <span class="label">Data science</span>
+          <span class="mark"></span>
+          <h4>Domestic Violence Recidivism</h4>
+          <p>
+            End-to-end data science project predicting recidivism in domestic
+            violence cases.
+          </p>
+          <div class="actions">
+            <a href="projects/ds-project-1.html" class="btn">View project</a>
+          </div>
+        </div>
+        <div class="featured-item">
+          <span class="label">Blog</span>
+          <span class="mark"></span>
+          <h4>First 1.5 Years in Industry</h4>
+          <p>
+            Lessons learned: an honest reflection on my first 1.5 years in the
+            tech industry.
+          </p>
+          <div class="actions">
+            <a href="blog/first-post.html" class="btn">Read post</a>
           </div>
         </div>
       </section>
     </main>
 
     <footer>
-      <div class="container">
-        <p>&copy; 2025 Jesse J Ruiz. Built with GitHub Pages.</p>
-        <div class="social-links">
-          <a href="https://github.com/jessejinnaruiz">GitHub</a>
-          <a href="https://www.linkedin.com/in/jesse-jinna-ruiz/">LinkedIn</a>
-        </div>
+      <p>&copy; 2026 Jesse J. Ruiz. Built with GitHub Pages.</p>
+      <div class="social-links">
+        <a href="https://github.com/jessejinnaruiz">GitHub</a>
+        <a href="https://www.linkedin.com/in/jesse-jinna-ruiz/">LinkedIn</a>
       </div>
     </footer>
   </body>
