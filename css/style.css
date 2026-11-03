@@ -198,14 +198,10 @@ main.site-main {
 }
 
 .featured-item .label {
-  position: relative;
-  z-index: 2;
   font-size: 0.76rem;
 }
 
 .featured-item h4 {
-  position: relative;
-  z-index: 2;
   font-size: clamp(1.25rem, 2vw, 1.7rem);
   font-weight: 400;
   line-height: 1.05;
@@ -213,20 +209,33 @@ main.site-main {
 }
 
 .featured-item p {
-  position: relative;
-  z-index: 2;
   font-family: Arial, sans-serif;
   font-size: 0.85rem;
   line-height: 1.4;
 }
 
 .featured-item .actions {
-  position: relative;
-  z-index: 2;
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
   gap: 8px;
+}
+
+/* The first button's link stretches over the whole row; later buttons stay above it. */
+.featured-item .actions .btn:first-child::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.featured-item .actions .btn:not(:first-child) {
+  position: relative;
+  z-index: 2;
+}
+
+.featured-item:has(.btn:first-child:hover) {
+  cursor: pointer;
 }
 
 .mark {
