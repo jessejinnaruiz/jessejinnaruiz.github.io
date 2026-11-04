@@ -1,0 +1,1402 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>BTS Complete Release Atlas</title>
+    <style>
+      :root {
+        --ink: #17151d;
+        --paper: #f5f0e8;
+        --pink: #dc3977;
+        --cyan: #2395a8;
+        --yellow: #ddd334;
+        --line-core: #2e7d32;
+        --line-japan: #1565c0;
+        --line-single: #ef6c00;
+        --line-collab: #7b1fa2;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font:
+          16px/1.45 Arial,
+          sans-serif;
+      }
+      header,
+      main,
+      footer {
+        max-width: 1180px;
+        margin: auto;
+        padding: 24px;
+      }
+      nav {
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+        font-weight: 900;
+        text-transform: uppercase;
+      }
+      a {
+        color: #167187;
+      }
+      h1 {
+        font:
+          700 clamp(3rem, 9vw, 7rem)/0.86 Georgia,
+          serif;
+        letter-spacing: 0;
+        max-width: 11ch;
+        margin: 10vh 0 22px;
+      }
+      .lede {
+        max-width: 760px;
+        font-size: 1.2rem;
+      }
+      .controls {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 12px;
+        margin: 42px 0 18px;
+      }
+      input {
+        min-height: 48px;
+        border: 2px solid;
+        padding: 10px;
+        font: inherit;
+      }
+      .filters {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+      .filters button {
+        min-height: 48px;
+        border: 2px solid;
+        background: transparent;
+        padding: 0 13px;
+        font-weight: 800;
+      }
+      .filters button[aria-pressed="true"] {
+        background: var(--ink);
+        color: #fff;
+      }
+      .count {
+        font-weight: 900;
+        margin: 18px 0 4px;
+      }
+      .freshness {
+        margin: 0 0 18px;
+        font-size: 13px;
+        color: #5d5761;
+      }
+      .dupe-note {
+        font: 700 12px Arial;
+        color: #5d5761;
+      }
+      .catalog {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+      }
+      .release {
+        border: 2px solid;
+        padding: 16px;
+        background: #fff;
+        min-height: 210px;
+      }
+      .release.line-core {
+        border-top: 10px solid var(--line-core);
+      }
+      .release.line-japan {
+        border-top: 10px solid var(--line-japan);
+      }
+      .release.line-single {
+        border-top: 10px solid var(--line-single);
+      }
+      .release.line-collab {
+        border-top: 10px solid var(--line-collab);
+      }
+      time,
+      .tag {
+        font: 800 11px Arial;
+        text-transform: uppercase;
+      }
+      .release h2 {
+        font: 700 1.35rem Georgia;
+        margin: 10px 0;
+      }
+      .meta {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+      .tag {
+        background: #ece8df;
+        padding: 5px 7px;
+      }
+      .tracks {
+        color: #5d5761;
+        font-size: 14px;
+      }
+      .legend {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin: 8px 0 18px;
+      }
+      .legend-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: 1px solid;
+        padding: 6px 10px;
+        background: #fff;
+        font: 700 12px Arial;
+      }
+      .legend-chip {
+        width: 14px;
+        height: 14px;
+        display: inline-block;
+      }
+      .legend-chip.core {
+        background: var(--line-core);
+      }
+      .legend-chip.japan {
+        background: var(--line-japan);
+      }
+      .legend-chip.single {
+        background: var(--line-single);
+      }
+      .legend-chip.collab {
+        background: var(--line-collab);
+      }
+      details {
+        margin-top: 12px;
+      }
+      summary {
+        cursor: pointer;
+        font-weight: 700;
+      }
+      ol.track-list {
+        margin: 10px 0 0;
+        padding-left: 20px;
+      }
+      .disc-label {
+        margin: 10px 0 0;
+        font: 700 12px Arial;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .song {
+        border: 0;
+        background: transparent;
+        color: #143f77;
+        cursor: pointer;
+        padding: 0;
+        text-align: left;
+        font: inherit;
+      }
+      .song:hover,
+      .song:focus {
+        text-decoration: underline;
+      }
+      .song-related {
+        margin: 6px 0 0;
+        padding: 8px;
+        background: #f2f6fb;
+        border-left: 3px solid #9bb8dd;
+        font-size: 12px;
+      }
+      .unknown {
+        margin-top: 10px;
+        background: #f6efe3;
+        border-left: 3px solid #a96d23;
+        padding: 8px;
+        font-size: 13px;
+      }
+      .scope {
+        margin-top: 45px;
+        border-top: 2px solid;
+        padding-top: 20px;
+        max-width: 900px;
+      }
+      @media (max-width: 850px) {
+        .catalog {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 560px) {
+        .catalog {
+          grid-template-columns: 1fr;
+        }
+        .controls {
+          grid-template-columns: 1fr;
+        }
+        h1 {
+          margin-top: 65px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <a href="../index.html">← Jesse J Ruiz</a
+        >
+      </nav>
+      <h1>BTS Complete Release Atlas</h1>
+      <p class="lede">
+        Every BTS-credited musical release package in scope as of the catalog
+        cutoff below—not a six-song sample. Search titles and filter the Korean/global,
+        Japanese, standalone, and collaboration lines.
+      </p>
+    </header>
+    <main>
+      <section class="controls">
+        <input
+          id="search"
+          type="search"
+          placeholder="Search releases, songs, years, or relationships"
+          aria-label="Search discography"
+        />
+        <div class="filters" role="group" aria-label="Release line">
+          <button data-line="all" aria-pressed="true">All</button
+          ><button data-line="core">Korean / global</button
+          ><button data-line="japan">Japan</button
+          ><button data-line="single">Standalone</button
+          ><button data-line="collab">Co-credited</button>
+        </div>
+      </section>
+      <section class="legend" aria-label="Release line color legend">
+        <span class="legend-item"
+          ><span class="legend-chip core" aria-hidden="true"></span>Korean /
+          global line</span
+        >
+        <span class="legend-item"
+          ><span class="legend-chip japan" aria-hidden="true"></span>Japanese
+          line</span
+        >
+        <span class="legend-item"
+          ><span class="legend-chip single" aria-hidden="true"></span
+          >Standalone / version line</span
+        >
+        <span class="legend-item"
+          ><span class="legend-chip collab" aria-hidden="true"></span
+          >Collaboration / co-credit line</span
+        >
+      </section>
+      <p class="count" id="count" role="status" aria-live="polite"></p>
+      <p class="freshness" id="freshness"></p>
+      <section class="catalog" id="catalog"></section>
+      <section class="scope">
+        <h2>Completeness rule</h2>
+        <p>
+          Scope includes distinct BTS-credited audio release packages available
+          by the cutoff: Korean/global albums, EPs, single albums, repackages,
+          anthologies, soundtrack and live albums; Japanese albums,
+          compilations, and physical singles; standalone group originals; and
+          co-credited releases. Member-solo catalogs, video-only products,
+          retailer packaging variants, clean edits, and identical-audio reprints
+          are excluded. Remixes and edition deltas are attached to their parent
+          release rather than inflated into separate albums.
+        </p>
+        <p>
+          No lyrics, audio, artwork, or photography are included. Metadata was
+          cross-checked against BIGHIT/Weverse notices, BTS Japan and label
+          catalogs, and major platform metadata; territory-specific editions can
+          vary.
+        </p>
+      </section>
+    </main>
+    <footer>
+      Unofficial factual index. Not affiliated with BTS, BIGHIT MUSIC, or HYBE.
+    </footer>
+    <script>
+      const releases = [
+        {
+          title: "2 Cool 4 Skool",
+          date: "2013-06-12",
+          line: "core",
+          tracks: [
+            "Intro: 2 Cool 4 Skool",
+            "We Are Bulletproof Pt.2",
+            "Skit: Circle Room Talk",
+            "No More Dream",
+            "Interlude",
+            "Like",
+            "Outro: Circle Room Cypher",
+          ],
+        },
+        {
+          title: "O!RUL8,2?",
+          date: "2013-09-11",
+          line: "core",
+          tracks: [
+            "Intro: O!RUL8,2?",
+            "N.O",
+            "We On",
+            "Skit: R U Happy Now?",
+            "If I Ruled the World",
+            "Coffee",
+            "BTS Cypher Pt.1",
+            "Attack on Bangtan",
+            "Paldogangsan",
+            "Outro: Luv in Skool",
+          ],
+        },
+        {
+          title: "Skool Luv Affair",
+          date: "2014-02-12",
+          line: "core",
+          tracks: [
+            "Intro: Skool Luv Affair",
+            "Boy in Luv",
+            "Skit: Soulmate",
+            "Where You From",
+            "Just One Day",
+            "Tomorrow",
+            "BTS Cypher Pt.2: Triptych",
+            "Spine Breaker",
+            "Jump",
+            "Outro: Propose",
+          ],
+        },
+        {
+          title: "Skool Luv Affair Special Addition",
+          date: "2014-05-14",
+          line: "core",
+          tracks: [
+            "Miss Right",
+            "Like (Slow Jam Remix)",
+            "Intro: Skool Luv Affair",
+            "Boy in Luv",
+            "Skit: Soulmate",
+            "Where You From",
+            "Just One Day",
+            "Tomorrow",
+            "BTS Cypher Pt.2: Triptych",
+            "Spine Breaker",
+            "Jump",
+            "Outro: Propose",
+            "Miss Right (Instrumental)",
+            "Like (Slow Jam Remix) (Instrumental)",
+            "Boy in Luv (Instrumental)",
+            "Just One Day (Instrumental)",
+            "Tomorrow (Instrumental)",
+            "Spine Breaker (Instrumental)",
+          ],
+        },
+        {
+          title: "Dark & Wild",
+          date: "2014-08-20",
+          line: "core",
+          tracks: [
+            "Intro: What Am I to You",
+            "Danger",
+            "War of Hormone",
+            "Hip Hop Phile",
+            "Let Me Know",
+            "Rain",
+            "BTS Cypher Pt.3: Killer",
+            "Interlude: What Are You Doing?",
+            "Could You Turn Off Your Cell Phone",
+            "Blanket Kick",
+            "24/7=Heaven",
+            "Look Here",
+            "2nd Grade",
+            "Outro: Does That Make Sense?",
+          ],
+        },
+        {
+          title: "The Most Beautiful Moment in Life, Pt. 1",
+          date: "2015-04-29",
+          line: "core",
+          tracks: [
+            "Intro: The Most Beautiful Moment in Life",
+            "I Need U",
+            "Hold Me Tight",
+            "Skit: Expectation!",
+            "Dope",
+            "Boyz with Fun",
+            "Converse High",
+            "Moving On",
+            "Outro: Love Is Not Over",
+          ],
+        },
+        {
+          title: "The Most Beautiful Moment in Life, Pt. 2",
+          date: "2015-11-30",
+          line: "core",
+          tracks: [
+            "Intro: Never Mind",
+            "Run",
+            "Butterfly",
+            "Whalien 52",
+            "Ma City",
+            "Silver Spoon",
+            "Skit: One Night in a Strange City",
+            "Autumn Leaves",
+            "Outro: House of Cards",
+          ],
+        },
+        {
+          title: "The Most Beautiful Moment in Life: Young Forever",
+          date: "2016-05-02",
+          line: "core",
+          tracks: [
+            [
+              "Intro: The Most Beautiful Moment in Life",
+              "I Need U",
+              "Hold Me Tight",
+              "Autumn Leaves",
+              "Butterfly (Prologue Mix)",
+              "Run",
+              "Ma City",
+              "Silver Spoon",
+              "Dope",
+              "Fire",
+              "Save Me",
+              "Epilogue: Young Forever",
+            ],
+            [
+              "Converse High",
+              "Moving On",
+              "Whalien 52",
+              "Butterfly",
+              "House of Cards (Full Length Edition)",
+              "Love Is Not Over (Full Length Edition)",
+              "I Need U (Urban Mix)",
+              "I Need U (Remix)",
+              "Run (Ballad Mix)",
+              "Run (Alternative Mix)",
+              "Butterfly (Alternative Mix)",
+            ],
+          ],
+        },
+        {
+          title: "Wings",
+          date: "2016-10-10",
+          line: "core",
+          tracks: [
+            "Intro: Boy Meets Evil",
+            "Blood Sweat & Tears",
+            "Begin",
+            "Lie",
+            "Stigma",
+            "First Love",
+            "Reflection",
+            "MAMA",
+            "Awake",
+            "Lost",
+            "BTS Cypher 4",
+            "Am I Wrong",
+            "21st Century Girl",
+            "2! 3!",
+            "Interlude: Wings",
+          ],
+        },
+        {
+          title: "You Never Walk Alone",
+          date: "2017-02-13",
+          line: "core",
+          tracks: [
+            "Intro: Boy Meets Evil",
+            "Blood Sweat & Tears",
+            "Begin",
+            "Lie",
+            "Stigma",
+            "First Love",
+            "Reflection",
+            "MAMA",
+            "Awake",
+            "Lost",
+            "BTS Cypher 4",
+            "Am I Wrong",
+            "21st Century Girl",
+            "2! 3!",
+            "Spring Day",
+            "Not Today",
+            "Outro: Wings",
+            "A Supplementary Story: You Never Walk Alone",
+          ],
+        },
+        {
+          title: "Love Yourself: Her",
+          date: "2017-09-18",
+          line: "core",
+          tracks: [
+            "Intro: Serendipity",
+            "DNA",
+            "Best of Me",
+            "Dimple",
+            "Pied Piper",
+            "Skit: Billboard Music Awards Speech",
+            "MIC Drop",
+            "Go Go",
+            "Outro: Her",
+          ],
+        },
+        {
+          title: "Love Yourself: Tear",
+          date: "2018-05-18",
+          line: "core",
+          tracks: [
+            "Intro: Singularity",
+            "Fake Love",
+            "The Truth Untold",
+            "134340",
+            "Paradise",
+            "Love Maze",
+            "Magic Shop",
+            "Airplane Pt.2",
+            "Anpanman",
+            "So What",
+            "Outro: Tear",
+          ],
+        },
+        {
+          title: "Love Yourself: Answer",
+          date: "2018-08-24",
+          line: "core",
+          tracks: [
+            [
+              "Euphoria",
+              "Trivia 起: Just Dance",
+              "Serendipity (Full Length Edition)",
+              "DNA",
+              "Dimple",
+              "Trivia 承: Love",
+              "Her",
+              "Singularity",
+              "Fake Love",
+              "The Truth Untold",
+              "Trivia 轉: Seesaw",
+              "Tear",
+              "Epiphany",
+              "I'm Fine",
+              "Idol",
+              "Answer: Love Myself",
+            ],
+            [
+              "Magic Shop",
+              "Best of Me",
+              "Airplane Pt.2",
+              "Go Go",
+              "Anpanman",
+              "MIC Drop",
+              "DNA (Pedal 2 LA Mix)",
+              "Fake Love (Rocking Vibe Mix)",
+              "MIC Drop (Steve Aoki Remix) (Full Length Edition)",
+            ],
+          ],
+        },
+        {
+          title: "Map of the Soul: Persona",
+          date: "2019-04-12",
+          line: "core",
+          tracks: [
+            "Intro: Persona",
+            "Boy With Luv",
+            "Mikrokosmos",
+            "Make It Right",
+            "Home",
+            "Jamais Vu",
+            "Dionysus",
+          ],
+        },
+        {
+          title: "BTS World: Original Soundtrack",
+          date: "2019-06-28",
+          line: "core",
+          tracks: [
+            "Heartbeat",
+            "Dream Glow",
+            "A Brand New Day",
+            "All Night",
+            "Captain",
+            "Cake Waltz",
+            "Shine",
+            "Not Alone",
+            "Friends",
+            "Wish",
+            "Flying",
+            "LaLaLa",
+            "You Are Here",
+            "You Are Here (Orchestra Version) (Instrumental)",
+          ],
+        },
+        {
+          title: "Map of the Soul: 7",
+          date: "2020-02-21",
+          line: "core",
+          tracks: [
+            "Intro: Persona",
+            "Boy With Luv",
+            "Make It Right",
+            "Jamais Vu",
+            "Dionysus",
+            "Interlude: Shadow",
+            "Black Swan",
+            "Filter",
+            "My Time",
+            "Louder than Bombs",
+            "ON",
+            "UGH!",
+            "00:00 (Zero O'Clock)",
+            "Inner Child",
+            "Friends",
+            "Moon",
+            "Respect",
+            "We Are Bulletproof: The Eternal",
+            "Outro: Ego",
+            "ON (feat. Sia)",
+          ],
+        },
+        {
+          title: "BE",
+          date: "2020-11-20",
+          line: "core",
+          tracks: [
+            "Life Goes On",
+            "Fly to My Room",
+            "Blue & Grey",
+            "Skit",
+            "Telepathy",
+            "Dis-ease",
+            "Stay",
+            "Dynamite",
+          ],
+        },
+        {
+          title: "Butter",
+          date: "2021-07-09",
+          line: "core",
+          tracks: [
+            "Butter",
+            "Permission to Dance",
+            "Butter (Instrumental)",
+            "Permission to Dance (Instrumental)",
+          ],
+        },
+        {
+          title: "Proof",
+          date: "2022-06-10",
+          line: "core",
+          tracks: [
+            [
+              "Born Singer",
+              "No More Dream",
+              "N.O",
+              "Boy in Luv",
+              "Danger",
+              "I Need U",
+              "Run",
+              "Fire",
+              "Blood Sweat & Tears",
+              "Spring Day",
+              "DNA",
+              "Fake Love",
+              "Idol",
+              "Boy With Luv",
+              "ON",
+              "Dynamite",
+              "Life Goes On",
+              "Butter",
+              "Yet to Come",
+            ],
+            [
+              "Run BTS",
+              "Intro: Persona",
+              "Stay",
+              "Moon",
+              "Jamais Vu",
+              "Trivia 轉: Seesaw",
+              "BTS Cypher Pt.3: Killer",
+              "Outro: Ego",
+              "Her",
+              "Filter",
+              "Friends",
+              "Singularity",
+              "00:00 (Zero O'Clock)",
+              "Euphoria",
+              "Dimple",
+            ],
+            [
+              "Jump (Demo Version)",
+              "Young Love",
+              "Boy in Luv (Demo Version)",
+              "Quotation Mark",
+              "I Need U (Demo Version)",
+              "Boyz with Fun (Demo Version)",
+              "Tony Montana (feat. Jimin)",
+              "Young Forever (RM Demo Version)",
+              "Spring Day (V Demo Version)",
+              "DNA (j-hope Demo Version)",
+              "Epiphany (Jin Demo Version)",
+              "Seesaw (Demo Version)",
+              "Still With You (Acapella)",
+              "For Youth",
+            ],
+          ],
+        },
+        {
+          title: "Permission to Dance on Stage - Live",
+          date: "2025-07-18",
+          line: "core",
+          tracks: [
+            "ON",
+            "Fire",
+            "Dope",
+            "DNA",
+            "Blue & Grey",
+            "Black Swan",
+            "Blood Sweat & Tears",
+            "Fake Love",
+            "Life Goes On",
+            "Boy With Luv",
+            "Dynamite",
+            "Butter",
+            "Telepathy",
+            "Outro: Wings",
+            "Stay",
+            "So What",
+            "Idol",
+            "Airplane Pt.2",
+            "Silver Spoon",
+            "Dis-ease",
+            "Spring Day",
+            "Permission to Dance",
+          ],
+        },
+        {
+          title: "ARIRANG",
+          date: "2026-03-20",
+          line: "core",
+          tracks: [
+            "Body to Body",
+            "Hooligan",
+            "Aliens",
+            "FYA",
+            "2.0",
+            "No. 29",
+            "SWIM",
+            "Merry Go Round",
+            "NORMAL",
+            "Like Animals",
+            "they don't know 'bout us",
+            "One More Night",
+            "Please",
+            "Into the Sun",
+          ],
+        },
+        {
+          title: "Keep Swimming",
+          date: "2026-03-27",
+          line: "single",
+          tracks: [
+            "SWIM",
+            "SWIM with RM (Chill Hip Hop Remix)",
+            "SWIM with Jin (Alternative Rock Remix)",
+            "SWIM with SUGA (Melodic Techno Remix)",
+            "SWIM with j-hope (Afrobeat Remix)",
+            "SWIM with Jimin (Slow Jam R&B Remix)",
+            "SWIM with V (Electronic Remix)",
+            "SWIM with Jung Kook (Acoustic Lofi Remix)",
+            "SWIM (Instrumental)",
+          ],
+        },
+        {
+          title: "SWIM (Live at Pier 17)",
+          date: "2026-03-31",
+          line: "single",
+          tracks: ["SWIM (Live at Pier 17)"],
+        },
+        {
+          title: "2.0 (Live at Pier 17)",
+          date: "2026-04-06",
+          line: "single",
+          tracks: ["2.0 (Live at Pier 17)"],
+        },
+        {
+          title: "SWIM (Underwater Remix)",
+          date: "2026-04-10",
+          line: "single",
+          tracks: ["SWIM", "SWIM (Underwater Remix)", "SWIM (Instrumental)"],
+        },
+        {
+          title: "SWIM (Spring Waves Remix)",
+          date: "2026-04-17",
+          line: "single",
+          tracks: ["SWIM", "SWIM (Spring Waves Remix)", "SWIM (Instrumental)"],
+        },
+        {
+          title: "NORMAL (Korean Ver.)",
+          date: "2026-07-17",
+          line: "single",
+          tracks: ["NORMAL (Korean Ver.)"],
+        },
+        {
+          title: "Wake Up",
+          date: "2014-12-24",
+          line: "japan",
+          tracks: [
+            "Intro.",
+            "The Stars",
+            "Jump (Japanese Ver.)",
+            "Danger (Japanese Ver.)",
+            "Boy in Luv (Japanese Ver.)",
+            "Just One Day (Japanese Ver. Extended)",
+            "I Like It (Japanese Ver.)",
+            "I Like It Pt.2: In That Place",
+            "No More Dream (Japanese Ver.)",
+            "Attack on Bangtan (Japanese Ver.)",
+            "N.O (Japanese Ver.)",
+            "Wake Up",
+            "Outro.",
+          ],
+        },
+        {
+          title: "Youth",
+          date: "2016-09-07",
+          line: "japan",
+          tracks: [
+            "Introduction: Youth",
+            "Run (Japanese Ver.)",
+            "Fire (Japanese Ver.)",
+            "Dope (Japanese Ver.)",
+            "Good Day",
+            "Save Me (Japanese Ver.)",
+            "Boyz with Fun (Japanese Ver.)",
+            "Silver Spoon (Japanese Ver.)",
+            "Wishing on a Star",
+            "Butterfly (Japanese Ver.)",
+            "For You",
+            "I Need U (Japanese Ver.)",
+            "Epilogue: Young Forever (Japanese Ver.)",
+          ],
+        },
+        {
+          title: "The Best of BTS: Korea Edition",
+          date: "2017-01-06",
+          line: "japan",
+          tracks: [
+            "No More Dream",
+            "We Are Bulletproof Pt.2",
+            "N.O",
+            "Boy in Luv",
+            "Just One Day",
+            "Danger",
+            "War of Hormone",
+            "I Need U",
+            "Dope",
+            "Run",
+            "Epilogue: Young Forever",
+            "Burning Up (Fire)",
+            "Save Me",
+            "Blood Sweat & Tears",
+          ],
+        },
+        {
+          title: "The Best of BTS: Japan Edition",
+          date: "2017-01-06",
+          line: "japan",
+          tracks: [
+            "No More Dream (Japanese Ver.)",
+            "Boy in Luv (Japanese Ver.)",
+            "Danger (Japanese Ver.)",
+            "Attack on Bangtan (Japanese Ver.)",
+            "Miss Right (Japanese Ver.)",
+            "I Like It Pt.2: In That Place",
+            "For You",
+            "War of Hormone (Japanese Ver.)",
+            "I Need U (Japanese Ver.)",
+            "Dope (Japanese Ver.)",
+            "Run (Japanese Ver.)",
+            "Fire (Japanese Ver.)",
+            "Save Me (Japanese Ver.)",
+            "Epilogue: Young Forever (Japanese Ver.)",
+          ],
+        },
+        {
+          title: "Face Yourself",
+          date: "2018-04-04",
+          line: "japan",
+          tracks: [
+            "Intro: Ringwanderung",
+            "Best of Me (Japanese Ver.)",
+            "Blood Sweat & Tears (Japanese Ver.)",
+            "DNA (Japanese Ver.)",
+            "Not Today (Japanese Ver.)",
+            "MIC Drop (Japanese Ver.)",
+            "Don't Leave Me",
+            "Go Go (Japanese Ver.)",
+            "Crystal Snow",
+            "Spring Day (Japanese Ver.)",
+            "Let Go",
+            "Outro: Crack",
+          ],
+        },
+        {
+          title: "Map of the Soul: 7 - The Journey",
+          date: "2020-07-14",
+          line: "japan",
+          tracks: [
+            "Intro: Calling",
+            "Stay Gold",
+            "Boy With Luv (Japanese Ver.)",
+            "Make It Right (Japanese Ver.)",
+            "Dionysus (Japanese Ver.)",
+            "Idol (Japanese Ver.)",
+            "Airplane Pt.2 (Japanese Ver.)",
+            "Fake Love (Japanese Ver.)",
+            "Black Swan (Japanese Ver.)",
+            "ON (Japanese Ver.)",
+            "Lights",
+            "Your Eyes Tell",
+            "Outro: The Journey",
+          ],
+        },
+        {
+          title: "BTS, The Best",
+          date: "2021-06-16",
+          line: "japan",
+          tracks: [
+            [
+              "Film Out",
+              "DNA (Japanese Ver.)",
+              "Best of Me (Japanese Ver.)",
+              "Lights",
+              "Blood Sweat & Tears (Japanese Ver.)",
+              "Fake Love (Japanese Ver.)",
+              "Black Swan (Japanese Ver.)",
+              "Airplane Pt.2 (Japanese Ver.)",
+              "Go Go (Japanese Ver.)",
+              "Idol (Japanese Ver.)",
+              "Dionysus (Japanese Ver.)",
+              "MIC Drop (Japanese Ver.)",
+              "Dynamite",
+            ],
+            [
+              "Boy With Luv (Japanese Ver.)",
+              "Stay Gold",
+              "Let Go",
+              "Spring Day (Japanese Ver.)",
+              "ON (Japanese Ver.)",
+              "Don't Leave Me",
+              "Not Today (Japanese Ver.)",
+              "Make It Right (Japanese Ver.)",
+              "Your Eyes Tell",
+              "Crystal Snow",
+            ],
+          ],
+        },
+        {
+          title: "No More Dream (Japanese Ver.)",
+          date: "2014-06-04",
+          line: "japan",
+          tracks: [
+            "No More Dream (Japanese Ver.)",
+            "Attack on Bangtan (Japanese Ver.)",
+            "Like (Japanese Ver.)",
+          ],
+        },
+        {
+          title: "Boy in Luv (Japanese Ver.)",
+          date: "2014-07-16",
+          line: "japan",
+          tracks: [
+            "Boy in Luv (Japanese Ver.)",
+            "N.O (Japanese Ver.)",
+            "Just One Day (Japanese Ver.)",
+          ],
+        },
+        {
+          title: "Danger (Japanese Ver.)",
+          date: "2014-11-19",
+          line: "japan",
+          tracks: [
+            "Danger (Japanese Ver.)",
+            "Attack on Bangtan (Second Grade)",
+            "Miss Right (Japanese Ver.)",
+          ],
+        },
+        {
+          title: "For You",
+          date: "2015-06-17",
+          line: "japan",
+          tracks: [
+            "For You",
+            "War of Hormone (Japanese Ver.)",
+            "Let Me Know (Japanese Ver.)",
+          ],
+        },
+        {
+          title: "I Need U (Japanese Ver.)",
+          date: "2015-12-08",
+          line: "japan",
+          tracks: [
+            "I Need U (Japanese Ver.)",
+            "Dope (Japanese Ver.)",
+            "Boyz with Fun (Japanese Ver.)",
+          ],
+        },
+        {
+          title: "Run (Japanese Ver.)",
+          date: "2016-03-15",
+          line: "japan",
+          tracks: [
+            "Run (Japanese Ver.)",
+            "Butterfly (Japanese Ver.)",
+            "Good Day",
+          ],
+        },
+        {
+          title: "Blood Sweat & Tears",
+          date: "2017-05-10",
+          line: "japan",
+          tracks: [
+            "Blood Sweat & Tears (Japanese Ver.)",
+            "Not Today (Japanese Ver.)",
+            "Spring Day (Japanese Ver.)",
+          ],
+        },
+        {
+          title: "MIC Drop / DNA / Crystal Snow",
+          date: "2017-12-06",
+          line: "japan",
+          tracks: [
+            "MIC Drop (Japanese Ver.)",
+            "DNA (Japanese Ver.)",
+            "Crystal Snow",
+          ],
+        },
+        {
+          title: "Fake Love / Airplane Pt.2",
+          date: "2018-11-07",
+          line: "japan",
+          tracks: [
+            "Fake Love (Japanese Ver.)",
+            "Airplane Pt.2 (Japanese Ver.)",
+            "Idol (Stadium Remix)",
+          ],
+        },
+        {
+          title: "Lights / Boy With Luv",
+          date: "2019-07-03",
+          line: "japan",
+          tracks: [
+            "Lights",
+            "Boy With Luv (Japanese Ver.)",
+            "Idol (Japanese Ver.)",
+          ],
+        },
+        {
+          title: "Come Back Home",
+          date: "2017-07-04",
+          line: "single",
+          tracks: ["Come Back Home"],
+        },
+        {
+          title: "MIC Drop (Steve Aoki Remix)",
+          date: "2017-11-24",
+          line: "collab",
+          tracks: ["MIC Drop (Steve Aoki Remix) (feat. Desiigner)"],
+        },
+        {
+          title: "Waste It on Me",
+          date: "2018-10-25",
+          line: "collab",
+          tracks: ["Waste It on Me"],
+        },
+        {
+          title: "Dream Glow (BTS World OST Part.1)",
+          date: "2019-06-07",
+          line: "collab",
+          tracks: ["Dream Glow"],
+        },
+        {
+          title: "A Brand New Day (BTS World OST Part.2)",
+          date: "2019-06-14",
+          line: "collab",
+          tracks: ["A Brand New Day"],
+        },
+        {
+          title: "All Night (BTS World OST Part.3)",
+          date: "2019-06-21",
+          line: "collab",
+          tracks: ["All Night"],
+        },
+        {
+          title: "Make It Right",
+          date: "2019-10-18",
+          line: "collab",
+          tracks: ["Make It Right (feat. Lauv)"],
+        },
+        {
+          title: "Dynamite (DayTime Version)",
+          date: "2020-08-24",
+          line: "single",
+          tracks: [
+            "Dynamite",
+            "Dynamite (Instrumental)",
+            "Dynamite (Acoustic Remix)",
+            "Dynamite (EDM Remix)",
+          ],
+        },
+        {
+          title: "Dynamite (NightTime Version)",
+          date: "2020-08-28",
+          line: "single",
+          tracks: [
+            "Dynamite",
+            "Dynamite (Instrumental)",
+            "Dynamite (Slow Jam Remix)",
+            "Dynamite (Midnight Remix)",
+            "Dynamite (Retro Remix)",
+            "Dynamite (Bedroom Remix)",
+          ],
+        },
+        {
+          title: "Savage Love (Laxed - Siren Beat) [BTS Remix]",
+          date: "2020-10-02",
+          line: "collab",
+          tracks: ["Savage Love (Laxed - Siren Beat) [BTS Remix]"],
+        },
+        {
+          title: "Butter",
+          date: "2021-05-21",
+          line: "single",
+          tracks: ["Butter", "Butter (Instrumental)"],
+        },
+        {
+          title: "Butter (Hotter, Sweeter, Cooler)",
+          date: "2021-06-04",
+          line: "single",
+          tracks: [
+            "Butter",
+            "Butter (Hotter Remix)",
+            "Butter (Sweeter Remix)",
+            "Butter (Cooler Remix)",
+          ],
+        },
+        {
+          title: "Butter (feat. Megan Thee Stallion)",
+          date: "2021-08-27",
+          line: "collab",
+          tracks: ["Butter (feat. Megan Thee Stallion)"],
+        },
+        {
+          title: "My Universe",
+          date: "2021-09-24",
+          line: "collab",
+          tracks: ["My Universe", "My Universe (Instrumental)"],
+        },
+        {
+          title: "Bad Decisions",
+          date: "2022-08-05",
+          line: "collab",
+          tracks: ["Bad Decisions"],
+        },
+        {
+          title: "The Planet",
+          date: "2023-05-12",
+          line: "single",
+          tracks: ["The Planet"],
+        },
+        {
+          title: "Take Two",
+          date: "2023-06-09",
+          line: "single",
+          tracks: ["Take Two"],
+        },
+        {
+          title: "Come Over",
+          date: "2026-06-12",
+          line: "single",
+          tracks: ["Come Over"],
+        },
+      ];
+      let line = "all";
+      // Stable sort keeps the authored order for same-day releases.
+      releases.sort((a, b) => a.date.localeCompare(b.date));
+      const titleCounts = releases.reduce((map, r) => {
+        map.set(r.title, (map.get(r.title) || 0) + 1);
+        return map;
+      }, new Map());
+      function foldText(v) {
+        return v
+          .toLowerCase()
+          .normalize("NFKD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .trim();
+      }
+      function esc(v) {
+        return v.replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[c],
+        );
+      }
+      function normalizeSongTitle(title) {
+        return title
+          .toLowerCase()
+          .normalize("NFKD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .replace(/\[[^\]]*\]/g, " ")
+          .replace(/\([^)]*\)/g, " ")
+          .replace(/\bfeat\.?\b.*$/g, " ")
+          .replace(/[^a-z0-9]+/g, " ")
+          .replace(/\s+/g, " ")
+          .trim();
+      }
+      function lineLabel(key) {
+        return (
+          {
+            core: "Korean / global",
+            japan: "Japan",
+            single: "Standalone / version",
+            collab: "Collaboration / co-credit",
+          }[key] || key
+        );
+      }
+      function flattenTracks(tracks) {
+        if (!tracks) return [];
+        if (!Array.isArray(tracks)) return [];
+        if (tracks.length && Array.isArray(tracks[0])) {
+          return tracks.flat();
+        }
+        return tracks;
+      }
+      function renderTrackDrilldown(release, releaseIndex) {
+        if (!release.tracks) {
+          return `<details><summary>Tracklist unresolved</summary><p class="unknown">${esc(release.unknown || "Tracklist could not be verified for this package.")}</p></details>`;
+        }
+        const renderSong = (song, trackIndex) => {
+          const norm = normalizeSongTitle(song);
+          const relatedId = `related-${releaseIndex}-${trackIndex}`;
+          return `<li><button class="song" type="button" data-song="${esc(song)}" data-norm="${esc(norm)}" data-release="${releaseIndex}" data-target="${relatedId}" aria-expanded="false">${esc(song)}</button><div class="song-related" id="${relatedId}" hidden></div></li>`;
+        };
+        if (release.tracks.length && Array.isArray(release.tracks[0])) {
+          const total = flattenTracks(release.tracks).length;
+          const discs = release.tracks
+            .map(
+              (disc, discIndex) =>
+                `<p class="disc-label">Disc ${discIndex + 1}</p><ol class="track-list">${disc
+                  .map((song, songIndex) => renderSong(song, `${discIndex}-${songIndex}`))
+                  .join("")}</ol>`,
+            )
+            .join("");
+          return `<details><summary>Tracklist (${total} songs)</summary>${discs}</details>`;
+        }
+        return `<details><summary>Tracklist (${release.tracks.length} songs)</summary><ol class="track-list">${release.tracks
+          .map((song, songIndex) => renderSong(song, songIndex))
+          .join("")}</ol></details>`;
+      }
+
+      const songIndex = releases.reduce((map, release, releaseIndex) => {
+        flattenTracks(release.tracks).forEach((song) => {
+          const key = normalizeSongTitle(song);
+          if (!key) return;
+          if (!map.has(key)) map.set(key, new Set());
+          map.get(key).add(releaseIndex);
+        });
+        return map;
+      }, new Map());
+
+      function searchBlob(release) {
+        const songs = flattenTracks(release.tracks).join(" ");
+        return [
+          release.date,
+          release.title,
+          release.line,
+          lineLabel(release.line),
+          release.unknown || "",
+          songs,
+        ]
+          .join(" ");
+      }
+      const blobs = releases.map((release) => foldText(searchBlob(release)));
+      // Built once so open tracklists survive searching and filtering.
+      catalog.innerHTML = releases
+        .map((release, index) => {
+          const totalTracks = flattenTracks(release.tracks).length;
+          const summary = release.tracks
+            ? `${totalTracks} known tracks in package order`
+            : "Tracklist unresolved";
+          const dupe =
+            titleCounts.get(release.title) > 1
+              ? ` <span class="dupe-note">(${esc(release.date)} · ${esc(lineLabel(release.line))})</span>`
+              : "";
+          return `<article class="release line-${release.line}" data-index="${index}"><time>${release.date}</time><h2>${esc(release.title)}${dupe}</h2><div class="meta"><span class="tag">${esc(lineLabel(release.line))}</span></div><p class="tracks"><b>${esc(summary)}</b></p>${renderTrackDrilldown(release, index)}</article>`;
+        })
+        .join("");
+      const cards = [...catalog.children];
+      const newest = releases[releases.length - 1];
+      freshness.textContent = `Catalog cutoff: September 2, 2026. Newest release in this index: ${newest.title} (${newest.date}).`;
+      function render() {
+        const q = foldText(search.value);
+        let shown = 0;
+        cards.forEach((card, index) => {
+          const match =
+            (line === "all" || releases[index].line === line) &&
+            blobs[index].includes(q);
+          card.hidden = !match;
+          if (match) shown += 1;
+        });
+        count.textContent = `${shown} of ${releases.length} release packages`;
+      }
+      search.oninput = render;
+      document.querySelectorAll(".filters button").forEach(
+        (button) =>
+          (button.onclick = () => {
+            line = button.dataset.line;
+            document
+              .querySelectorAll(".filters button")
+              .forEach((x) => x.setAttribute("aria-pressed", x === button));
+            render();
+          }),
+      );
+      catalog.addEventListener("click", (event) => {
+        const button = event.target.closest("button.song");
+        if (!button) return;
+        const key = button.dataset.norm;
+        const sourceReleaseIndex = Number(button.dataset.release);
+        const targetId = button.dataset.target;
+        const target = targetId ? document.getElementById(targetId) : null;
+        if (!key || !target || Number.isNaN(sourceReleaseIndex)) return;
+        const nowExpanded = button.getAttribute("aria-expanded") === "true";
+        if (nowExpanded) {
+          button.setAttribute("aria-expanded", "false");
+          target.hidden = true;
+          target.textContent = "";
+          return;
+        }
+        const related = [...(songIndex.get(key) || [])].filter(
+          (i) => i !== sourceReleaseIndex,
+        );
+        button.setAttribute("aria-expanded", "true");
+        if (!related.length) {
+          target.textContent = "No other release package in this index matches this normalized title.";
+          target.hidden = false;
+          return;
+        }
+        target.innerHTML = `<b>Also packaged on:</b> ${related
+          .map((i) => `${esc(releases[i].title)} (${releases[i].date})`)
+          .join("; ")}`;
+        target.hidden = false;
+      });
+      render();
+    </script>
+    <script data-goatcounter="https://jessejinnaruiz.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
