@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Deere Equipment Index: searchable snapshot of Deere U.S. equipment pages (212 observed records)." />
+  <title>Deere Equipment Index</title>
+  <style>
+    :root {
+      --ink-950: #11130e;
+      --ink-900: #191c16;
+      --ink-800: #23281f;
+      --steel-500: #6f7a73;
+      --steel-300: #a9b1ab;
+      --paper-100: #f6f7f3;
+      --paper-200: #ecefe6;
+      --deere-yellow: #f6cc2b;
+      --deere-yellow-deep: #d8af13;
+      --signal-green: #2f8f4e;
+      --warn: #9d3b1d;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+      --container: min(1160px, 100% - 2rem);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      font-family: "Segoe UI", "Trebuchet MS", "Franklin Gothic Medium", sans-serif;
+      color: var(--ink-950);
+      background:
+        radial-gradient(1200px 420px at 15% -20%, rgba(246, 204, 43, 0.38), transparent 64%),
+        radial-gradient(1200px 420px at 110% 10%, rgba(47, 143, 78, 0.23), transparent 66%),
+        linear-gradient(170deg, #f8f9f5 0%, #edf0e7 46%, #e4e8dd 100%);
+      line-height: 1.45;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(25, 28, 22, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(25, 28, 22, 0.04) 1px, transparent 1px);
+      background-size: 28px 28px;
+      mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0));
+    }
+
+    .shell {
+      width: var(--container);
+      margin: 0 auto;
+      padding: 1.2rem 0 3rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    header {
+      background: linear-gradient(150deg, rgba(24, 28, 22, 0.97), rgba(37, 43, 34, 0.95));
+      color: #f8fbf6;
+      border-radius: var(--radius-lg);
+      padding: 1.1rem 1.1rem 1.3rem;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(246, 204, 43, 0.28);
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::after {
+      content: "";
+      position: absolute;
+      right: -60px;
+      top: -80px;
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      background: radial-gradient(circle at center, rgba(246, 204, 43, 0.25), rgba(246, 204, 43, 0));
+    }
+
+    .headline {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: 0.7rem 1rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.45rem, 3vw, 2.2rem);
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .badge {
+      font-weight: 700;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      background: rgba(246, 204, 43, 0.2);
+      color: #fff5be;
+      border: 1px solid rgba(246, 204, 43, 0.45);
+      padding: 0.28rem 0.52rem;
+      border-radius: 999px;
+    }
+
+    .subtitle {
+      margin: 0.72rem 0 0;
+      max-width: 90ch;
+      color: #e3e8da;
+      font-size: 0.98rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    main {
+      margin-top: 1rem;
+      display: grid;
+      gap: 1rem;
+    }
+
+    .panel {
+      background: rgba(255, 255, 255, 0.83);
+      border: 1px solid rgba(17, 19, 14, 0.09);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 10px 24px rgba(17, 19, 14, 0.09);
+      backdrop-filter: blur(4px);
+      padding: 1rem;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(120px, 1fr));
+      gap: 0.7rem;
+    }
+
+    .stat {
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(25, 28, 22, 0.12);
+      background: linear-gradient(180deg, rgba(246, 247, 243, 0.98), rgba(237, 240, 231, 0.95));
+      padding: 0.7rem;
+    }
+
+    .stat h2 {
+      margin: 0;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #384039;
+    }
+
+    .stat p {
+      margin: 0.22rem 0 0;
+      font-size: clamp(1.2rem, 2.2vw, 1.6rem);
+      font-weight: 700;
+      color: #11130e;
+    }
+
+    form {
+      margin-top: 0.9rem;
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    .field-grid {
+      display: grid;
+      gap: 0.8rem;
+      grid-template-columns: 1fr;
+    }
+
+    label {
+      font-size: 0.78rem;
+      font-weight: 650;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #2a312b;
+      margin-bottom: 0.28rem;
+      display: inline-block;
+    }
+
+    input,
+    select,
+    button {
+      font: inherit;
+      color: inherit;
+    }
+
+    input[type="search"],
+    select {
+      width: 100%;
+      border: 1px solid rgba(22, 26, 20, 0.22);
+      border-radius: var(--radius-sm);
+      background: #fdfff8;
+      padding: 0.58rem 0.68rem;
+      min-height: 2.45rem;
+    }
+
+    input[type="search"]:focus,
+    select:focus,
+    button:focus {
+      outline: 3px solid rgba(246, 204, 43, 0.36);
+      outline-offset: 1px;
+      border-color: rgba(27, 31, 25, 0.52);
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+    }
+
+    .chip {
+      border: 1px solid rgba(17, 19, 14, 0.24);
+      background: #f5f8f0;
+      border-radius: 999px;
+      padding: 0.38rem 0.64rem;
+      min-height: 2rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.82rem;
+      transition: transform 120ms ease, background 120ms ease;
+    }
+
+    .chip:hover {
+      transform: translateY(-1px);
+      background: #f0f4e7;
+    }
+
+    .chip[aria-pressed="true"] {
+      background: linear-gradient(180deg, var(--deere-yellow), var(--deere-yellow-deep));
+      border-color: #8d7310;
+      color: #15170f;
+      font-weight: 700;
+    }
+
+    .chip-count {
+      font-size: 0.74rem;
+      padding: 0.1rem 0.4rem;
+      border-radius: 999px;
+      background: rgba(17, 19, 14, 0.11);
+    }
+
+    .chip[aria-pressed="true"] .chip-count {
+      background: rgba(0, 0, 0, 0.15);
+    }
+
+    .toolbar {
+      margin-top: 0.85rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.6rem;
+      border-top: 1px dashed rgba(22, 26, 20, 0.2);
+      padding-top: 0.75rem;
+    }
+
+    .toolbar p {
+      margin: 0;
+      color: #2a312b;
+      font-size: 0.88rem;
+    }
+
+    .catalog {
+      list-style: none;
+      margin: 0.9rem 0 0;
+      padding: 0;
+      display: grid;
+      gap: 0.7rem;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+
+    .item {
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(19, 22, 17, 0.15);
+      background: linear-gradient(185deg, #ffffff, #f2f5ec);
+      padding: 0.78rem;
+      display: grid;
+      gap: 0.4rem;
+      animation: rise 240ms ease;
+      box-shadow: 0 6px 16px rgba(16, 18, 13, 0.08);
+    }
+
+    @keyframes rise {
+      from {
+        transform: translateY(4px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .item h3 {
+      margin: 0;
+      font-size: 1rem;
+      line-height: 1.25;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .meta li {
+      border-radius: 999px;
+      background: #e8ede1;
+      border: 1px solid rgba(30, 33, 27, 0.12);
+      font-size: 0.76rem;
+      padding: 0.14rem 0.48rem;
+    }
+
+    .item a {
+      color: #0d3e24;
+      text-decoration-thickness: 0.09em;
+      word-break: break-word;
+      font-size: 0.84rem;
+    }
+
+    .item a:hover,
+    .item a:focus-visible {
+      color: #0b5a33;
+    }
+
+    .empty {
+      border-radius: var(--radius-md);
+      border: 1px dashed rgba(157, 59, 29, 0.45);
+      background: rgba(157, 59, 29, 0.08);
+      color: #57200f;
+      padding: 1rem;
+      margin-top: 0.9rem;
+    }
+
+    nav[aria-label="Catalog pagination"] {
+      margin-top: 0.95rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.7rem;
+      border-top: 1px dashed rgba(22, 26, 20, 0.2);
+      padding-top: 0.8rem;
+    }
+
+    .pager {
+      display: flex;
+      gap: 0.45rem;
+      flex-wrap: wrap;
+    }
+
+    .pager button,
+    .utility button {
+      border: 1px solid rgba(17, 19, 14, 0.28);
+      border-radius: var(--radius-sm);
+      background: #f6f9ee;
+      min-height: 2.2rem;
+      padding: 0.4rem 0.74rem;
+      cursor: pointer;
+    }
+
+    .pager button[disabled] {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .utility {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    details {
+      margin-top: 1rem;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(17, 19, 14, 0.18);
+      background: rgba(248, 251, 243, 0.94);
+      padding: 0.8rem;
+    }
+
+    summary {
+      cursor: pointer;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      font-size: 0.82rem;
+    }
+
+    details p,
+    details ul {
+      margin: 0.65rem 0 0;
+      color: #212722;
+      font-size: 0.9rem;
+    }
+
+    footer {
+      margin-top: 1rem;
+      color: #2f3630;
+      font-size: 0.8rem;
+      text-align: right;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @media (min-width: 880px) {
+      .stats {
+        grid-template-columns: repeat(5, minmax(110px, 1fr));
+      }
+
+      .field-grid {
+        grid-template-columns: 1.3fr 0.8fr 0.8fr 0.6fr;
+        align-items: end;
+      }
+
+      .panel {
+        padding: 1.1rem;
+      }
+    }
+
+    @media (max-width: 460px) {
+      .shell {
+        width: min(100% - 1rem, 420px);
+      }
+
+      header,
+      .panel {
+        border-radius: 14px;
+      }
+
+      .catalog {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <a href="../index.html" style="position:relative;z-index:1;display:inline-block;margin-bottom:0.8rem;color:#f8fbf6;font:700 0.72rem Arial,sans-serif;letter-spacing:0.08em;text-transform:uppercase;text-decoration:none">&larr; Jesse J Ruiz</a>
+      <div class="headline">
+        <h1>Deere Equipment Index</h1>
+        <span class="badge" id="snapshotBadge">Observed U.S. Snapshot</span>
+      </div>
+      <p class="subtitle">
+        Search, filter, and review 212 observed Deere U.S. equipment-page records (name, code, domain, URL).
+        This is an observed catalog snapshot from one retrieval run, not a claim of every Deere product worldwide.
+      </p>
+    </header>
+
+    <main>
+      <section class="panel" aria-labelledby="catalogHeading">
+        <h2 id="catalogHeading" class="sr-only">Equipment Catalog Controls and Results</h2>
+
+        <div class="stats" id="statsGrid" aria-live="polite"></div>
+
+        <form id="controls" role="search" aria-label="Search Deere equipment catalog">
+          <div class="field-grid">
+            <div>
+              <label for="searchInput">Search name, code, URL, or domain</label>
+              <input id="searchInput" type="search" placeholder="Try: 8R, Excavator, XUV, 9RX" autocomplete="off" />
+            </div>
+
+            <div>
+              <label for="domainSelect">Domain</label>
+              <select id="domainSelect"></select>
+            </div>
+
+            <div>
+              <label for="sortSelect">Sort</label>
+              <select id="sortSelect">
+                <option value="name-asc">Name A-Z</option>
+                <option value="name-desc">Name Z-A</option>
+                <option value="code-asc">Code A-Z</option>
+                <option value="domain-asc">Domain A-Z</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="sizeSelect">Rows</label>
+              <select id="sizeSelect">
+                <option value="12">12</option>
+                <option value="24" selected>24</option>
+                <option value="48">48</option>
+                <option value="96">96</option>
+              </select>
+            </div>
+          </div>
+
+          <fieldset>
+            <legend class="sr-only">Quick domain filter</legend>
+            <div class="chips" id="domainChips" role="group" aria-label="Quick domain filters"></div>
+          </fieldset>
+
+          <div class="toolbar">
+            <p id="resultSummary" aria-live="polite"></p>
+            <div class="utility">
+              <button type="button" id="resetBtn">Reset Filters</button>
+            </div>
+          </div>
+        </form>
+
+        <ul id="catalogList" class="catalog" aria-live="polite"></ul>
+        <p id="emptyState" class="empty" hidden>No records match your current filter settings.</p>
+
+        <nav aria-label="Catalog pagination">
+          <div class="pager" role="group" aria-label="Pagination controls">
+            <button type="button" id="firstBtn">First</button>
+            <button type="button" id="prevBtn">Previous</button>
+            <button type="button" id="nextBtn">Next</button>
+            <button type="button" id="lastBtn">Last</button>
+          </div>
+          <p id="pageStatus" aria-live="polite"></p>
+        </nav>
+
+        <details>
+          <summary>Source, Method, and Retrieval Disclosure</summary>
+          <p>
+            Source: Official Deere U.S. first-party autocomplete GraphQL endpoint results, filtered to equipment-page URLs.
+          </p>
+          <ul>
+            <li>Record schema: name, code, domain, url.</li>
+            <li>Embedded dataset size: 212 records, directly in this single HTML file (no runtime fetch).</li>
+            <li>Observed scope: U.S. equipment-page catalog snapshot from one retrieval run.</li>
+            <li>Interpretation: this should not be treated as an exhaustive worldwide Deere product inventory.</li>
+          </ul>
+        </details>
+      </section>
+    </main>
+
+    <footer>
+      Keyboard tip: press / to focus search from anywhere outside input fields.
+    </footer>
+  </div>
+
+  <script id="dataset" type="application/json">[{"name":"260 P-Tier","code":"9451DW","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/articulated-dump-trucks/260-p-tier-articulated-dump-truck-otq1murx"},{"name":"310 P-Tier","code":"9461DW","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/articulated-dump-trucks/310-p-tier-articulated-dump-truck-otq2murx"},{"name":"410 P-Tier","code":"9471DW","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/articulated-dump-trucks/410-p-tier-articulated-dump-truck-otq3murx"},{"name":"460 P-Tier","code":"9481DW","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/articulated-dump-trucks/460-p-tier-articulated-dump-truck-otq4murx"},{"name":"310 G-Tier","code":"17A1T","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/backhoes/310-g-tier-backhoe-mtdbmvq"},{"name":"310 P-Tier","code":"17B1T","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/backhoes/310-p-tier-backhoe-mtdcmvq"},{"name":"320 P-Tier","code":"17C1T","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/backhoes/320-p-tier-backhoe-mtddmvq"},{"name":"410 P-Tier","code":"17E1T","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/backhoes/410-p-tier-backhoe-mtdfmvq"},{"name":"710 P-Tier","code":"17F1T","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/backhoes/710-p-tier-backhoe-mtdgmvq"},{"name":"317 P-Tier","code":"8510P","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/compact-track-loaders/317-p-tier-compact-track-loader-oduxmfa"},{"name":"325 P-Tier","code":"00Z0T","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/compact-track-loaders/325-p-tier-compact-track-loader-mdbamfq"},{"name":"331 P-Tier","code":"00U0T","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/compact-track-loaders/331-p-tier-compact-track-loader-mdbvmfq"},{"name":"333 P-Tier","code":"00V0T","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/compact-track-loaders/333-p-tier-compact-track-loader-mdbwmfq"},{"name":"335 P-Tier","code":"00W0T","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/compact-track-loaders/335-p-tier-compact-track-loader-mdbxmfq"},{"name":"1050 P-Tier","code":"06Z0T","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/dozers/1050-p-tier-large-dozer-mdzamfq"},{"name":"450 P-Tier","code":"55A0T","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/dozers/450-p-tier-small-dozer-ntvbmfq"},{"name":"550 P-Tier","code":"55B0T","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/dozers/550-p-tier-small-dozer-ntvcmfq"},{"name":"650 P-Tier","code":"55C0T","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/dozers/650-p-tier-small-dozer-ntvdmfq"},{"name":"700 P-Tier","code":"18A0T","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/dozers/700-p-tier-mid-size-dozer-mthbmfq"},{"name":"750 P-Tier","code":"18B0T","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/dozers/750-p-tier-mid-size-dozer-mthcmfq"},{"name":"850 P-Tier","code":"18C0T","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/dozers/850-p-tier-mid-size-dozer-mthdmfq"},{"name":"850 X-Tier E-Drive","code":"18D0T","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/dozers/850-x-tier-e-drive-mid-size-dozer-mthemfq"},{"name":"950 P-Tier","code":"06S0T","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/dozers/950-p-tier-large-dozer-mdztmfq"},{"name":"135 P-Tier","code":"8200FF","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/excavators/135-p-tier-mid-size-excavator-odiwmezg"},{"name":"160 P-Tier","code":"04D0FF","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/excavators/160-p-tier-mid-size-excavator-mdremezg"},{"name":"17 P-Tier","code":"02A0T","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/excavators/17-p-tier-compact-excavator-mdjbmfq"},{"name":"26 P-Tier","code":"02B0T","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/excavators/26-p-tier-compact-excavator-mdjcmfq"},{"name":"30 P-Tier","code":"0140FF","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/excavators/30-p-tier-compact-excavator-mde0mezg"},{"name":"35 P-Tier","code":"0150FF","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/excavators/35-p-tier-compact-excavator-mde1mezg"},{"name":"380 P-Tier","code":"8010FF","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/excavators/380-p-tier-mid-size-excavator-odaxmezg"},{"name":"50 P-Tier","code":"0180FF","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/excavators/50-p-tier-compact-excavator-mde4mezg"},{"name":"60 P-Tier","code":"0190FF","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/excavators/60-p-tier-compact-excavator-mde5mezg"},{"name":"75 P-Tier","code":"8240FF","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/excavators/75-p-tier-mid-size-excavator-odi0mezg"},{"name":"85 P-Tier","code":"8230FF","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/excavators/85-p-tier-mid-size-excavator-odizmezg"},{"name":"870 P-Tier","code":"04N0FF","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/excavators/870-p-tier-large-excavator-mdromezg"},{"name":"620 G-Tier","code":"8500BZ","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/motor-graders/620-g-tier-motor-grader-oduwmeja"},{"name":"620 P-Tier","code":"8000DW","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/motor-graders/620-p-tier-motor-grader-odawmerx"},{"name":"622 G-Tier","code":"8510BZ","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/motor-graders/622-g-tier-motor-grader-oduxmeja"},{"name":"622 P-Tier","code":"8010DW","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/motor-graders/622-p-tier-motor-grader-odaxmerx"},{"name":"670 G-Tier","code":"8400BZ","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/motor-graders/670-g-tier-motor-grader-odqwmeja"},{"name":"672 G-Tier","code":"8410BZ","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/motor-graders/672-g-tier-motor-grader-odqxmeja"},{"name":"672 P-Tier","code":"8030DW","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/motor-graders/672-p-tier-motor-grader-odazmerx"},{"name":"770 G-Tier","code":"8420BZ","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/motor-graders/770-g-tier-motor-grader-odqymeja"},{"name":"770 P-Tier","code":"8040DW","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/motor-graders/770-p-tier-motor-grader-oda0merx"},{"name":"772 G-Tier","code":"8430BZ","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/motor-graders/772-g-tier-motor-grader-odqzmeja"},{"name":"772 P-Tier","code":"8050DW","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/motor-graders/772-p-tier-motor-grader-oda1merx"},{"name":"872 P-Tier","code":"8070DW","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/motor-graders/872-p-tier-motor-grader-oda3merx"},{"name":"318 P-Tier","code":"8520P","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/skid-steers/318-p-tier-skid-steer-oduymfa"},{"name":"320 P-Tier","code":"00X0T","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/skid-steers/320-p-tier-skid-steer-mdbymfq"},{"name":"324 P-Tier","code":"00Y0T","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/skid-steers/324-p-tier-skid-steer-mdbzmfq"},{"name":"330 P-Tier","code":"00S0T","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/skid-steers/330-p-tier-skid-steer-mdbtmfq"},{"name":"334 P-Tier","code":"00T0T","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/skid-steers/334-p-tier-skid-steer-mdbumfq"},{"name":"244 P-Tier","code":"01G0T","domain":"Construction","url":"https://www.deere.com/en-us/products-solutions/construction-equipment/wheel-loaders/244-p-tier-compact-wheel-loader-mdfhmfq"},{"name":"1010G","code":"0290WJ","domain":"Forestry","url":"https://www.deere.com/en-us/products-solutions/forestry-logging-equipment/forwarders/1010g-forwarder-mdi5mfdk"},{"name":"1110G","code":"0470WJ","domain":"Forestry","url":"https://www.deere.com/en-us/products-solutions/forestry-logging-equipment/forwarders/1110g-forwarder-mdq3mfdk"},{"name":"1210G","code":"0460WJ","domain":"Forestry","url":"https://www.deere.com/en-us/products-solutions/forestry-logging-equipment/forwarders/1210g-forwarder-mdq2mfdk"},{"name":"1510G","code":"0450WJ","domain":"Forestry","url":"https://www.deere.com/en-us/products-solutions/forestry-logging-equipment/forwarders/1510g-forwarder-mdq1mfdk"},{"name":"1610G","code":"6000WJ","domain":"Forestry","url":"https://www.deere.com/en-us/products-solutions/forestry-logging-equipment/forwarders/1610g-forwarder-njawmfdk"},{"name":"1910G","code":"0420WJ","domain":"Forestry","url":"https://www.deere.com/en-us/products-solutions/forestry-logging-equipment/forwarders/1910g-forwarder-mdqymfdk"},{"name":"2010H","code":"0930WJ","domain":"Forestry","url":"https://www.deere.com/en-us/products-solutions/forestry-logging-equipment/forwarders/2010h-forwarder-mdkzmfdk"},{"name":"2510H","code":"0940WJ","domain":"Forestry","url":"https://www.deere.com/en-us/products-solutions/forestry-logging-equipment/forwarders/2510h-forwarder-mdk0mfdk"},{"name":"437G","code":"0BN0T","domain":"Forestry","url":"https://www.deere.com/en-us/products-solutions/forestry-logging-equipment/knuckleboom-loaders/437g-knuckleboom-loader-mejomfq"},{"name":"640L-III","code":"1220DW","domain":"Forestry","url":"https://www.deere.com/en-us/products-solutions/forestry-logging-equipment/skidders/640l-iii-cable-skidder-mtiymerx"},{"name":"648L-III","code":"1230DW","domain":"Forestry","url":"https://www.deere.com/en-us/products-solutions/forestry-logging-equipment/skidders/648l-iii-grapple-skidder-mtizmerx"},{"name":"748L-III","code":"1240DW","domain":"Forestry","url":"https://www.deere.com/en-us/products-solutions/forestry-logging-equipment/skidders/748l-iii-grapple-skidder-mti0merx"},{"name":"768L-III","code":"1250DW","domain":"Forestry","url":"https://www.deere.com/en-us/products-solutions/forestry-logging-equipment/skidders/768l-iii-bogie-skidder-mti1merx"},{"name":"848L-III","code":"1260DW","domain":"Forestry","url":"https://www.deere.com/en-us/products-solutions/forestry-logging-equipment/skidders/848l-iii-grapple-skidder-mti2merx"},{"name":"948L-III","code":"1270DW","domain":"Forestry","url":"https://www.deere.com/en-us/products-solutions/forestry-logging-equipment/skidders/948l-iii-grapple-skidder-mti3merx"},{"name":"2154G","code":"0AD1FF","domain":"Forestry","url":"https://www.deere.com/en-us/products-solutions/forestry-logging-equipment/swing-machines/2154g-swing-machine-mefemuzg"},{"name":"2156G","code":"7751FF","domain":"Forestry","url":"https://www.deere.com/en-us/products-solutions/forestry-logging-equipment/swing-machines/2156g-swing-machine-nzc1muzg"},{"name":"2654G","code":"0AE1FF","domain":"Forestry","url":"https://www.deere.com/en-us/products-solutions/forestry-logging-equipment/swing-machines/2654g-swing-machine-meffmuzg"},{"name":"2656G","code":"7761FF","domain":"Forestry","url":"https://www.deere.com/en-us/products-solutions/forestry-logging-equipment/swing-machines/2656g-swing-machine-nzc2muzg"},{"name":"2956G","code":"7791FF","domain":"Forestry","url":"https://www.deere.com/en-us/products-solutions/forestry-logging-equipment/swing-machines/2956g-swing-machine-nzc5muzg"},{"name":"3154G","code":"0AF1FF","domain":"Forestry","url":"https://www.deere.com/en-us/products-solutions/forestry-logging-equipment/swing-machines/3154g-swing-machine-mefgmuzg"},{"name":"3156G","code":"7771FF","domain":"Forestry","url":"https://www.deere.com/en-us/products-solutions/forestry-logging-equipment/swing-machines/3156g-swing-machine-nzc3muzg"},{"name":"3754G","code":"0AG1FF","domain":"Forestry","url":"https://www.deere.com/en-us/products-solutions/forestry-logging-equipment/swing-machines/3754g-swing-machine-mefhmuzg"},{"name":"3756G","code":"7781FF","domain":"Forestry","url":"https://www.deere.com/en-us/products-solutions/forestry-logging-equipment/swing-machines/3756g-swing-machine-nzc4muzg"},{"name":"XUV 845E","code":"8803M","domain":"Turf \u0026 Utility","url":"https://www.deere.com/en-us/products-solutions/gator-utility-vehicles/full-size-crossover-utvs/xuv-845e-crossover-utility-vehicle-odgw00m"},{"name":"XUV 845M","code":"8817M","domain":"Turf \u0026 Utility","url":"https://www.deere.com/en-us/products-solutions/gator-utility-vehicles/full-size-crossover-utvs/xuv-845m-crossover-utility-vehicle-odgx00n"},{"name":"XUV 845M HVAC Cab","code":"8819M","domain":"Turf \u0026 Utility","url":"https://www.deere.com/en-us/products-solutions/gator-utility-vehicles/full-size-crossover-utvs/xuv-845m-hvac-cab-crossover-utility-vehicle-odgxo0u"},{"name":"XUV 845R Premium Cab","code":"8826M","domain":"Turf \u0026 Utility","url":"https://www.deere.com/en-us/products-solutions/gator-utility-vehicles/full-size-crossover-utvs/xuv-845r-premium-cab-crossover-utility-vehicle-odgyn0k"},{"name":"XUV 845R Signature Edition","code":"8827M","domain":"Turf \u0026 Utility","url":"https://www.deere.com/en-us/products-solutions/gator-utility-vehicles/full-size-crossover-utvs/xuv-845r-signature-edition-crossover-utility-vehicle-odgy00n"},{"name":"XUV855M S4","code":"57FJM","domain":"Turf \u0026 Utility","url":"https://www.deere.com/en-us/products-solutions/gator-utility-vehicles/full-size-crossover-utvs/xuv855m-s4-crossover-utility-vehicle-ntdgs0k"},{"name":"XUV 875M HVAC Cab Diesel","code":"8849M","domain":"Turf \u0026 Utility","url":"https://www.deere.com/en-us/products-solutions/gator-utility-vehicles/full-size-crossover-utvs/xuv-875m-hvac-cab-diesel-crossover-utility-vehicle-odg0o0u"},{"name":"XUV 875R Signature Edition","code":"8856M","domain":"Turf \u0026 Utility","url":"https://www.deere.com/en-us/products-solutions/gator-utility-vehicles/full-size-crossover-utvs/xuv-875r-signature-edition-crossover-utility-vehicle-odg1n0k"},{"name":"XUV560E","code":"578GM","domain":"Turf \u0026 Utility","url":"https://www.deere.com/en-us/products-solutions/gator-utility-vehicles/mid-size-crossover-utvs/xuv560e-crossover-utility-vehicle-ntc400r"},{"name":"XUV590M","code":"592PM","domain":"Turf \u0026 Utility","url":"https://www.deere.com/en-us/products-solutions/gator-utility-vehicles/mid-size-crossover-utvs/xuv590m-crossover-utility-vehicle-ntkyu0e"},{"name":"GX Electric Crew","code":"0691XF","domain":"Turf \u0026 Utility","url":"https://www.deere.com/en-us/products-solutions/gator-utility-vehicles/work-utility-vehicles/gx-electric-crew-utility-vehicle-mdy5mvhg"},{"name":"GX Electric","code":"0681XF","domain":"Turf \u0026 Utility","url":"https://www.deere.com/en-us/products-solutions/gator-utility-vehicles/work-utility-vehicles/gx-electric-utility-vehicle-mdy4mvhg"},{"name":"TE 4x2 Electric","code":"55D3M","domain":"Turf \u0026 Utility","url":"https://www.deere.com/en-us/products-solutions/gator-utility-vehicles/work-utility-vehicles/te-4x2-electric-work-utility-vehicle-ntve00m"},{"name":"TH 6x4 Diesel","code":"562WM","domain":"Turf \u0026 Utility","url":"https://www.deere.com/en-us/products-solutions/gator-utility-vehicles/work-utility-vehicles/th-6x4-diesel-traditional-utility-vehicle-ntyy00v"},{"name":"TH 6x4 Gas","code":"561JM","domain":"Turf \u0026 Utility","url":"https://www.deere.com/en-us/products-solutions/gator-utility-vehicles/work-utility-vehicles/th-6x4-gas-traditional-utility-vehicle-ntyxs0k"},{"name":"TX 4x2","code":"56AAM","domain":"Turf \u0026 Utility","url":"https://www.deere.com/en-us/products-solutions/gator-utility-vehicles/work-utility-vehicles/tx-4x2-traditional-utility-vehicle-ntzbq0u"},{"name":"S7 600","code":"327BH","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/harvesting/combines/s7-600-combine-mzi3qkg"},{"name":"S7 700","code":"328BH","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/harvesting/combines/s7-700-combine-mzi4qkg"},{"name":"S7 800","code":"329BH","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/harvesting/combines/s7-800-combine-mzi5qkg"},{"name":"S7 900","code":"331BH","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/harvesting/combines/s7-900-combine-mzmxqkg"},{"name":"T6 800","code":"339AZ","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/harvesting/combines/t6-800-combine-mzm5qvo"},{"name":"X9 1000","code":"400GH","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/harvesting/combines/x9-1000-combine-ndawr0g"},{"name":"X9 1100","code":"401GH","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/harvesting/combines/x9-1100-combine-ndaxr0g"},{"name":"CH750 Track","code":"082AT8","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/harvesting/sugar/ch750-track-sugar-cane-harvester-mdgyqv4q"},{"name":"CH750 Wheel","code":"081AT8","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/harvesting/sugar/ch750-wheel-sugar-cane-harvester-mdgxqv4q"},{"name":"CH770 Track","code":"083AT8","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/harvesting/sugar/ch770-track-sugar-cane-harvester-mdgzqv4q"},{"name":"CH950","code":"084ANW","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/harvesting/sugar/ch950-sugar-cane-harvester-mdg0qu5x"},{"name":"CH960","code":"085ANW","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/harvesting/sugar/ch960-sugar-cane-harvester-mdg1qu5x"},{"name":"F8 400","code":"304AZ","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/hay-forage-equipment/harvesting/f8-400-self-propelled-forage-harvester-mza0qvo"},{"name":"F8 500","code":"305AZ","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/hay-forage-equipment/harvesting/f8-500-self-propelled-forage-harvester-mza1qvo"},{"name":"F9 1000","code":"315AZ","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/hay-forage-equipment/harvesting/f9-1000-self-propelled-forage-harvester-mze1qvo"},{"name":"F9 900","code":"314AZ","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/hay-forage-equipment/harvesting/f9-900-self-propelled-forage-harvester-mze0qvo"},{"name":"120R","code":"1471P","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/loaders/front-end-loaders/120r-loader-mtq3mva"},{"name":"220R","code":"1481P","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/loaders/front-end-loaders/220r-loader-mtq4mva"},{"name":"300E","code":"1361P","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/loaders/front-end-loaders/300e-loader-mtm2mva"},{"name":"320R","code":"1350P","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/loaders/front-end-loaders/320r-loader-mtm1mfa"},{"name":"400E","code":"1380P","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/loaders/front-end-loaders/400e-loader-mtm4mfa"},{"name":"520M","code":"14B1P","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/loaders/front-end-loaders/520m-loader-mtrcmva"},{"name":"540M","code":"14C0P","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/loaders/front-end-loaders/540m-loader-mtrdmfa"},{"name":"540R","code":"0BEAP","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/loaders/front-end-loaders/540r-loader-mejfqva"},{"name":"600M","code":"04G0P","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/loaders/front-end-loaders/600m-loader-mdrhmfa"},{"name":"640R","code":"0BNEP","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/loaders/front-end-loaders/640r-loader-mejorva"},{"name":"660R","code":"0BRFP","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/loaders/front-end-loaders/660r-loader-mejsrla"},{"name":"Z720E","code":"2242TC","domain":"Turf \u0026 Utility","url":"https://www.deere.com/en-us/products-solutions/mowers/commercial-zero-turn-mowers/z720e-ztrak-zero-turn-mower-mji0mlrd"},{"name":"Z730M","code":"2262TC","domain":"Turf \u0026 Utility","url":"https://www.deere.com/en-us/products-solutions/mowers/commercial-zero-turn-mowers/z730m-ztrak-zero-turn-mower-mji2mlrd"},{"name":"Z950R","code":"2197TC","domain":"Turf \u0026 Utility","url":"https://www.deere.com/en-us/products-solutions/mowers/commercial-zero-turn-mowers/z950r-ztrak-zero-turn-mower-mje5n1rd"},{"name":"Z970R","code":"2215TC","domain":"Turf \u0026 Utility","url":"https://www.deere.com/en-us/products-solutions/mowers/commercial-zero-turn-mowers/z970r-zero-turn-mower-mjixnvrd"},{"name":"Z998R Diesel","code":"2680TC","domain":"Turf \u0026 Utility","url":"https://www.deere.com/en-us/products-solutions/mowers/commercial-zero-turn-mowers/z998r-diesel-ztrak-zero-turn-mower-mjy4mfrd"},{"name":"1575","code":"244DTC","domain":"Turf \u0026 Utility","url":"https://www.deere.com/en-us/products-solutions/mowers/front-and-wide-area-mowers/1575-terraincut-front-mower-mjq0rfrd"},{"name":"S100","code":"3001GX","domain":"Turf \u0026 Utility","url":"https://www.deere.com/en-us/products-solutions/mowers/residential-lawn-mowers/s100-lawn-tractor-mzawmudy"},{"name":"S130","code":"3031GX","domain":"Turf \u0026 Utility","url":"https://www.deere.com/en-us/products-solutions/mowers/residential-lawn-mowers/s130-lawn-tractor-mzazmudy"},{"name":"X350 (42-in. Deck)","code":"488DM","domain":"Turf \u0026 Utility","url":"https://www.deere.com/en-us/products-solutions/mowers/residential-lawn-mowers/x350-42-in-deck-lawn-tractor-ndg4r0e"},{"name":"X570 (54-in. Deck)","code":"5349M","domain":"Turf \u0026 Utility","url":"https://www.deere.com/en-us/products-solutions/mowers/residential-lawn-mowers/x570-54-in-deck-lawn-tractor-ntm0o0u"},{"name":"X738","code":"5832M","domain":"Turf \u0026 Utility","url":"https://www.deere.com/en-us/products-solutions/mowers/residential-lawn-mowers/x738-signature-series-lawn-tractor-ntgzm0k"},{"name":"Z315E","code":"5670GX","domain":"Turf \u0026 Utility","url":"https://www.deere.com/en-us/products-solutions/mowers/residential-lawn-mowers/z315e-ztrak-mower-with-42-in-deck-nty3medy"},{"name":"Z325E","code":"5700GX","domain":"Turf \u0026 Utility","url":"https://www.deere.com/en-us/products-solutions/mowers/residential-lawn-mowers/z325e-ztrak-mower-with-48-or-54-in-deck-ntcwmedy"},{"name":"Z330M","code":"5710GX","domain":"Turf \u0026 Utility","url":"https://www.deere.com/en-us/products-solutions/mowers/residential-lawn-mowers/z330m-ztrak-mower-with-48-or-54-in-deck-ntcxmedy"},{"name":"Z330R","code":"5720GX","domain":"Turf \u0026 Utility","url":"https://www.deere.com/en-us/products-solutions/mowers/residential-lawn-mowers/z330r-ztrak-mower-with-48-or-54-in-deck-ntcymedy"},{"name":"Z370R Electric","code":"5730GX","domain":"Turf \u0026 Utility","url":"https://www.deere.com/en-us/products-solutions/mowers/residential-lawn-mowers/z370r-electric-ztrak-mower-with-42-or-48-in-deck-ntczmedy"},{"name":"Z370RS Electric","code":"5750GX","domain":"Turf \u0026 Utility","url":"https://www.deere.com/en-us/products-solutions/mowers/residential-lawn-mowers/z370rs-electric-ztrak-mower-with-42-in-deck-ntc1medy"},{"name":"Z515E","code":"5620GX","domain":"Turf \u0026 Utility","url":"https://www.deere.com/en-us/products-solutions/mowers/residential-lawn-mowers/z515e-ztrak-mower-ntyymedy"},{"name":"Z530R","code":"5640GX","domain":"Turf \u0026 Utility","url":"https://www.deere.com/en-us/products-solutions/mowers/residential-lawn-mowers/z530r-ztrak-mower-with-54-or-60-in-deck-nty0medy"},{"name":"Z545R","code":"5650GX","domain":"Turf \u0026 Utility","url":"https://www.deere.com/en-us/products-solutions/mowers/residential-lawn-mowers/z545r-ztrak-mower-with-48-54-or-60-in-deck-nty1medy"},{"name":"Q810E","code":"23A1TC","domain":"Turf \u0026 Utility","url":"https://www.deere.com/en-us/products-solutions/mowers/stand-on-mowers/q810e-quiktrak-stand-on-mower-mjnbmvrd"},{"name":"Q820E","code":"23B1TC","domain":"Turf \u0026 Utility","url":"https://www.deere.com/en-us/products-solutions/mowers/stand-on-mowers/q820e-quiktrak-stand-on-mower-mjncmvrd"},{"name":"Q820M","code":"23C1TC","domain":"Turf \u0026 Utility","url":"https://www.deere.com/en-us/products-solutions/mowers/stand-on-mowers/q820m-quiktrak-stand-on-mower-mjndmvrd"},{"name":"Q850M","code":"23D1TC","domain":"Turf \u0026 Utility","url":"https://www.deere.com/en-us/products-solutions/mowers/stand-on-mowers/q850m-quiktrak-stand-on-mower-mjnemvrd"},{"name":"Q850R","code":"23E1TC","domain":"Turf \u0026 Utility","url":"https://www.deere.com/en-us/products-solutions/mowers/stand-on-mowers/q850r-quiktrak-stand-on-mower-mjnfmvrd"},{"name":"Q865R EFI","code":"23J1TC","domain":"Turf \u0026 Utility","url":"https://www.deere.com/en-us/products-solutions/mowers/stand-on-mowers/q865r-efi-quiktrak-stand-on-mower-mjnkmvrd"},{"name":"DB60 24Row30/47Row15","code":"95E2H","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/planters/db-planters/db60-24row30-47row15-planter-otvfmkg"},{"name":"DB60 24Row30/48Row15","code":"95E3H","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/planters/db-planters/db60-24row30-48row15-planter-otvfm0g"},{"name":"DB60 36Row20","code":"95E5H","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/planters/db-planters/db60-36row20-planter-otvfnug"},{"name":"DB90 54Row20","code":"95NPH","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/planters/db-planters/db90-54row20-planter-otvoueg"},{"name":"1765 Flex","code":"652GH","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/planters/drawn-planters/1765-flex-drawn-planter-njuyr0g"},{"name":"1775NT 24Row30","code":"621ZH","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/planters/drawn-planters/1775nt-24row30-drawn-planter-njixwkg"},{"name":"1795 12Row Split 23","code":"608VH","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/planters/drawn-planters/1795-12row-split-23-planter-nja4vkg"},{"name":"1795 16Row Split 32","code":"608ZH","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/planters/drawn-planters/1795-16row-split-32-planter-nja4wkg"},{"name":"DR24","code":"360DH","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/planters/dr-planters/dr24-planter-mzywreg"},{"name":"1705 (Eight Row - 30 in.)","code":"350WH","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/planters/mounted-planters/1705-eight-row-30-in-planter-mzuwv0g"},{"name":"1705 (Four Row)","code":"350UH","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/planters/mounted-planters/1705-four-row-planter-mzuwvug"},{"name":"MP516","code":"615BYK","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/planters/mounted-planters/mp516-planter-nje1qlll"},{"name":"408R","code":"6816N","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/sprayers-and-applicators/self-propelled-sprayers-and-applicators/408r-sprayer-njgxn4k"},{"name":"412R","code":"6836N","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/sprayers-and-applicators/self-propelled-sprayers-and-applicators/412r-sprayer-njgzn4k"},{"name":"612R","code":"6846N","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/sprayers-and-applicators/self-propelled-sprayers-and-applicators/612r-sprayer-njg0n4k"},{"name":"616R","code":"6856N","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/sprayers-and-applicators/self-propelled-sprayers-and-applicators/616r-sprayer-njg1n4k"},{"name":"R4023","code":"4587N","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/sprayers-and-applicators/self-propelled-sprayers-and-applicators/r4023-sprayer-ndu440n"},{"name":"1023E","code":"0253LV","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/tractors/compact-tractors/1023e-sub-compact-tractor-mdi1m0xw"},{"name":"1R 25","code":"0830LV","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/tractors/compact-tractors/1r-25-sub-compact-tractor-mdgzmexw"},{"name":"2032R","code":"153ALV","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/tractors/compact-tractors/2032r-compact-tractor-mtuzquxw"},{"name":"4066R","code":"038BLV","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/tractors/compact-tractors/4066r-compact-tractor-mdm4qkxw"},{"name":"4075R","code":"039ALV","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/tractors/compact-tractors/4075r-compact-tractor-mdm5quxw"},{"name":"8R 250","code":"8111RW","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/tractors/row-crop-4wd-tractors/8r-250-tractor-odexmvjx"},{"name":"8R 280","code":"8121RW","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/tractors/row-crop-4wd-tractors/8r-280-tractor-odeymvjx"},{"name":"8R 310","code":"8131RW","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/tractors/row-crop-4wd-tractors/8r-310-tractor-odezmvjx"},{"name":"8R 340","code":"8141RW","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/tractors/row-crop-4wd-tractors/8r-340-tractor-ode0mvjx"},{"name":"8R 370","code":"8151RW","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/tractors/row-crop-4wd-tractors/8r-370-tractor-ode1mvjx"},{"name":"8R 410","code":"8161RW","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/tractors/row-crop-4wd-tractors/8r-410-tractor-ode2mvjx"},{"name":"8R 440","code":"8400RW","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/tractors/row-crop-4wd-tractors/8r-440-tractor-odqwmfjx"},{"name":"8R 490","code":"8410RW","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/tractors/row-crop-4wd-tractors/8r-490-tractor-odqxmfjx"},{"name":"8R 540","code":"8420RW","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/tractors/row-crop-4wd-tractors/8r-540-tractor-odqymfjx"},{"name":"8RX 440","code":"8500RW","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/tractors/row-crop-4wd-tractors/8rx-440-tractor-oduwmfjx"},{"name":"8RX 490","code":"8510RW","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/tractors/row-crop-4wd-tractors/8rx-490-tractor-oduxmfjx"},{"name":"8RX 540","code":"8520RW","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/tractors/row-crop-4wd-tractors/8rx-540-tractor-oduymfjx"},{"name":"9R 390","code":"9300RW","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/tractors/row-crop-4wd-tractors/9r-390-tractor-otmwmfjx"},{"name":"9R 440","code":"9310RW","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/tractors/row-crop-4wd-tractors/9r-440-tractor-otmxmfjx"},{"name":"9R 540","code":"9330RW","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/tractors/row-crop-4wd-tractors/9r-540-tractor-otmzmfjx"},{"name":"9R 640","code":"9350RW","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/tractors/row-crop-4wd-tractors/9r-640-tractor-otm1mfjx"},{"name":"9RX 540","code":"9520RW","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/tractors/row-crop-4wd-tractors/9rx-540-tractor-otuymfjx"},{"name":"9RX 590","code":"9530RW","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/tractors/row-crop-4wd-tractors/9rx-590-tractor-otuzmfjx"},{"name":"9RX 640","code":"9540RW","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/tractors/row-crop-4wd-tractors/9rx-640-tractor-otu0mfjx"},{"name":"9RX 830","code":"9920RW","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/tractors/row-crop-4wd-tractors/9rx-830-tractor-otkymfjx"},{"name":"9R 590 Scraper Special","code":"9620RW","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/tractors/scraper-systems/9r-590-scraper-special-tractor-otyymfjx"},{"name":"9R 640 Scraper Special","code":"9630RW","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/tractors/scraper-systems/9r-640-scraper-special-tractor-otyzmfjx"},{"name":"9RX 710 Scraper Special","code":"9930RW","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/tractors/scraper-systems/9rx-710-scraper-special-tractor-otkzmfjx"},{"name":"9RX 770 Scraper Special","code":"9940RW","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/tractors/scraper-systems/9rx-770-scraper-special-tractor-otk0mfjx"},{"name":"5060E","code":"060TPY","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/tractors/utility-tractors/5060e-tractor-mdywvfbz"},{"name":"5075E","code":"075TPY","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/tractors/utility-tractors/5075e-tractor-mdc1vfbz"},{"name":"5075M","code":"251GPY","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/tractors/utility-tractors/5075m-tractor-mjuxr1bz"},{"name":"5085M","code":"192GPY","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/tractors/utility-tractors/5085m-tractor-mtkyr1bz"},{"name":"5090E Cab","code":"08AIP","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/tractors/utility-tractors/5090e-cab-tractor-mdhbsva"},{"name":"5095M","code":"19AGPY","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/tractors/utility-tractors/5095m-tractor-mtlbr1bz"},{"name":"5100E Cab","code":"697RP","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/tractors/utility-tractors/5100e-cab-tractor-njk3ula"},{"name":"5105M","code":"19BGPY","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/tractors/utility-tractors/5105m-tractor-mtlcr1bz"},{"name":"5120M","code":"19DGPY","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/tractors/utility-tractors/5120m-tractor-mtler1bz"},{"name":"5130M","code":"19EGPY","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/tractors/utility-tractors/5130m-tractor-mtlfr1bz"},{"name":"6M 180","code":"6111L","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/tractors/utility-tractors/6m-180-tractor-njexmuw"},{"name":"6M 95","code":"6001L","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/tractors/utility-tractors/6m-95-tractor-njawmuw"},{"name":"6R 140","code":"01A3L","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/tractors/utility-tractors/6r-140-tractor-mdfbm0w"},{"name":"6R 155","code":"08KAL","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/tractors/utility-tractors/6r-155-tractor-mdhlquw"},{"name":"6R 165","code":"08RAL","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/tractors/utility-tractors/6r-165-tractor-mdhsquw"},{"name":"6R 185","code":"08SAL","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/tractors/utility-tractors/6r-185-tractor-mdhtquw"},{"name":"6R 200","code":"08TFL","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/tractors/utility-tractors/6r-200-tractor-mdhurkw"},{"name":"6R 220","code":"08UFL","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/tractors/utility-tractors/6r-220-tractor-mdhvrkw"},{"name":"6R 230","code":"08Q4L","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/tractors/utility-tractors/6r-230-tractor-mdhrnew"},{"name":"6R 260","code":"08WFL","domain":"Agriculture","url":"https://www.deere.com/en-us/products-solutions/tractors/utility-tractors/6r-260-tractor-mdhxrkw"}]
+</script>
+  <script id="app-script">
+    (function () {
+      "use strict";
+
+      function readDataset() {
+        var node = document.getElementById("dataset");
+        if (!node) {
+          return [];
+        }
+        try {
+          var parsed = JSON.parse(node.textContent);
+          if (!Array.isArray(parsed)) {
+            return [];
+          }
+          return parsed.map(function (record) {
+            return {
+              name: String(record.name || "").trim(),
+              code: String(record.code || "").trim(),
+              domain: String(record.domain || "").trim(),
+              url: String(record.url || "").trim()
+            };
+          });
+        } catch (error) {
+          console.error("Unable to parse embedded dataset", error);
+          return [];
+        }
+      }
+
+      var allRecords = readDataset();
+      var preferredDomainOrder = ["Agriculture", "Construction", "Forestry", "Turf & Utility"];
+      var discoveredDomains = Array.from(new Set(allRecords.map(function (r) { return r.domain; }))).sort();
+      var domainOrder = preferredDomainOrder.filter(function (domain) {
+        return discoveredDomains.indexOf(domain) !== -1;
+      }).concat(discoveredDomains.filter(function (domain) {
+        return preferredDomainOrder.indexOf(domain) === -1;
+      }));
+
+      var countsByDomain = allRecords.reduce(function (acc, record) {
+        acc[record.domain] = (acc[record.domain] || 0) + 1;
+        return acc;
+      }, {});
+
+      var state = {
+        query: "",
+        domain: "All",
+        sort: "name-asc",
+        page: 1,
+        pageSize: 24
+      };
+
+      var nodes = {
+        searchInput: document.getElementById("searchInput"),
+        domainSelect: document.getElementById("domainSelect"),
+        sortSelect: document.getElementById("sortSelect"),
+        sizeSelect: document.getElementById("sizeSelect"),
+        resetBtn: document.getElementById("resetBtn"),
+        catalogList: document.getElementById("catalogList"),
+        emptyState: document.getElementById("emptyState"),
+        statsGrid: document.getElementById("statsGrid"),
+        resultSummary: document.getElementById("resultSummary"),
+        pageStatus: document.getElementById("pageStatus"),
+        domainChips: document.getElementById("domainChips"),
+        firstBtn: document.getElementById("firstBtn"),
+        prevBtn: document.getElementById("prevBtn"),
+        nextBtn: document.getElementById("nextBtn"),
+        lastBtn: document.getElementById("lastBtn"),
+        snapshotBadge: document.getElementById("snapshotBadge")
+      };
+
+      function escapeHtml(text) {
+        return text
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/\"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      function renderStats() {
+        var rows = [
+          { title: "Total Records", value: String(allRecords.length) }
+        ];
+
+        domainOrder.forEach(function (domain) {
+          rows.push({ title: domain, value: String(countsByDomain[domain] || 0) });
+        });
+
+        nodes.statsGrid.innerHTML = rows.map(function (item) {
+          return "<article class=\"stat\"><h2>" + escapeHtml(item.title) + "</h2><p>" + escapeHtml(item.value) + "</p></article>";
+        }).join("");
+
+        nodes.snapshotBadge.textContent = "Observed U.S. Snapshot: " + allRecords.length + " records";
+      }
+
+      function renderDomainControls() {
+        var options = ["All"].concat(domainOrder);
+
+        nodes.domainSelect.innerHTML = options.map(function (domain) {
+          var label = domain === "All" ? "All Domains" : domain;
+          return "<option value=\"" + escapeHtml(domain) + "\">" + escapeHtml(label) + "</option>";
+        }).join("");
+
+        nodes.domainChips.innerHTML = options.map(function (domain) {
+          var count = domain === "All" ? allRecords.length : (countsByDomain[domain] || 0);
+          return "<button type=\"button\" class=\"chip\" data-domain=\"" + escapeHtml(domain) + "\" aria-pressed=\"" + String(domain === state.domain) + "\">" +
+            "<span>" + escapeHtml(domain === "All" ? "All" : domain) + "</span>" +
+            "<span class=\"chip-count\">" + String(count) + "</span>" +
+            "</button>";
+        }).join("");
+      }
+
+      function sortRecords(records) {
+        var copy = records.slice();
+        copy.sort(function (a, b) {
+          if (state.sort === "name-desc") {
+            return b.name.localeCompare(a.name);
+          }
+          if (state.sort === "code-asc") {
+            return a.code.localeCompare(b.code) || a.name.localeCompare(b.name);
+          }
+          if (state.sort === "domain-asc") {
+            return a.domain.localeCompare(b.domain) || a.name.localeCompare(b.name);
+          }
+          return a.name.localeCompare(b.name);
+        });
+        return copy;
+      }
+
+      function getFilteredRecords() {
+        var q = state.query.toLowerCase();
+        var filtered = allRecords.filter(function (item) {
+          if (state.domain !== "All" && item.domain !== state.domain) {
+            return false;
+          }
+
+          if (!q) {
+            return true;
+          }
+
+          return (
+            item.name.toLowerCase().indexOf(q) !== -1 ||
+            item.code.toLowerCase().indexOf(q) !== -1 ||
+            item.domain.toLowerCase().indexOf(q) !== -1 ||
+            item.url.toLowerCase().indexOf(q) !== -1
+          );
+        });
+
+        return sortRecords(filtered);
+      }
+
+      function renderResults() {
+        var filtered = getFilteredRecords();
+        var total = filtered.length;
+        var totalPages = Math.max(1, Math.ceil(total / state.pageSize));
+        state.page = Math.max(1, Math.min(state.page, totalPages));
+
+        var start = (state.page - 1) * state.pageSize;
+        var visible = filtered.slice(start, start + state.pageSize);
+
+        if (visible.length === 0) {
+          nodes.catalogList.innerHTML = "";
+          nodes.emptyState.hidden = false;
+        } else {
+          nodes.emptyState.hidden = true;
+          nodes.catalogList.innerHTML = visible.map(function (item) {
+            return "<li class=\"item\">" +
+              "<h3>" + escapeHtml(item.name) + "</h3>" +
+              "<ul class=\"meta\">" +
+              "<li>Code: " + escapeHtml(item.code) + "</li>" +
+              "<li>Domain: " + escapeHtml(item.domain) + "</li>" +
+              "</ul>" +
+              "<a href=\"" + escapeHtml(item.url) + "\" target=\"_blank\" rel=\"noopener noreferrer\">" + escapeHtml(item.url) + "</a>" +
+              "</li>";
+          }).join("");
+        }
+
+        var from = total === 0 ? 0 : start + 1;
+        var to = total === 0 ? 0 : start + visible.length;
+
+        nodes.resultSummary.textContent = "Showing " + from + "-" + to + " of " + total + " matching records";
+        nodes.pageStatus.textContent = "Page " + state.page + " of " + totalPages;
+
+        nodes.firstBtn.disabled = state.page <= 1;
+        nodes.prevBtn.disabled = state.page <= 1;
+        nodes.nextBtn.disabled = state.page >= totalPages;
+        nodes.lastBtn.disabled = state.page >= totalPages;
+
+        Array.from(nodes.domainChips.querySelectorAll(".chip")).forEach(function (button) {
+          button.setAttribute("aria-pressed", String(button.getAttribute("data-domain") === state.domain));
+        });
+      }
+
+      function setDomain(domain) {
+        state.domain = domain;
+        state.page = 1;
+        nodes.domainSelect.value = domain;
+        renderResults();
+      }
+
+      function resetAll() {
+        state.query = "";
+        state.domain = "All";
+        state.sort = "name-asc";
+        state.pageSize = 24;
+        state.page = 1;
+
+        nodes.searchInput.value = "";
+        nodes.domainSelect.value = "All";
+        nodes.sortSelect.value = "name-asc";
+        nodes.sizeSelect.value = "24";
+
+        renderResults();
+        nodes.searchInput.focus();
+      }
+
+      function bindEvents() {
+        nodes.searchInput.addEventListener("input", function (event) {
+          state.query = event.target.value.trim();
+          state.page = 1;
+          renderResults();
+        });
+
+        nodes.domainSelect.addEventListener("change", function (event) {
+          setDomain(event.target.value);
+        });
+
+        nodes.sortSelect.addEventListener("change", function (event) {
+          state.sort = event.target.value;
+          state.page = 1;
+          renderResults();
+        });
+
+        nodes.sizeSelect.addEventListener("change", function (event) {
+          state.pageSize = Number(event.target.value) || 24;
+          state.page = 1;
+          renderResults();
+        });
+
+        nodes.domainChips.addEventListener("click", function (event) {
+          var button = event.target.closest("button[data-domain]");
+          if (!button) {
+            return;
+          }
+          setDomain(button.getAttribute("data-domain") || "All");
+        });
+
+        nodes.resetBtn.addEventListener("click", resetAll);
+
+        nodes.firstBtn.addEventListener("click", function () {
+          state.page = 1;
+          renderResults();
+        });
+
+        nodes.prevBtn.addEventListener("click", function () {
+          state.page = Math.max(1, state.page - 1);
+          renderResults();
+        });
+
+        nodes.nextBtn.addEventListener("click", function () {
+          state.page += 1;
+          renderResults();
+        });
+
+        nodes.lastBtn.addEventListener("click", function () {
+          var total = getFilteredRecords().length;
+          state.page = Math.max(1, Math.ceil(total / state.pageSize));
+          renderResults();
+        });
+
+        document.addEventListener("keydown", function (event) {
+          var tag = event.target && event.target.tagName ? event.target.tagName.toLowerCase() : "";
+          var isTyping = tag === "input" || tag === "textarea" || event.target.isContentEditable;
+          if (!isTyping && event.key === "/") {
+            event.preventDefault();
+            nodes.searchInput.focus();
+          }
+        });
+      }
+
+      renderStats();
+      renderDomainControls();
+      bindEvents();
+      renderResults();
+    })();
+  </script>
+  <script data-goatcounter="https://jessejinnaruiz.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
+
