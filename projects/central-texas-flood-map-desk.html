@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Central Texas Flood Map Desk</title>
+    <style>
+      :root {
+        --ink: #102b3b;
+        --paper: #edf4f5;
+        --blue: #126c8b;
+        --cyan: #88d1d1;
+        --red: #bd4938;
+        --line: #b5c9cc;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font:
+          16px/1.5 Arial,
+          sans-serif;
+      }
+      header,
+      main,
+      footer {
+        max-width: 1160px;
+        margin: auto;
+        padding: 24px;
+      }
+      nav {
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+      a {
+        color: #075d78;
+      }
+      h1 {
+        font:
+          400 clamp(3rem, 8vw, 6.5rem)/0.9 Georgia,
+          serif;
+        max-width: 9ch;
+        margin: 9vh 0 20px;
+      }
+      .lede {
+        max-width: 730px;
+        font-size: 18px;
+      }
+      .mast {
+        border-bottom: 1px solid var(--ink);
+      }
+      .controls {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 10px;
+        margin: 30px 0;
+      }
+      .controls input,
+      .controls select {
+        min-height: 48px;
+        padding: 10px;
+        border: 1px solid var(--line);
+        font: inherit;
+      }
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 46px;
+        padding: 10px 14px;
+        background: var(--blue);
+        color: white;
+        text-decoration: none;
+        font-weight: 800;
+        border: 0;
+        cursor: pointer;
+      }
+      .watersheds {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 8px;
+      }
+      .region {
+        border: 1px solid var(--line);
+        background: #fff;
+        padding: 14px 10px;
+        text-align: left;
+        color: var(--ink);
+        cursor: pointer;
+        min-height: 90px;
+      }
+      .region[aria-pressed="true"] {
+        background: var(--ink);
+        color: white;
+      }
+      .region b {
+        display: block;
+        font-size: 13px;
+      }
+      .region span {
+        font-size: 11px;
+      }
+      .mapdesk {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 25px;
+        margin-top: 24px;
+      }
+      .diagram {
+        background: #d6e9e8;
+        border: 1px solid var(--line);
+        min-height: 310px;
+        padding: 20px;
+        position: relative;
+        overflow: hidden;
+      }
+      .river {
+        position: absolute;
+        width: 150%;
+        height: 50px;
+        background: #88c7d4;
+        transform: rotate(-24deg);
+        left: -20%;
+        top: 48%;
+      }
+      .basin {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        gap: 10px;
+      }
+      .basin div {
+        max-width: 44%;
+        padding: 10px;
+        background: #f7f6e9;
+        border: 1px solid #708e86;
+        font-size: 13px;
+      }
+      .basin div:nth-child(even) {
+        margin-left: 48%;
+      }
+      .panel {
+        border-top: 4px solid var(--red);
+        padding-top: 14px;
+      }
+      .panel h2 {
+        font: 400 2rem Georgia;
+        margin: 0 0 10px;
+      }
+      .links {
+        display: grid;
+        gap: 10px;
+        margin-top: 16px;
+      }
+      .links a {
+        padding: 12px;
+        border-bottom: 1px solid var(--line);
+        font-weight: 700;
+      }
+      .events {
+        margin: 44px 0;
+        border-top: 1px solid var(--ink);
+        padding-top: 22px;
+      }
+      .event {
+        display: grid;
+        grid-template-columns: 120px 1fr;
+        gap: 18px;
+        padding: 14px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .event time {
+        font-weight: 800;
+        color: var(--red);
+      }
+      .warning {
+        margin: 28px 0;
+        padding: 15px;
+        border: 1px solid var(--red);
+        background: #fff7ee;
+        font-size: 14px;
+      }
+      .foot {
+        font-size: 12px;
+        color: #4d6871;
+        margin-top: 24px;
+      }
+      @media (max-width: 720px) {
+        .controls,
+        .mapdesk {
+          grid-template-columns: 1fr;
+        }
+        .watersheds {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .event {
+          grid-template-columns: 1fr;
+          gap: 3px;
+        }
+        h1 {
+          margin-top: 55px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="mast">
+      <nav>
+        <a href="../index.html">&larr; Jesse J Ruiz</a>
+      </nav>
+      <p
+        style="
+          margin-top: 8vh;
+          color: var(--blue);
+          font-weight: 800;
+          text-transform: uppercase;
+          font-size: 12px;
+        "
+      >
+        Flood map navigator
+      </p>
+      <h1>Know which map you are reading.</h1>
+      <p class="lede">
+        Find official Central Texas flood maps, planning data, and live river
+        conditions. These sources answer different questions; this page keeps
+        them separate.
+      </p>
+    </header>
+    <main>
+      <div class="controls">
+        <label
+          >Find an area<input
+            id="areaSearch"
+            type="search"
+            placeholder="Try Upper Colorado, Guadalupe, Lower Brazos..."
+            aria-label="Search an area" /></label
+        ><a
+          class="button"
+          href="https://msc.fema.gov/portal/home"
+          target="_blank"
+          rel="noreferrer"
+          >Open FEMA map search</a
+        >
+      </div>
+      <div class="watersheds" role="group" aria-label="Flood planning region">
+        <button class="region" data-region="7" aria-pressed="false">
+          <b>07 / Upper Brazos</b><span>Northwest Central TX</span></button
+        ><button class="region" data-region="8" aria-pressed="false">
+          <b>08 / Lower Brazos</b><span>North Central TX</span></button
+        ><button class="region" data-region="9" aria-pressed="false">
+          <b>09 / Upper Colorado</b><span>Hill Country west</span></button
+        ><button class="region" data-region="10" aria-pressed="true">
+          <b>10 / Lower Colorado-Lavaca</b><span>Austin and east</span></button
+        ><button class="region" data-region="11" aria-pressed="false">
+          <b>11 / Guadalupe</b><span>San Marcos corridor</span></button
+        ><button class="region" data-region="12" aria-pressed="false">
+          <b>12 / San Antonio</b><span>South-central TX</span>
+        </button>
+      </div>
+      <section class="mapdesk">
+        <div class="diagram" aria-label="Schematic, not-to-scale basin index">
+          <div class="river"></div>
+          <div class="basin">
+            <div>Upper Brazos</div>
+            <div>Lower Brazos</div>
+            <div>Upper Colorado</div>
+            <div>Lower Colorado</div>
+            <div>Guadalupe</div>
+            <div>San Antonio</div>
+          </div>
+          <small style="position: absolute; bottom: 8px; right: 10px"
+            >Schematic basin index, not a flood boundary map</small
+          >
+        </div>
+        <article class="panel">
+          <p
+            id="regionCode"
+            style="
+              font-size: 12px;
+              text-transform: uppercase;
+              font-weight: 800;
+              color: var(--red);
+            "
+          >
+            SELECTED REGION / 10
+          </p>
+          <h2 id="regionTitle">Lower Colorado-Lavaca</h2>
+          <p id="regionCopy">
+            Use official map products for address-level review. The planning
+            region summarizes basin-scale risks and proposed projects; it is not
+            a parcel determination.
+          </p>
+          <div class="links">
+            <a
+              href="https://hazards-fema.maps.arcgis.com/apps/webappviewer/index.html?id=8b0adb51996444d4879338b5529aa9cd"
+              target="_blank"
+              rel="noreferrer"
+              >FEMA National Flood Hazard Layer (effective flood zones)</a
+            ><a
+              href="https://map.texasflood.org/#/"
+              target="_blank"
+              rel="noreferrer"
+              >Texas Flood Viewer (gauges and current conditions)</a
+            ><a
+              href="https://texasstatefloodplan.org/floodrisk-existing"
+              target="_blank"
+              rel="noreferrer"
+              >TWDB State Flood Plan (planning-level risk)</a
+            ><a
+              href="https://webapps.usgs.gov/infrm/fdst/?region=tx"
+              target="_blank"
+              rel="noreferrer"
+              >USGS Flood Decision Support Toolbox (scenarios)</a
+            >
+          </div>
+        </article>
+      </section>
+      <section class="events">
+        <h2>Central Texas flood history</h2>
+        <article class="event">
+          <time>September 1921</time>
+          <div>
+            <b>Thrall rainfall record</b><br />TexasFlood reports more than 36
+            inches in 18 hours in Williamson County. This is historical context,
+            not a recurrence forecast.
+          </div>
+        </article>
+        <article class="event">
+          <time>October 1998</time>
+          <div>
+            <b>South-central Texas floods</b><br />TexasFlood reports up to 30
+            inches over two days and historic flooding along the San Marcos,
+            Guadalupe, and San Antonio rivers.
+          </div>
+        </article>
+        <article class="event">
+          <time>Every day</time>
+          <div>
+            <b>Risk changes with location and conditions</b><br />Check current
+            watches, warnings, road closures, and local emergency instructions
+            before travel.
+          </div>
+        </article>
+      </section>
+      <div class="warning">
+        <b>Not an emergency service or property determination.</b> Flood zones
+        do not show every possible flood, and planning maps are not live. Never
+        drive or walk through floodwater. During an active threat, follow local
+        officials and the National Weather Service.
+      </div>
+      <p class="foot">
+        Area search filters the region index only; it does not geocode or
+        transmit your address. Opening an official map sends you to that
+        agency's site.
+      </p>
+    </main>
+    <footer class="foot">
+      Sources:
+      <a href="https://www.twdb.texas.gov/flood/planning/regions/index.asp"
+        >Texas Water Development Board regions</a
+      >, <a href="https://www.texasflood.org/">TexasFlood</a>, FEMA NFHL, USGS
+      InFRM. Data may be incomplete or updated by source owners.
+    </footer>
+    <script>
+      const regionData = {
+        7: [
+          "Upper Brazos",
+          "Use the official Upper Brazos regional plan and FEMA effective maps for the chosen community.",
+        ],
+        8: [
+          "Lower Brazos",
+          "Planning-region summaries describe basin-scale risk and proposals, not parcel-level flood status.",
+        ],
+        9: [
+          "Upper Colorado",
+          "For Hill Country areas, compare effective flood maps with local studies and current gauge conditions.",
+        ],
+        10: [
+          "Lower Colorado-Lavaca",
+          "Use official map products for address-level review. The planning region summarizes basin-scale risks and proposed projects; it is not a parcel determination.",
+        ],
+        11: [
+          "Guadalupe",
+          "The Guadalupe basin crosses rapidly changing terrain. Check local warnings and river conditions separately from mapped zones.",
+        ],
+        12: [
+          "San Antonio",
+          "Use the San Antonio regional plan for planning context and FEMA effective products for mapped hazard zones.",
+        ],
+      };
+      document.querySelectorAll(".region").forEach((b) =>
+        b.addEventListener("click", () => {
+          document
+            .querySelectorAll(".region")
+            .forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+          const [name, copy] = regionData[b.dataset.region];
+          document.querySelector("#regionCode").textContent =
+            `SELECTED REGION / ${b.dataset.region}`;
+          document.querySelector("#regionTitle").textContent = name;
+          document.querySelector("#regionCopy").textContent = copy;
+        }),
+      );
+      document.querySelector("#areaSearch").addEventListener("input", (e) => {
+        const q = e.target.value.toLowerCase();
+        document.querySelectorAll(".region").forEach((b) => {
+          b.hidden =
+            q &&
+            !b.textContent.toLowerCase().includes(q) &&
+            !regionData[b.dataset.region][0].toLowerCase().includes(q);
+        });
+      });
+    </script>
+    <script data-goatcounter="https://jessejinnaruiz.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
