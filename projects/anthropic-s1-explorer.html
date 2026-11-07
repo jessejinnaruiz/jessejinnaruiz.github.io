@@ -1,0 +1,761 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Anthropic S-1 Explorer</title>
+<meta name="description" content="A visual, source-cited analysis of Anthropic, PBC's Form S-1 registration statement filed with the SEC on October 26, 2026.">
+<style>
+:root{--paper:#f1eee5;--card:#f8f6ef;--ink:#191915;--muted:#67655f;--line:#c9c3b5;--clay:#a8472b;--teal:#176b87;--olive:#5b6b2f;--plum:#7b3f61;--slate:#3d4a57;--gold:#c99a2e;--grey:#9a968a;--green:#2e7d4f;--red:#b3261e}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 Georgia,"Times New Roman",serif}
+a{color:var(--teal)}
+.label,.tabs button,.kpi small,th,.chip,.btnrow button,.eyebrow{font-family:"Arial Narrow",Arial,sans-serif;text-transform:uppercase;letter-spacing:.08em;font-weight:700}
+header.top{max-width:1180px;margin:auto;padding:24px 24px 8px}
+nav.crumb{font:700 12px Arial,sans-serif;text-transform:uppercase}
+nav.crumb a{color:var(--ink)}
+h1{font-weight:400;font-size:clamp(2.6rem,8vw,6rem);line-height:.9;letter-spacing:-.045em;margin:7vh 0 18px;max-width:12ch}
+.lede{max-width:760px;font-size:1.18rem;margin:0 0 14px}
+.source{max-width:900px;font:13px/1.5 Arial,sans-serif;color:var(--muted);border-left:3px solid var(--clay);padding:6px 0 6px 12px;margin:14px 0 0}
+.tabs{position:sticky;top:0;z-index:20;background:var(--paper);border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);margin-top:22px;overflow-x:auto;white-space:nowrap}
+.tabs .in{max-width:1180px;margin:auto;padding:0 24px;display:flex;gap:2px}
+.tabs button{border:0;background:transparent;padding:14px 12px;font-size:12px;color:var(--ink);cursor:pointer;border-bottom:3px solid transparent}
+.tabs button[aria-selected=true]{border-bottom-color:var(--clay);color:var(--clay)}
+.tabs button:focus-visible{outline:2px solid var(--teal);outline-offset:-2px}
+main{max-width:1180px;margin:auto;padding:28px 24px 10px}
+section.panel[hidden]{display:none}
+h2{font-weight:400;font-size:clamp(1.8rem,4vw,3rem);letter-spacing:-.035em;line-height:1;margin:6px 0 8px}
+h3{font-size:1.15rem;margin:0 0 4px;font-weight:700}
+.sub{color:var(--muted);font:14px/1.5 Arial,sans-serif;max-width:820px;margin:0 0 20px}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(2,minmax(0,1fr))}
+.grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.grid.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+.card{background:var(--card);border:1px solid var(--ink);padding:18px;min-width:0}
+.card.wide{grid-column:1/-1}
+.kpi{background:var(--card);border:1px solid var(--ink);padding:14px 16px}
+.kpi small{display:block;font-size:11px;color:var(--muted)}
+.kpi b{display:block;font:400 clamp(1.7rem,3vw,2.5rem)/1.05 Georgia,serif;letter-spacing:-.03em;margin:6px 0 4px}
+.kpi span{font:13px/1.4 Arial,sans-serif;color:var(--muted)}
+.take{font:14px/1.5 Arial,sans-serif;margin:10px 0 0;padding:8px 10px;background:#efe9dc;border-left:3px solid var(--clay)}
+.src{font:11.5px/1.4 Arial,sans-serif;color:var(--muted);margin:10px 0 0}
+.derived{display:inline-block;font:700 10px Arial,sans-serif;letter-spacing:.06em;text-transform:uppercase;background:#e4dccb;color:#5a4a2a;padding:1px 5px;margin-left:4px;vertical-align:middle}
+.btnrow{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 10px}
+.btnrow button,.btnrow label{border:1px solid var(--ink);background:transparent;padding:6px 10px;font-size:11px;cursor:pointer;color:var(--ink)}
+.btnrow button[aria-pressed=true]{background:var(--ink);color:var(--paper)}
+.btnrow label{display:inline-flex;gap:6px;align-items:center}
+svg{width:100%;height:auto;display:block}
+svg text{font-family:Arial,sans-serif;fill:var(--ink)}
+details.data{margin-top:10px;font:13px Arial,sans-serif}
+details.data summary{cursor:pointer;font-weight:700;color:var(--teal)}
+table{border-collapse:collapse;width:100%;font:13px/1.4 Arial,sans-serif;margin-top:8px}
+th,td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+th.n,td.n{text-align:right}
+th{font-size:10.5px;color:var(--muted)}
+th:first-child,td:first-child{text-align:left}
+td.l,th.l{text-align:left}
+.tablewrap{overflow-x:auto}
+ul.facts{margin:6px 0 0;padding-left:18px;font:14px/1.5 Arial,sans-serif}
+ul.facts li{margin:5px 0}
+.chip{display:inline-block;font-size:10px;padding:3px 7px;border:1px solid currentColor;margin:0 4px 4px 0}
+.kind-minimum{color:var(--clay)}.kind-upto{color:var(--teal)}.kind-lease{color:var(--plum)}.kind-estimate{color:var(--grey)}
+.risk{display:grid;grid-template-columns:34px 1fr auto;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);font:14px/1.45 Arial,sans-serif}
+.risk[hidden]{display:none}
+.risk .n{font:700 13px Arial;color:var(--muted)}
+input[type=search]{width:100%;max-width:420px;min-height:42px;border:1px solid var(--ink);padding:8px 10px;font:14px Arial,sans-serif;background:#fff}
+.tl{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px;margin:0;padding:0;list-style:none}
+.tl li{border-top:3px solid var(--clay);padding:8px 2px 0;font:13px/1.4 Arial,sans-serif}
+.tl b{display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--clay)}
+.pass{color:var(--green);font-weight:700}.fail{color:var(--red);font-weight:700}
+.gap{border:1px dashed var(--ink);padding:12px;font:14px/1.45 Arial,sans-serif;background:repeating-linear-gradient(135deg,transparent 0 10px,rgba(25,25,21,.04) 10px 11px)}
+footer{max-width:1180px;margin:20px auto 0;padding:24px 24px 50px;border-top:1px solid var(--ink);font:13px/1.5 Arial,sans-serif;color:var(--muted)}
+@media(max-width:900px){.grid,.grid.three,.grid.four{grid-template-columns:1fr 1fr}}
+@media(max-width:620px){.grid,.grid.three,.grid.four{grid-template-columns:1fr}.risk{grid-template-columns:28px 1fr}.risk .chipcell{grid-column:2}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<header class="top">
+  <nav class="crumb"><a href="../index.html">&larr; Jesse J Ruiz</a></nav>
+  <h1>Anthropic S-1 Explorer</h1>
+  <p class="lede">A visual, source-cited reading of Anthropic, PBC's Form S-1 registration statement, filed with the SEC on October 26, 2026. Every number comes from the filing; anything calculated here is labeled <span class="derived">derived</span>.</p>
+  <p class="source"><b>Source document:</b> Anthropic, PBC, Form S-1 (Registration No. 333-, CIK 2130357, accession 0001628280-26-067168), <a href="https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm" rel="noopener">sec.gov</a>. sec.gov blocked automated download, so the text was read from the Internet Archive's capture of that exact SEC URL (taken Nov 4, 2026). This is the original S-1; later amendments (S-1/A), if any, are not reflected. Page references (p.) are to the filing's printed page numbers.</p>
+</header>
+<div class="tabs"><div class="in" id="tabs" role="tablist" aria-label="Sections"></div></div>
+<main id="main"><noscript>This explorer needs JavaScript to draw its charts.</noscript></main>
+<footer>
+  Unofficial analysis for education. Not investment advice, and not affiliated with Anthropic, the SEC, or any underwriter. This is a preliminary prospectus: the offering price, share counts and several totals were left blank by the filer and may change in later amendments. Figures are in US dollars; "M" = million, "B" = billion.
+</footer>
+
+<script>
+/* ---------- Data transcribed from the S-1 (page refs in the UI) ---------- */
+const Q = ["Q1 ’25","Q2 ’25","Q3 ’25","Q4 ’25","Q1 ’26","Q2 ’26"];
+const QD = {
+  revenue:[376,787,1382,2040,4731,11555],
+  compute:[944,1390,2047,2945,3387,5558],
+  personnel:[218,320,489,812,1295,1857],
+  bartz:[0,0,1500,0,0,0],
+  sm:[24,96,202,246,1033,2135],
+  other:[125,181,233,873,683,1031],
+  opex:[1311,1987,4471,4876,6398,10581],
+  opinc:[-935,-1200,-3089,-2836,-1667,974],
+  interest:[51,64,124,192,349,762],
+  fv:[-5701,-5241,-9165,-14201,-12791,-59597],
+  oth:[0,0,-3,-5,-309,-8448],
+  totalOther:[-5650,-5177,-9044,-14014,-12751,-67283],
+  pretax:[-6585,-6377,-12133,-16850,-14418,-66309],
+  tax:[7,0,5,8,21,0],
+  net:[-6592,-6377,-12138,-16858,-14439,-66309],
+  sbc:[105,181,305,574,924,1300]
+};
+const P = ["2023","2024","2025","H1 ’25","H1 ’26"];
+const PD = {
+  revenue:[41,386,4585,1163,16286],
+  compute:[433,2522,7326,2334,8945],
+  personnel:[95,454,1839,538,3152],
+  bartz:[0,0,1500,0,0],
+  sm:[2,43,568,120,3168],
+  other:[62,347,1412,306,1714],
+  opex:[592,3366,12645,3298,16979],
+  opinc:[-551,-2980,-8060,-2135,-693],
+  interest:[69,106,431,115,1111],
+  fv:[-1045,-5434,-34308,-10942,-72388],
+  oth:[-2,0,-8,0,-8757],
+  totalOther:[-978,-5328,-33885,-10827,-80034],
+  pretax:[-1529,-8308,-41945,-12962,-80727],
+  tax:[2,1,20,7,21],
+  net:[-1531,-8309,-41965,-12969,-80748],
+  adjOp:[-522,-2788,-4854,-1849,1618],
+  adjOpM:[-1273,-722,-106,-159,10],
+  opM:[-1344,-772,-176,-184,-4],
+  adjNet:[-457,-2683,-4448,-1741,2671],
+  sbc:[29,192,1200,286,2200],
+  cfo:[-1627,-5692,-2637,-1513,3929],
+  cfi:[-2,-22,-3077,-49,-17181],
+  cff:[2320,7248,19960,4749,110774],
+  fCost:[26,752,2773,1019,2380],
+  fRD:[422,2275,6338,1850,9741],
+  fSM:[76,163,911,239,3808],
+  fBartz:[0,0,1500,0,0],
+  fGA:[68,176,1123,190,1050]
+};
+const BS = {
+  d:["Dec 31, 2024","Dec 31, 2025","Jun 30, 2026"],
+  cash:[3141,17388,112389], sti:[0,2889,19262], ar:[95,909,5833], prepaid:[2076,2560,496],
+  restricted:[13,13,2529], ppe:[19,146,1187], rou:[35,126,1157], goodwill:[0,154,576], otherNC:[2373,476,3929],
+  assets:[7752,24661,147358], curAssets:[5312,23746,137980],
+  apAccr:[333,2511,5422], leaseCur:[13,37,148], defRev:[28,269,1650], curLiab:[374,2817,7220],
+  leaseNC:[39,80,931], conv:[14116,41677,108566], otherNCL:[150,823,750], liab:[14679,45397,117467],
+  pref:[2874,29769,157510], apic:[239,1644,5336], deficit:[-10040,-52154,-132902], equity:[-9801,-50505,-127619]
+};
+const SERIES = [
+  {s:"A",p:2.57},{s:"B",p:11.23},{s:"C",p:11.23},{s:"D-1",p:30.00},{s:"E-1",p:56.09},{s:"F-1",p:140.97},{s:"G-1",p:259.14},{s:"H-1",p:589.01}
+];
+const COMMIT = [
+  {name:"Google (cloud / TPU)",amt:114.5,kind:"minimum",pg:"p.171",note:"At least ~$114.5B between Apr 2026 and Jul 2033 regardless of usage; shortfalls are paid as a true-up. Non-cancelable except for Google's uncured material breach."},
+  {name:"Amazon",amt:110.0,kind:"minimum",pg:"p.172",note:"At least $110.0B between May 2026 and Apr 2036 regardless of usage; shortfall true-up. Non-cancelable except for Amazon's uncured material breach."},
+  {name:"Microsoft",amt:44.9,kind:"minimum",pg:"p.171",note:"At least $44.9B between Nov 2026 and May 2033 regardless of usage. Non-cancelable except for uncured breach or undelivered tranches."},
+  {name:"SpaceXAI (NVIDIA GPUs)",amt:120.5,kind:"upto",pg:"p.172",note:"Up to $120.5B over terms into 2029 (~$3.1B per month once all capacity is delivered, expected Dec 2026). After initial periods ending Jan and Mar 2027, either party may cancel on 90 days' notice."},
+  {name:"Nscale (NVIDIA GPUs)",amt:44.6,kind:"upto",pg:"p.172",note:"Up to ~$44.6B over terms into 2033; fees accrue only as capacity is delivered and accepted."},
+  {name:"Lambda (NVIDIA GPUs)",amt:41.3,kind:"upto",pg:"p.172",note:"~$41.3B over terms into 2034, including ~$34.9B under the Aug 2026 agreement; fees accrue as capacity is delivered."},
+  {name:"Broadcom equipment leases (TPU)",amt:161.2,kind:"lease",pg:"p.172",note:"Five-year master equipment leases accounted for as finance leases; rent totals ~$161.2B excluding interest, paid quarterly once equipment is ready for service."},
+  {name:"Additional TPU compute, 2028–2031",lo:125,hi:150,amt:137.5,kind:"estimate",pg:"p.171",note:"Company estimate of $125.0B–$150.0B for additional TPU capacity (Google and other TPU providers). Not in the contractual-obligations table; depends on capacity delivered. Bar shows the midpoint."},
+  {name:"AMD Helios systems (2027)",amt:20.0,kind:"estimate",pg:"p.172",note:"No fixed dollar commitment; if the initial tranche is fully procured, spend is expected to exceed $20.0B, with an option for up to about as much again. Bar shows the $20.0B floor."}
+];
+const KINDS = {minimum:"Minimum commitments",upto:"Up to / delivery-dependent",lease:"Equipment leases",estimate:"Company estimates"};
+const CUST = {
+  t:[0,12,18,21,24,30,33], d:["Dec ’23","Dec ’24","Jun ’25","Sep ’25","Dec ’25","Jun ’26","Sep ’26"],
+  n:[20,200,600,950,1500,6000,11900], lab:["~20","~200",">600",">950","~1,500",">6,000",">11,900"]
+};
+const RISKS = [
+ ["Models","Must keep developing the most advanced, capable AI models; failure could hurt the business."],
+ ["Compute","If adequate compute can’t be secured, or is directed poorly across workloads, models may fall behind and customers may go unserved."],
+ ["Compute","Constraints on the critical inputs behind compute (chips, power, data-center capacity) could limit access."],
+ ["People","Heavy dependence on co-founders, senior management and key technical employees."],
+ ["People","Company culture has driven success and may be hard to maintain as the company grows."],
+ ["Market","Intense competition."],
+ ["Market","The market for models, platform and applications could develop more slowly than expected or decline."],
+ ["Safety","Harm from misuse by malicious actors, or from failure of guardrails and safeguards."],
+ ["Safety","Models may behave in unintended, misaligned or autonomous ways, including taking harmful actions no one directed."],
+ ["Legal","Exposure to liability, litigation and regulatory action over harms from models; contracts and insurance may be insufficient."],
+ ["Customers","A substantial share of revenue and receivables comes from a limited number of customers and distribution channels."],
+ ["Growth","Limited operating history in a new, evolving industry."],
+ ["Growth","Early-stage, rapid growth; historical growth rates are not indicative of future performance."],
+ ["Legal","Evolving and uncertain regulatory and political environment."],
+ ["Compute","Reliance on a limited number of cloud providers and suppliers, some of which are investors, vendors, customers and competitors, creating conflict-of-interest dynamics."],
+ ["Governance","Capital stock structure has novel provisions that may effectively eliminate Class A holders’ influence on important decisions, including a change in control."],
+ ["Governance","Voting power is concentrated with the Long-Term Benefit Trust and the Founder LLC, and is not proportionate to economic interest."],
+ ["Governance","Public benefit corporation duties (balancing stockholders, affected stakeholders and the stated purpose) may conflict with financial returns."]
+];
+
+const NEO = {
+  names:["Dario Amodei (CEO)","Daniela Amodei (President)","Krishna Rao (CFO)"],
+  salary:[654167,654167,706250], stock:[9264932,9264932,0], option:[4028558,4028558,0], other:[4010641,2461341,14000], total:[17958298,16408998,720250]
+};
+const OTHERC = {
+  labels:["401(k) match","Personal security & transport","Private air (personal use)","Tender-offer spread","Valuation report"],
+  dario:[14000,2745874,97055,1153087,625], daniela:[14000,1293629,0,1153087,625]
+};
+const SAL = {labels:["Jan ’25","Jun ’25","Dec ’25","Jan ’26","Feb ’26","Jul ’26"],amodei:[600,700,700,915,915,1380],rao:[700,700,850,850,1250,1250]};
+const ROUNDS = [
+  {s:"C",when:"Mar–Jun 2023",price:11.2261,usd:445.3374,inv:null},
+  {s:"D",when:"Jan–May 2024",price:30.0045,usd:1199.540154,inv:54},
+  {s:"E-1",when:"Jan–Mar 2025",price:56.0865,usd:3567.66821,inv:72},
+  {s:"F-1",when:"Aug–Sep 2025",price:140.9676,usd:12999.992602,inv:202},
+  {s:"G-1",when:"Jan–Feb 2026",price:259.1364,usd:23454.545698,inv:261},
+  {s:"H-1",when:"May–Jun 2026",price:589.0095,usd:45729.447703,inv:305}
+];
+const SPARK = [["C-1",75.0],["D-1",75.0],["E-1",100.0],["F-1",62.0],["G-1",25.0],["H-1",440.0]];
+const MS = ["Day 1","D27","D48","D62","D76","FY26 ERD","+13","+27","+41","+55","+69","Q1 ERD / D180","+34","+48","+62","+76","Q2 ERD","+27","+41","+55","+69","+83","Q3 ERD / D365"];
+const LOCK = {
+  A:{name:"Non-founder directors & officers, certain employees (180-day)",color:"#176b87",rel:{0:10,5:35,11:"rest"}},
+  B:{name:"Certain other stockholders (180-day)",color:"#a8472b",rel:{1:6,2:6,3:7,4:7,5:12.5,6:9.5,7:9.5,8:9.5,9:9.5,10:9.5,11:"rest"}},
+  C:{name:"Holders of over 0.5% of fully diluted shares (365-day)",color:"#5b6b2f",rel:{1:1.8,2:1.8,3:2.1,4:2.1,5:3.75,6:2.85,7:2.85,8:2.85,9:2.85,10:2.85,11:4.2,12:5.6,13:5.6,14:5.6,15:5.6,16:7.0,17:6.3,18:6.3,19:6.3,20:6.3,21:6.3,22:"rest"}},
+  D:{name:"Founders (365-day)",color:"#7b3f61",rel:{11:29,22:"rest"}}
+};
+function lockCum(g){let c=0;return MS.map((_,i)=>{const v=g.rel[i];if(v==="rest")c=100;else if(v)c+=v;return +c.toFixed(2)})}
+const UW = [
+  ["Goldman Sachs & Co. LLC","Representative","Joint lead arranger, bookrunner, syndication agent"],
+  ["Morgan Stanley & Co. LLC","Representative; stabilization agent","Administrative agent, collateral agent, lead left arranger, bookrunner, syndication agent"],
+  ["J.P. Morgan Securities LLC","","Joint lead arranger, bookrunner, syndication agent"],
+  ["Citigroup Global Markets Inc.","","Joint lead arranger, bookrunner, syndication agent"],
+  ["Barclays Capital Inc. and Barclays Bank PLC","","Joint lead arranger, bookrunner, syndication agent"],
+  ["Wells Fargo Securities, LLC","","Joint lead arranger, bookrunner, syndication agent"],
+  ["BofA Securities, Inc.","","Joint lead arranger, bookrunner, documentation agent"],
+  ["Deutsche Bank Securities Inc.","","Joint lead arranger, bookrunner, documentation agent"],
+  ["RBC Capital Markets, LLC","","Joint lead arranger, bookrunner, documentation agent"],
+  ["UBS Securities LLC","","Joint lead arranger, bookrunner, documentation agent"],
+  ["BMO Capital Markets Corp.","","Joint lead arranger and bookrunner"],
+  ["BNP Paribas Securities Corp.","","Joint lead arranger and bookrunner"],
+  ["Crédit Agricole Securities (USA) Inc.","","Joint lead arranger and bookrunner"],
+  ["Mizuho Securities USA LLC","","Joint lead arranger and bookrunner"],
+  ["MUFG Securities Americas Inc.","","Joint lead arranger and bookrunner"],
+  ["TD Securities (USA) LLC","","Joint lead arranger and bookrunner"],
+  ["Jefferies LLC","","None disclosed"],
+  ["SG Americas Securities, LLC","Bernstein Institutional Services acts as selling agent","None disclosed"],
+  ["BTIG, LLC","","None disclosed"],
+  ["Cantor Fitzgerald & Co.","","None disclosed"],
+  ["Capital One Securities, Inc.","","None disclosed"],
+  ["Macquarie Capital (USA) Inc.","","None disclosed"]
+];
+
+/* ---------- Helpers ---------- */
+const $ = (s, el=document) => el.querySelector(s);
+const $$ = (s, el=document) => [...el.querySelectorAll(s)];
+const sum = a => a.reduce((x,y)=>x+y,0);
+const esc = v => String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function fM(v){const a=Math.abs(v),s=v<0?"−":"";return a>=1000?`${s}$${(a/1000).toFixed(a>=100000?0:1)}B`:`${s}$${Math.round(a).toLocaleString()}M`}
+function fAx(v){const a=Math.abs(v),s=v<0?"−":"";if(a>=1000){const b=a/1000;return `${s}$${Number.isInteger(b)?b:b.toFixed(1)}B`}return `${s}$${a}M`}
+const fPct = v => `${v<0?"−":""}${Math.abs(Math.round(v)).toLocaleString()}%`;
+const fN = v => Math.round(v).toLocaleString();
+const D = txt => `<span class="derived">${txt||"derived"}</span>`;
+function niceMax(v){if(v<=0)return 1;const p=10**Math.floor(Math.log10(v)),n=v/p;return (n<=1?1:n<=2?2:n<=2.5?2.5:n<=5?5:10)*p}
+
+/* ---------- Chart primitives (inline SVG) ---------- */
+function barChart({labels,series,stacked=false,log=false,fmt=fM,axFmt=fAx,h=300,vals=true,marks=[],label="Chart"}){
+  const W=760,m={l:64,r:14,t:20,b:40},iw=W-m.l-m.r,ih=h-m.t-m.b,n=labels.length;
+  const all=series.flatMap(s=>s.values);
+  const tot=labels.map((_,i)=>sum(series.map(s=>s.values[i]||0)));
+  let max=stacked?Math.max(...tot):Math.max(...all,0),min=stacked?0:Math.min(...all,0),y,ticks=[],base;
+  if(log){const pos=all.filter(v=>v>0),lo=Math.floor(Math.log10(Math.min(...pos))),hi=Math.ceil(Math.log10(max));
+    y=v=>m.t+ih-(Math.log10(Math.max(v,10**lo))-lo)/(hi-lo)*ih;base=y(10**lo);for(let e=lo;e<=hi;e++)ticks.push(10**e)}
+  else{const rawTop=max||1,rawBot=min<0?min:0,step=niceMax((rawTop-rawBot)/4),top=Math.ceil(rawTop/step-1e-9)*step,bot=Math.floor(rawBot/step+1e-9)*step;
+    y=v=>m.t+ih-(v-bot)/(top-bot)*ih;base=y(0);for(let t=bot;t<=top+step/2;t+=step)ticks.push(+t.toFixed(6))}
+  const gw=iw/n,ns=series.length,bw=stacked?gw*.58:gw*.74/ns;
+  let o=`<svg viewBox="0 0 ${W} ${h}" role="img" aria-label="${esc(label)}">`;
+  ticks.forEach(t=>{const yy=y(t);o+=`<line x1="${m.l}" x2="${W-m.r}" y1="${yy}" y2="${yy}" stroke="#d8d2c3"/><text x="${m.l-8}" y="${yy+4}" font-size="11" text-anchor="end">${axFmt(t)}</text>`});
+  if(!log)o+=`<line x1="${m.l}" x2="${W-m.r}" y1="${base}" y2="${base}" stroke="#191915"/>`;
+  labels.forEach((lb,i)=>{
+    const cx=m.l+gw*i+gw/2;
+    o+=`<text x="${cx}" y="${h-m.b+18}" font-size="12" text-anchor="middle">${esc(lb)}</text>`;
+    let acc=0;
+    series.forEach((s,j)=>{
+      const v=s.values[i]||0;if(!v&&stacked)return;
+      let x,y0,y1;
+      if(stacked){x=cx-bw/2;y0=y(acc);acc+=v;y1=y(acc)}
+      else{x=cx-gw*.37+j*bw;y0=base;y1=y(v)}
+      const top=Math.min(y0,y1),ht=Math.max(Math.abs(y1-y0),v?1:0);
+      o+=`<rect x="${x.toFixed(1)}" y="${top.toFixed(1)}" width="${bw.toFixed(1)}" height="${ht.toFixed(1)}" fill="${s.color}"><title>${esc(s.name)} · ${esc(lb)}: ${fmt(v)}</title></rect>`;
+      if(vals&&!stacked&&(ns<=2||n<=6))o+=`<text x="${(x+bw/2).toFixed(1)}" y="${(v<0?top+ht+13:top-5).toFixed(1)}" font-size="10.5" text-anchor="middle">${fmt(v)}</text>`;
+    });
+    if(stacked&&vals)o+=`<text x="${cx}" y="${y(tot[i])-5}" font-size="10.5" text-anchor="middle">${fmt(tot[i])}</text>`;
+  });
+  marks.forEach(mk=>{const cx=m.l+gw*mk.i+gw/2;o+=`<line x1="${cx}" x2="${cx}" y1="${m.t}" y2="${h-m.b}" stroke="#a8472b" stroke-dasharray="4 3"/><text x="${cx+4}" y="${m.t+10}" font-size="10.5" fill="#a8472b" style="fill:#a8472b">${esc(mk.text)}</text>`});
+  o+=`</svg>`;
+  const lg=ns>1?`<div class="btnrow" aria-hidden="true">${series.map(s=>`<span class="chip" style="color:${s.color}">${esc(s.name)}</span>`).join("")}</div>`:"";
+  return lg+o;
+}
+function hbar({rows,fmt=v=>v,max,label="Bar chart",w=760,lw=230}){
+  const rh=38,h=rows.length*rh+14,top=max||Math.max(...rows.map(r=>r.hi||r.value));
+  const x=v=>lw+(v/top)*(w-lw-70);
+  let o=`<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="${esc(label)}">`;
+  rows.forEach((r,i)=>{
+    const yy=i*rh+6;
+    o+=`<text x="${lw-10}" y="${yy+22}" font-size="12.5" text-anchor="end">${esc(r.label)}</text>`;
+    o+=`<rect x="${lw}" y="${yy+6}" width="${Math.max(x(r.value)-lw,1).toFixed(1)}" height="22" fill="${r.color}" opacity="${r.dim?0.25:1}"><title>${esc(r.label)}: ${fmt(r.value)}</title></rect>`;
+    if(r.lo!=null){o+=`<line x1="${x(r.lo)}" x2="${x(r.hi)}" y1="${yy+17}" y2="${yy+17}" stroke="#191915" stroke-width="2"/><line x1="${x(r.lo)}" x2="${x(r.lo)}" y1="${yy+10}" y2="${yy+24}" stroke="#191915" stroke-width="2"/><line x1="${x(r.hi)}" x2="${x(r.hi)}" y1="${yy+10}" y2="${yy+24}" stroke="#191915" stroke-width="2"/>`}
+    o+=`<text x="${x(r.hi||r.value)+8}" y="${yy+22}" font-size="12" font-weight="700">${r.text||fmt(r.value)}</text>`;
+  });
+  return o+`</svg>`;
+}
+function lineChart({xs,ys,xlabels,vlabels,h=300,color="#176b87",label="Line chart",fmt=fN}){
+  const W=760,m={l:64,r:20,t:20,b:40},iw=W-m.l-m.r,ih=h-m.t-m.b,xmax=Math.max(...xs);
+  const lo=Math.floor(Math.log10(Math.min(...ys))),hi=Math.ceil(Math.log10(Math.max(...ys)));
+  const X=v=>m.l+(v/xmax)*iw,Y=v=>m.t+ih-(Math.log10(v)-lo)/(hi-lo)*ih;
+  let o=`<svg viewBox="0 0 ${W} ${h}" role="img" aria-label="${esc(label)}">`;
+  for(let e=lo;e<=hi;e++){const yy=Y(10**e);o+=`<line x1="${m.l}" x2="${W-m.r}" y1="${yy}" y2="${yy}" stroke="#d8d2c3"/><text x="${m.l-8}" y="${yy+4}" font-size="11" text-anchor="end">${fmt(10**e)}</text>`}
+  o+=`<polyline fill="none" stroke="${color}" stroke-width="2.5" points="${xs.map((x,i)=>`${X(x).toFixed(1)},${Y(ys[i]).toFixed(1)}`).join(" ")}"/>`;
+  xs.forEach((x,i)=>{o+=`<circle cx="${X(x)}" cy="${Y(ys[i])}" r="5" fill="${color}"><title>${esc(xlabels[i])}: ${esc(vlabels[i])}</title></circle><text x="${X(x)}" y="${Y(ys[i])-11}" font-size="11" text-anchor="middle" font-weight="700">${esc(vlabels[i])}</text><text x="${X(x)}" y="${h-m.b+18}" font-size="11" text-anchor="middle">${esc(xlabels[i])}</text>`});
+  return o+`</svg>`;
+}
+function waterfall({items,h=320,label="Waterfall"}){
+  const W=760,m={l:64,r:14,t:28,b:52},iw=W-m.l-m.r,ih=h-m.t-m.b;
+  let run=0;const bars=items.map(it=>{if(it.total){const b={...it,from:0,to:run};return b}const from=run;run+=it.v;return {...it,from,to:run}});
+  const rawLo=Math.min(0,...bars.flatMap(b=>[b.from,b.to])),rawHi=Math.max(0,...bars.flatMap(b=>[b.from,b.to]));
+  const step=niceMax((rawHi-rawLo)/4),lo=Math.floor(rawLo/step+1e-9)*step,hi=Math.ceil(rawHi/step-1e-9)*step;
+  const span=hi-lo,y=v=>m.t+(hi-v)/span*ih,gw=iw/bars.length,bw=gw*.6;
+  let o=`<svg viewBox="0 0 ${W} ${h}" role="img" aria-label="${esc(label)}"><line x1="${m.l}" x2="${W-m.r}" y1="${y(0)}" y2="${y(0)}" stroke="#191915"/>`;
+  for(let t=lo;t<=hi+step/2;t+=step){o+=`<line x1="${m.l}" x2="${W-m.r}" y1="${y(t)}" y2="${y(t)}" stroke="#e3ddcf"/><text x="${m.l-8}" y="${y(t)+4}" font-size="11" text-anchor="end">${fAx(+t.toFixed(6))}</text>`}
+  bars.forEach((b,i)=>{
+    const x=m.l+gw*i+(gw-bw)/2,t=Math.min(y(b.from),y(b.to)),ht=Math.max(Math.abs(y(b.from)-y(b.to)),2);
+    const col=b.total?"#191915":(b.v<0?"#b3261e":"#2e7d4f");
+    o+=`<rect x="${x}" y="${t}" width="${bw}" height="${ht}" fill="${col}"><title>${esc(b.name)}: ${fM(b.total?b.to:b.v)}</title></rect>`;
+    o+=`<text x="${x+bw/2}" y="${(b.to<b.from||b.total&&b.to<0)?t+ht+14:t-6}" font-size="11" text-anchor="middle" font-weight="700">${fM(b.total?b.to:b.v)}</text>`;
+    o+=`<text x="${x+bw/2}" y="${h-m.b+16}" font-size="11" text-anchor="middle">${esc(b.name).split(" / ").map((s,k)=>`<tspan x="${x+bw/2}" dy="${k?13:0}">${s}</tspan>`).join("")}</text>`;
+  });
+  return o+`</svg>`;
+}
+function stepChart({ticks,series,h=360,label="Step chart"}){
+  const W=760,m={l:50,r:14,t:16,b:84},iw=W-m.l-m.r,ih=h-m.t-m.b,n=ticks.length;
+  const X=i=>m.l+iw*i/(n-1),Y=v=>m.t+ih-(v/100)*ih;
+  let o=`<svg viewBox="0 0 ${W} ${h}" role="img" aria-label="${esc(label)}">`;
+  [0,25,50,75,100].forEach(v=>{o+=`<line x1="${m.l}" x2="${W-m.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="#d8d2c3"/><text x="${m.l-8}" y="${Y(v)+4}" font-size="11" text-anchor="end">${v}%</text>`});
+  ticks.forEach((t,i)=>{o+=`<text transform="translate(${X(i)},${h-m.b+14}) rotate(-50)" font-size="10" text-anchor="end">${esc(t)}</text>`});
+  series.forEach(s=>{
+    let d=`M${X(0)},${Y(0)}`,prev=0;
+    s.vals.forEach((v,i)=>{d+=` L${X(i)},${Y(prev)} L${X(i)},${Y(v)}`;prev=v});
+    d+=` L${X(n-1)},${Y(prev)}`;
+    o+=`<path d="${d}" fill="none" stroke="${s.color}" stroke-width="2.5" stroke-linejoin="round"><title>${esc(s.name)}</title></path>`;
+    s.vals.forEach((v,i)=>{if(i===0||v!==s.vals[i-1])o+=`<circle cx="${X(i)}" cy="${Y(v)}" r="3.5" fill="${s.color}"><title>${esc(s.name)} · ${esc(ticks[i])}: ${v}% cumulative</title></circle>`});
+  });
+  return o+`</svg>`;
+}
+function table(head,rows,cls=""){
+  const plain=c=>String(c).replace(/<[^>]+>/g,"").trim();
+  const isNum=c=>{const t=plain(c);return t===""||/^[−+\-–~>≥$ ]*\d[\d,.]*\s?(%|[BMK]|×)?(\s*\(.*\))?$/.test(t)||t==="–"||t==="n/a"};
+  const numCol=head.map((_,i)=>i>0&&rows.length>0&&rows.every(r=>isNum(r[i])));
+  return `<div class="tablewrap"><table class="${cls}"><thead><tr>${head.map((h,i)=>`<th${numCol[i]?" class=\"n\"":""}>${h}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map((c,i)=>`<td${numCol[i]?" class=\"n\"":""}>${c}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+}
+function card({title,sub,body,take,src,data,wide,id}){
+  return `<div class="card${wide?" wide":""}"${id?` id="${id}"`:""}><h3>${title}</h3>${sub?`<p class="sub" style="margin-bottom:6px">${sub}</p>`:""}${body}${take?`<p class="take">${take}</p>`:""}${data?`<details class="data"><summary>Show data table</summary>${data}</details>`:""}${src?`<p class="src">Source: ${src}</p>`:""}</div>`;
+}
+function toggle(name,opts,cur){return `<div class="btnrow" role="group" aria-label="${name}">${opts.map(([v,l])=>`<button type="button" data-tg="${name}" data-v="${v}" aria-pressed="${v===cur}">${l}</button>`).join("")}</div>`}
+
+/* ---------- Derived numbers used in text ---------- */
+const H1 = {rev25:PD.revenue[3],rev26:PD.revenue[4]};
+const cashSti = BS.cash[2]+BS.sti[2];
+
+/* ---------- Tabs ---------- */
+const state = {tab:"overview",growth:"linear",opex:"usd",commit:{minimum:true,upto:true,lease:true,estimate:false},lock:{A:true,B:true,C:true,D:true}};
+const TABS = [
+ ["overview","Overview"],["growth","Growth"],["profit","Profit & loss"],["customers","Customers"],["compute","Compute"],
+ ["cash","Cash & funding"],["gov","Governance"],["pay","Pay & insiders"],["ipo","IPO & lock-ups"],["risks","Risks"],["gaps","Left blank"],["checks","Checks & ledger"]
+];
+
+const R = {};
+
+R.overview = () => {
+  const kpis=[
+    ["Revenue, first half 2026",fM(H1.rev26),`vs ${fM(H1.rev25)} in H1 2025 (filing: +1,300%)`],
+    ["Operating income, Q2 2026",`+${fM(QD.opinc[5])}`,`after ${fM(QD.opinc[4])} in Q1; first positive quarter of the six shown`],
+    ["Net loss, first half 2026",fM(PD.net[4]),`of which ${fM(PD.fv[4])} is fair-value change on notes, derivatives and SAFEs`],
+    ["Cash + short-term investments",fM(cashSti),"as of Jun 30, 2026"],
+    ["Customers ≥ $100K (TTM)","> 11,900","Sep 30, 2026; > 950 a year earlier"],
+    ["Net revenue retention","~900%","Sep 30, 2026 (excludes Pro/Max subscribers)"],
+    ["Employees","~5,300","Sep 30, 2026; TTM revenue per employee over $6.6M"],
+    ["Planned listing","Nasdaq: ANT","Class A stock; price range and share count are blank"]
+  ];
+  const says=[
+    `<b>Hypergrowth.</b> Quarterly revenue went from ${fM(QD.revenue[0])} to ${fM(QD.revenue[5])} in six quarters. Q2 2026 alone was ${(QD.revenue[5]/PD.revenue[2]).toFixed(1)}× all of 2025 ${D()}.`,
+    `<b>The loss is mostly not operating.</b> In H1 2026, operating loss was ${fM(PD.opinc[4])}; the other ${fM(PD.totalOther[4])} came below the line, mainly ${fM(PD.fv[4])} of fair-value change on convertible notes, derivatives and SAFEs, which the filing says is driven by a rising enterprise valuation.`,
+    `<b>Operating leverage is arriving.</b> Compute and infrastructure fell from ${fPct(QD.compute[0]/QD.revenue[0]*100)} of revenue (Q1 ’25) to ${fPct(QD.compute[5]/QD.revenue[5]*100)} (Q2 ’26) ${D()}. The company’s adjusted operating margin for H1 2026 is +${PD.adjOpM[4]}% against −${Math.abs(PD.opM[4])}% GAAP.`,
+    `<b>Commitments dwarf today’s cash.</b> The compute deals disclosed in the Compute tab add up to hundreds of billions of dollars of minimums, ceilings, leases and estimates, against ${fM(cashSti)} of cash and investments.`,
+    `<b>Customer concentration is falling.</b> Revenue outside the top five customers rose from ~64% (Q1 ’26) to ~79% (Q3 ’26); no customer exceeded 10% of revenue in the nine months to Sep 30, 2026.`,
+    `<b>Unusual control structure.</b> A single Class F share held by a founder LLC carries a fixed 50.1% of votes, and a trust elects a board majority. Class A holders share at most 49.9% of the vote.`,
+    `<b>Pay is mostly equity, and it vests at the IPO.</b> Dario Amodei’s 2025 reported pay was $${(NEO.total[0]/1e6).toFixed(1)}M (about ${fPct((NEO.stock[0]+NEO.option[0])/NEO.total[0]*100)} equity grant-date value ${D()}); the RSUs vest only once this registration statement is effective. Each co-founder executive’s salary rose from $600K to $1.38M in 18 months.`,
+    `<b>Insiders can’t sell all at once, but they can sell early.</b> Lock-ups unwind in 23 steps over about a year: up to 10% for non-founder directors and officers on day one, up to 29% for founders from the Q1 ’27 earnings release (or day 180), and the rest by the Q3 ’27 release (or day 365).`
+  ];
+  const tl=[
+    ["Jan 2021","Incorporated as a Delaware public benefit corporation"],
+    ["Nov 2025","Opus 4.5 launches; quarter-over-quarter revenue growth then rises from 48% to 132%"],
+    ["Q3 2025","$1.5B Bartz settlement expensed"],
+    ["Q1–Q2 2026","Series G ($45.2B) and Series H ($65.2B) preferred financings"],
+    ["Mar–Apr 2026","Google and Amazon compute agreements signed"],
+    ["Jun 1, 2026","Auditor’s report date (Grant Thornton), updated for the split Sep 30"],
+    ["Sep 17, 2026","10-for-1 split of Class A and N stock"],
+    ["Oct 26, 2026","Form S-1 filed with the SEC"]
+  ];
+  return `<h2>The S-1 at a glance</h2><p class="sub">Anthropic’s first public registration statement for an IPO of Class A common stock. Start here, then use the tabs for charts, tables and the underlying sources.</p>
+  <div class="grid four">${kpis.map(k=>`<div class="kpi"><small>${k[0]}</small><b>${k[1]}</b><span>${k[2]}</span></div>`).join("")}</div>
+  <div class="grid" style="margin-top:14px">
+    ${card({title:"Eight things the numbers say",body:`<ul class="facts">${says.map(s=>`<li>${s}</li>`).join("")}</ul>`,src:"Quarterly Results of Operations (p.158); Summary Financial Data (p.23–25); Customers (p.143–144); Capital structure (p.16); Executive compensation (p.271–273); Lock-ups (p.322–324)."})}
+    ${card({title:"Key dates in the filing",body:`<ul class="tl">${tl.map(t=>`<li><b>${t[0]}</b>${t[1]}</li>`).join("")}</ul>`,src:"Business and MD&A narrative; Notes F-15, F-46; cover page."})}
+    ${card({title:"How to read this explorer",wide:true,body:`<ul class="facts"><li>Charts are drawn from numbers transcribed from the filing. Each chart has a <i>Show data table</i> toggle, and the <b>Checks &amp; ledger</b> tab re-runs arithmetic cross-checks (for example, that expense lines sum to totals and that assets equal liabilities plus preferred stock plus deficit).</li><li>Labels marked ${D()} are calculated here from the filing’s figures and are not numbers the company reports.</li><li>The <b>Left blank</b> tab lists what this draft prospectus has not yet filled in. Nothing here estimates an IPO price or valuation, because the filing does not give one.</li></ul>`})}
+  </div>`;
+};
+
+R.growth = () => {
+  const lg = state.growth==="log";
+  const qoq = QD.revenue.map((v,i)=>i?(v/QD.revenue[i-1]-1)*100:null);
+  const body = `<div id="g-q">${barChart({labels:Q,series:[{name:"Revenue",values:QD.revenue,color:"#176b87"}],log:lg,h:300,label:"Quarterly revenue",marks:[{i:3,text:"Opus 4.5 launched Nov 2025"}]})}</div>`;
+  const qoqRow = `<div class="tablewrap"><table><thead><tr><th>Quarter-over-quarter growth ${D()}</th>${Q.map(q=>`<th>${q}</th>`).join("")}</tr></thead><tbody><tr><td>Revenue growth</td>${qoq.map(v=>`<td>${v==null?"–":"+"+fPct(v)}</td>`).join("")}</tr></tbody></table></div>`;
+  const mix = barChart({labels:["2024","2025","H1 ’26"],series:[{name:"Consumption (pay-for-intelligence)",values:[288,3800,13100],color:"#176b87"},{name:"Subscription",values:[98,789,3200],color:"#c99a2e"}],stacked:true,h:280,label:"Revenue by model"});
+  return `<h2>Growth</h2><p class="sub">Revenue is recognized as customers use Claude, metered in tokens, plus subscription fees recognized ratably.</p>
+  <div class="grid">
+   ${card({wide:true,title:"Quarterly revenue",sub:"Six quarters, unaudited quarterly data.",body:toggle("growth",[["linear","Linear"],["log","Log scale"]],state.growth)+body+qoqRow,take:`The filing reports growth accelerating from 48% (Q4 ’25) to 132% (Q1 ’26) after Opus 4.5 launched with greater capability and a lower price per task. The next quarter grew a further ${fPct(qoq[5])} ${D()}. The company also states it expects its growth rate to decline over time, possibly sharply.`,src:"Quarterly Results of Operations (p.158); growth narrative (p.196)."})}
+   ${card({title:"Annual and half-year revenue",body:barChart({labels:["2023","2024","2025","H1 ’26"],series:[{name:"Revenue",values:[41,386,4585,16286],color:"#a8472b"}],h:280,label:"Annual revenue"}),take:`2024 was ${(386/41).toFixed(1)}× 2023 and 2025 was ${(4585/386).toFixed(1)}× 2024 ${D()}. The first half of 2026 alone is ${(16286/4585).toFixed(1)}× all of 2025 ${D()}.`,data:table(["Period","Revenue"],P.map((p,i)=>[p,fM(PD.revenue[i])])),src:"Summary Consolidated Financial Data (p.23)."})}
+   ${card({title:"Revenue by pricing model",body:mix,take:"Consumption (pay for tokens used) is the substantial majority: 75% of 2024 revenue, 83% of 2025 and 80% of H1 2026. Subscriptions were 25%, 17% and 20%. Both amounts are rounded as stated in the filing.",data:table(["Period","Consumption","Subscription"],[["2024","$288M (75%)","$98M (25%)"],["2025","$3.8B (83%)","$789M (17%)"],["H1 ’26","$13.1B (80%)","$3.2B (20%)"]]),src:"MD&A, How We Generate Revenue (p.139)."})}
+   ${card({wide:true,title:"What drives it, according to the filing",body:`<ul class="facts"><li><b>Cheaper per task as models improve.</b> Fable 5.1 (Sep 2026) cut the cost of typical workloads by ~25% versus Fable 5, up to 45% for complex coding and agentic tasks. Opus 5.5 cut cost per task ~40% versus Opus 5, a mix of lower prices and efficiency.</li><li><b>Newest models carry the revenue.</b> Model versions released in the six months to Sep 30, 2026 accounted for over 80% of Q3 2026 revenue.</li><li><b>Agentic coding expands spend.</b> In Q3 2026, Claude Enterprise users who did not use Claude Code spent under $75 a month on average; the top 5% who used Claude Code spent about 20× that.</li><li><b>Net revenue retention of ~900%</b> (customers’ current-quarter revenue divided by their revenue a year earlier, excluding Pro and Max subscribers).</li><li><b>Seasonality:</b> usage dips around summer and winter holiday periods.</li><li><b>Caveat on quality of revenue:</b> the company estimates 5% to 7% of revenue in the nine months to Sep 30, 2026 came from customers later determined to be violating usage policy or commercial terms.</li></ul>`,src:"Business (p.195–196); MD&A (p.144–146)."})}
+  </div>`;
+};
+
+R.profit = () => {
+  const usd = state.opex==="usd";
+  const cats=[["Compute & infrastructure","compute","#176b87"],["Personnel","personnel","#a8472b"],["Sales, marketing & partnerships","sm","#c99a2e"],["Other operating & admin","other","#7b3f61"],["Bartz settlement","bartz","#3d4a57"]];
+  const series=cats.map(([n,k,c])=>({name:n,color:c,values:QD[k].map((v,i)=>usd?v:v/QD.revenue[i]*100)}));
+  const opexBody = `<div id="p-opex">${barChart({labels:Q,series,stacked:true,h:320,fmt:usd?fM:fPct,axFmt:usd?fAx:v=>fPct(v),label:"Operating expenses by quarter"})}</div>`;
+  const opinc = barChart({labels:Q,series:[{name:"Operating income (loss)",values:QD.opinc,color:"#191915"}],h:280,label:"Operating income by quarter"});
+  const bridge = waterfall({items:[{name:"Operating loss",v:PD.opinc[4]},{name:"Interest income",v:PD.interest[4]},{name:"Fair-value change / notes, derivatives, SAFEs",v:PD.fv[4]},{name:"Other expense",v:PD.oth[4]},{name:"Income taxes",v:-PD.tax[4]},{name:"Net loss",total:true}],label:"H1 2026 net loss bridge"});
+  const fun = barChart({labels:P,series:[{name:"Cost of revenue",values:PD.fCost,color:"#176b87"},{name:"Research & development",values:PD.fRD,color:"#a8472b"},{name:"Sales & marketing",values:PD.fSM,color:"#c99a2e"},{name:"G&A",values:PD.fGA,color:"#7b3f61"},{name:"Bartz settlement",values:PD.fBartz,color:"#3d4a57"}],stacked:true,h:300,label:"Operating expenses by function"});
+  const gm = PD.revenue.map((r,i)=>(r-PD.fCost[i])/r*100);
+  return `<h2>Profit &amp; loss</h2><p class="sub">Where the money goes, when operations turned the corner, and why the headline net loss is so large.</p>
+  <div class="grid">
+   ${card({wide:true,title:"Operating expenses by quarter",body:toggle("opex",[["usd","Dollars"],["pct","% of revenue"]],state.opex)+opexBody,take:`Compute and infrastructure is the largest line every quarter. It grew ${(QD.compute[5]/QD.compute[0]).toFixed(1)}× from Q1 ’25 to Q2 ’26 ${D()} while revenue grew ${(QD.revenue[5]/QD.revenue[0]).toFixed(0)}× ${D()}. Sales, marketing and partnerships jumped in 2026 (the filing cites $2.7B more in fees paid to channel partners in H1).`,data:table(["Quarter","Revenue","Compute","Personnel","S&M","Other","Bartz","Total"],Q.map((q,i)=>[q,fM(QD.revenue[i]),fM(QD.compute[i]),fM(QD.personnel[i]),fM(QD.sm[i]),fM(QD.other[i]),QD.bartz[i]?fM(QD.bartz[i]):"–",fM(QD.opex[i])])),src:"Quarterly Results of Operations (p.158–159); H1 comparison (p.149–150)."})}
+   ${card({title:"Operating income (loss) by quarter",body:opinc,take:`Operating income turned positive in Q2 2026 (${fM(QD.opinc[5])}). Q3 2025 includes the $1.5B Bartz settlement.`,data:table(["Quarter","Operating income"],Q.map((q,i)=>[q,fM(QD.opinc[i])])),src:"Quarterly Results of Operations (p.158)."})}
+   ${card({title:"Why H1 2026 net loss was $80.7B",body:bridge,take:`Operating loss was only ${fM(PD.opinc[4])}. The ${fM(PD.fv[4])} fair-value change reflects convertible notes, derivative liabilities and SAFEs rising in value as the company’s enterprise valuation rose. The filing says $113.2B of the $132.9B accumulated deficit comes from such changes since 2023 (${(113.2/132.9*100).toFixed(0)}% ${D()}).`,data:table(["Item","H1 ’26"],[["Operating loss",fM(PD.opinc[4])],["Interest income",fM(PD.interest[4])],["Change in fair value",fM(PD.fv[4])],["Other expense, net",fM(PD.oth[4])],["Income taxes",fM(-PD.tax[4])],["Net loss",fM(PD.net[4])]]),src:"Summary Consolidated Financial Data (p.23); MD&A Liquidity (p.162)."})}
+   ${card({wide:true,title:"Expenses by function, and a derived gross margin",sub:"The company switched in 2025 to presenting expenses by nature (above). A functional split survives as supplemental information in the notes.",body:fun,take:`Cost of revenue is “substantially all” compute for customer-serving workloads; research and development is mostly compute for model development. Revenue minus cost of revenue gives gross margins of ${PD.revenue.map((r,i)=>`${P[i]} ${fPct(gm[i])}`).join(", ")} ${D()}. The company does not report gross profit, and sales and marketing also includes compute for free access.`,data:table(["Period","Revenue","Cost of revenue","R&D","S&M","G&A","Derived gross margin"],P.map((p,i)=>[p,fM(PD.revenue[i]),fM(PD.fCost[i]),fM(PD.fRD[i]),fM(PD.fSM[i]),fM(PD.fGA[i]),fPct(gm[i])])),src:"Note 8, Supplemental Operating Expense Information (F-40)."})}
+   ${card({title:"Company-defined adjusted measures",body:table(["Measure","2023","2024","2025","H1 ’25","H1 ’26"],[["GAAP operating margin",...PD.opM.map(fPct)],["Adjusted operating margin",...PD.adjOpM.map(fPct)],["Adjusted operating income",...PD.adjOp.map(fM)],["Adjusted net income",...PD.adjNet.map(fM)]]),take:"Adjusted operating income is positive in H1 2026 ($1.6B, a 10% margin) while GAAP operating income is slightly negative. See the filing’s reconciliation for the adjustments.",src:"Non-GAAP Financial Measures (p.25)."})}
+   ${card({title:"Stock-based compensation",body:barChart({labels:Q,series:[{name:"Stock-based compensation",values:QD.sbc,color:"#5b6b2f"}],h:260,label:"Stock-based compensation by quarter"}),take:`Full-year amounts: $29M (2023), $192M (2024), $1.2B (2025). Personnel expense rose $2.6B in H1 2026, of which $1.9B was stock-based compensation.`,src:"Quarterly Results footnote (p.158); H1 comparison (p.150)."})}
+  </div>`;
+};
+
+R.customers = () => {
+  const cnt = lineChart({xs:CUST.t,ys:CUST.n,xlabels:CUST.d,vlabels:CUST.lab,h:300,label:"Customers with at least $100,000 of trailing-twelve-month revenue"});
+  const share = barChart({labels:["2023","2024","2025","H1 ’25","H1 ’26"],series:[{name:"Revenue from ≥$100K customers ($M)",values:[37,220,3500,870,12000],color:"#176b87"},{name:"All other revenue ($M)",values:[4,166,1085,293,4286],color:"#c9c3b5"}],stacked:true,h:300,label:"Revenue from large customers vs all other"});
+  const top5 = barChart({labels:["Q1 ’26","Q3 ’26"],series:[{name:"Top five customers",values:[36,21],color:"#a8472b"},{name:"All other customers",values:[64,79],color:"#c9c3b5"}],stacked:true,h:260,fmt:fPct,axFmt:v=>fPct(v),label:"Share of revenue from top five customers"});
+  return `<h2>Customers</h2><p class="sub">The filing uses customers with $100,000 or more of trailing-twelve-month (TTM) revenue as its measure of enterprise adoption.</p>
+  <div class="grid">
+   ${card({wide:true,title:"Customers with ≥ $100K of TTM revenue",body:cnt,take:`Roughly 20 customers at the end of 2023 became more than 11,900 by Sep 30, 2026. Log scale. A further ~40 million customers each spend under $100K. As of Sep 30, 2026 there were also over 1,900 customers at ≥ $1M and ~250 at ≥ $10M.`,data:table(["Date","Customers ≥ $100K"],CUST.d.map((d,i)=>[d,CUST.lab[i]])),src:"MD&A Key Factors (p.143); Business (p.195); H1 comparison (p.149)."})}
+   ${card({title:"How much revenue large customers supply",body:share,take:`Customers ≥ $100K supplied 90%, 57%, 76%, 75% and 74% of revenue across the five periods (as stated in the filing). “All other” bars are the remainder ${D()}.`,data:table(["Period","≥ $100K revenue","Share"],[["2023","$37M","90%"],["2024","$220M","57%"],["2025","$3.5B","76%"],["H1 ’25","$870M","75%"],["H1 ’26","$12.0B","74%"]]),src:"MD&A (p.143, p.149)."})}
+   ${card({title:"Top-five concentration is easing",body:top5,take:"About 79% of Q3 2026 revenue came from outside the top five customers, up from ~64% in Q1 2026. For the nine months to Sep 30, 2026 the top five were ~25% of revenue and no customer exceeded 10%. Even so, each top-five customer hit a record in Q3, and many have no long-term contract.",src:"MD&A (p.144); Risk Factors."})}
+   ${card({title:"Customers over 10% of revenue (named only as letters)",body:table(["Customer","2023","2024","2025","H1 ’25","H1 ’26"],[["A","–","–","12%","–","–"],["B","–","–","12%","18%","–"],["C","43%","–","–","–","11%"],["D","11%","–","–","–","–"]]),take:"The 2023 revenue base was tiny ($41M), so a single customer at 43% is a small absolute amount. On receivables, customer A was 13% at both Dec 2025 and Jun 2026, and customer C 10% at Jun 2026. “–” means under 10%.",src:"Note 1, Significant Customers (F-16)."})}
+   ${card({title:"Reach among large companies",body:`<ul class="facts"><li>Every company in the <b>Fortune 10</b> is a ≥ $100K customer.</li><li><b>Over 50%</b> of the Fortune 500 and <b>over 30%</b> of the Global 2000.</li><li>Within the Fortune 500: the 10 largest software/IT services firms, 10 largest internet companies, 10 largest banks, 9 of the 10 largest pharmaceutical companies, 9 of the 10 largest semiconductor companies, and 8 of the 10 largest healthcare companies.</li><li>Fortune 500 customers at ≥ $100K spend, on average, under 0.1% of their total expenses with the company; the top 10 spend under 1%, still over 8× the average. The company reads this as runway.</li></ul>`,src:"Business (p.195); MD&A (p.143–144). As of Sep 30, 2026."})}
+   ${card({title:"Caveats the filing itself raises",body:`<ul class="facts"><li>“Enterprise” is not tracked internally; $100K+ TTM spend is used as a proxy.</li><li>An estimated 5% to 7% of nine-month 2026 revenue came from customers later found to violate usage policy or commercial terms.</li><li>Run-Rate Revenue (trailing 28 days of consumption × 13 plus monthly subscriptions × 12) is an operating metric, not a forecast. Its value as of Oct 31, 2026 is blank in this draft.</li></ul>`,src:"Definitions (p.3); MD&A (p.146); Risk Factors."})}
+  </div>`;
+};
+
+function commitSummary(){
+  const sel=COMMIT.filter(c=>state.commit[c.kind]);
+  const lo=sum(sel.map(c=>c.lo??c.amt)),hi=sum(sel.map(c=>c.hi??c.amt));
+  const annual=PD.compute[4]*2;
+  const rng=lo===hi?fM(lo*1000):`${fM(lo*1000)} to ${fM(hi*1000)}`;
+  return `<p class="take"><b>Selected total: ${rng}</b> ${D()}. That is ${(lo*1000/cashSti).toFixed(1)}${lo===hi?"":"–"+(hi*1000/cashSti).toFixed(1)}× the ${fM(cashSti)} of cash and short-term investments at Jun 30, 2026, and ${(lo*1000/annual).toFixed(0)}${lo===hi?"":"–"+(hi*1000/annual).toFixed(0)}× H1 2026 compute and infrastructure expense annualized (${fM(annual)}) ${D()}. The kinds differ: some are non-cancelable minimums, some are ceilings that accrue as capacity arrives, some are cancelable, and some are estimates, so treat the total as an order of magnitude, not a liability.</p>`;
+}
+function commitChart(){
+  const rows=COMMIT.map(c=>({label:c.name,value:c.amt,lo:c.lo,hi:c.hi,color:{minimum:"#a8472b",upto:"#176b87",lease:"#7b3f61",estimate:"#9a968a"}[c.kind],dim:!state.commit[c.kind],text:c.lo?`$${c.lo}–${c.hi}B`:`${c.kind==="upto"?"up to ":c.kind==="estimate"?"> ":"≥ "}$${c.amt.toFixed(1)}B`.replace("≥ $161.2B","~$161.2B")}));
+  return hbar({rows,fmt:v=>`$${v}B`,max:170,label:"Compute commitments by counterparty",lw:250});
+}
+R.compute = () => {
+  const ctrl=`<div class="btnrow" id="c-ctrl" role="group" aria-label="Include in total">${Object.entries(KINDS).map(([k,l])=>`<label class="kind-${k}"><input type="checkbox" data-kind="${k}" ${state.commit[k]?"checked":""}> ${l}</label>`).join("")}</div>`;
+  const rows=COMMIT.map(c=>[c.name,`<span class="chip kind-${c.kind}">${KINDS[c.kind]}</span>`,c.lo?`$${c.lo}–${c.hi}B`:`$${c.amt}B`,`<span class="l">${esc(c.note)} <i>(${c.pg})</i></span>`]);
+  return `<h2>Compute</h2><p class="sub">Compute and infrastructure is the largest expense and the main call on future cash. The filing names its largest arrangements; the aggregate contractual-obligations total is left blank in this draft, so this chart is assembled from the named deals.</p>
+  <div class="grid">
+   ${card({wide:true,title:"Disclosed compute and infrastructure arrangements ($ billions)",sub:"Toggle the kinds of commitment to include in the running total.",body:ctrl+`<div id="c-chart">${commitChart()}</div><div id="c-sum">${commitSummary()}</div>`,data:`<div class="tablewrap"><table><thead><tr><th class="l">Counterparty</th><th class="l">Kind</th><th class="n">Amount</th><th class="l">Terms (page)</th></tr></thead><tbody>${rows.map(r=>`<tr><td class="l">${r[0]}</td><td class="l">${r[1]}</td><td class="n">${r[2]}</td><td class="l">${r[3]}</td></tr>`).join("")}</tbody></table></div>`,src:"MD&A, Contractual Obligations: Infrastructure Service Arrangements and Equipment Leases (p.171–172)."})}
+   ${card({title:"Compute expense vs revenue, by quarter",body:barChart({labels:Q,series:[{name:"Revenue",values:QD.revenue,color:"#176b87"},{name:"Compute & infrastructure",values:QD.compute,color:"#a8472b"}],h:300,label:"Revenue and compute expense by quarter"}),take:`Revenue first exceeded compute expense in ${Q[QD.revenue.findIndex((r,i)=>r>QD.compute[i])]} (${fM(QD.revenue[QD.revenue.findIndex((r,i)=>r>QD.compute[i])])} vs ${fM(QD.compute[QD.revenue.findIndex((r,i)=>r>QD.compute[i])])}) ${D()} and by Q2 ’26 was ${(QD.revenue[5]/QD.compute[5]).toFixed(1)}× compute ${D()}. The filing says the compute base was mostly committed in advance, so it did not move with demand.`,src:"Quarterly Results of Operations (p.158); H1 comparison (p.150)."})}
+   ${card({title:"What changes in the cash profile",body:`<ul class="facts"><li>Compute bought through cloud-provider (CSP) deals is generally paid as it becomes available. The company expects a growing share to be <b>capital expenditures, leases and prepayments</b> paid well before capacity is usable.</li><li>It has been <b>compute-constrained</b>: demand has exceeded supply.</li><li>Some partners are also investors, vendors, <i>competitors</i> and customers, which the filing flags as a conflict-of-interest risk.</li><li>To secure data-center projects it has relied on partners who guarantee lease obligations, and it posts restricted cash for some leases ($2.5B restricted cash at Jun 30, 2026).</li><li>It expects significant net cash used in operating and investing activities for the foreseeable future, regardless of financial performance.</li></ul>`,src:"MD&A Liquidity and Capital Resources (p.162–163, p.172)."})}
+  </div>`;
+};
+
+R.cash = () => {
+  const cf = barChart({labels:P,series:[{name:"Operating",values:PD.cfo,color:"#176b87"},{name:"Investing",values:PD.cfi,color:"#c99a2e"},{name:"Financing",values:PD.cff,color:"#a8472b"}],h:320,vals:false,label:"Cash flows by period"});
+  const assets = barChart({labels:BS.d,series:[{name:"Cash & equivalents",values:BS.cash,color:"#176b87"},{name:"Short-term investments",values:BS.sti,color:"#5b6b2f"},{name:"Receivables",values:BS.ar,color:"#c99a2e"},{name:"All other assets",values:BS.assets.map((a,i)=>a-BS.cash[i]-BS.sti[i]-BS.ar[i]),color:"#9a968a"}],stacked:true,h:300,label:"Total assets"});
+  const liab = barChart({labels:BS.d,series:[{name:"Convertible notes (fair value)",values:BS.conv,color:"#a8472b"},{name:"Other liabilities",values:BS.liab.map((l,i)=>l-BS.conv[i]),color:"#9a968a"},{name:"Redeemable convertible preferred",values:BS.pref,color:"#7b3f61"}],stacked:true,h:300,label:"Liabilities and preferred stock"});
+  const ladder = barChart({labels:SERIES.map(s=>s.s),series:[{name:"Original issue price per preferred share",values:SERIES.map(s=>s.p),color:"#7b3f61"}],log:true,h:300,fmt:v=>"$"+v.toFixed(2),axFmt:v=>"$"+v,label:"Preferred stock original issue price by series"});
+  return `<h2>Cash &amp; funding</h2><p class="sub">The company funded itself with convertible notes, SAFEs, preferred stock and, increasingly, customer cash.</p>
+  <div class="grid">
+   ${card({wide:true,title:"Cash flows",body:cf,take:`Operating cash flow turned positive in H1 2026 (+${fM(PD.cfo[4])}). Financing brought in ${fM(PD.cff[4])}, primarily redeemable convertible preferred stock, and ${fM(-PD.cfi[4])} went to investments and equipment. Net change in H1 2026 ${D()}: +${fM(PD.cfo[4]+PD.cfi[4]+PD.cff[4])}.`,data:table(["Period","Operating","Investing","Financing"],P.map((p,i)=>[p,fM(PD.cfo[i]),fM(PD.cfi[i]),fM(PD.cff[i])])),src:"Cash Flows (p.169)."})}
+   ${card({title:"Where the assets sit",body:assets,take:`Cash and short-term investments are ${fPct(cashSti/BS.assets[2]*100)} of Jun 30, 2026 assets ${D()}.`,data:table(["Item",...BS.d],[["Cash & equivalents",...BS.cash.map(fM)],["Short-term investments",...BS.sti.map(v=>v?fM(v):"–")],["Receivables",...BS.ar.map(fM)],["Total assets",...BS.assets.map(fM)]]),src:"Consolidated Balance Sheets (F-6)."})}
+   ${card({title:"Liabilities and preferred stock",body:liab,take:`Convertible notes carried at fair value are ${fPct(BS.conv[2]/BS.liab[2]*100)} of Jun 30, 2026 liabilities ${D()}. The pro forma figures assume these notes and the preferred stock convert at the IPO; the pro forma columns are blank in this draft. Stockholders’ deficit was ${fM(BS.equity[2])}.`,data:table(["Item",...BS.d],[["Convertible notes payable",...BS.conv.map(fM)],["Total liabilities",...BS.liab.map(fM)],["Redeemable convertible preferred",...BS.pref.map(fM)],["Accumulated deficit",...BS.deficit.map(fM)],["Stockholders’ deficit",...BS.equity.map(fM)]]),src:"Consolidated Balance Sheets (F-6, F-7)."})}
+   ${card({title:"Preferred stock price ladder",sub:"Original issue price per preferred share of each lead series, log scale.",body:ladder,take:`From Series A ($2.57) to Series H ($589.01) is ${(589.01/2.57).toFixed(0)}× ${D()}. The latest step-ups: F to G ${(259.14/140.97).toFixed(1)}×, G to H ${(589.01/259.14).toFixed(1)}× ${D()}. Prices are per preferred share and are not adjusted for the Sep 2026 10-for-1 common stock split. The filing does not state a valuation.`,src:"Note, Redeemable Convertible Preferred Stock (F-46)."})}
+   ${card({wide:true,title:"Priced rounds got bigger and broader",sub:"Proceeds of each lead (voting) preferred series, with the number of investors that bought it.",body:barChart({labels:ROUNDS.map(r=>r.s),series:[{name:"Proceeds",values:ROUNDS.map(r=>r.usd),color:"#7b3f61"}],h:300,fmt:fM,axFmt:fAx,label:"Proceeds of lead preferred series"}),take:`Round size grew ${(ROUNDS[3].usd/ROUNDS[2].usd).toFixed(1)}× from E-1 to F-1, ${(ROUNDS[4].usd/ROUNDS[3].usd).toFixed(1)}× to G-1 and ${(ROUNDS[5].usd/ROUNDS[4].usd).toFixed(1)}× to H-1 ${D()}, while the number of investors grew from 54 (Series D) to 305 (Series H-1). The non-voting tranches add more: Series G-2 raised about $21.7B from five investors and Series H-2 about $19.5B from 11. Together G and H raised $45.2B and $65.2B.`,data:table(["Series","When","Price per preferred share","Proceeds","Investors"],ROUNDS.map(r=>[r.s,r.when,"$"+r.price.toFixed(4),fM(r.usd),r.inv??"n/a"])),src:"Related Person Transactions (p.283–285); Recent Sales of Unregistered Securities (II-4–II-5)."})}
+   ${card({title:"The 2026 financings",body:`<ul class="facts"><li><b>Series G</b> at $259.1364 per share: $30.2B in Q1 2026 (Series G-1 and G-2) plus $15.0B in Q2 2026 (G-2).</li><li><b>Series H</b> at $589.0095 per share: $65.2B in Q2 2026 (H-1 and H-2).</li><li>Together ~$110B, in line with $110.8B of financing cash flow in H1 2026 ${D()}.</li><li>$3.2B was still available under the revolving credit facility at Jun 30, 2026.</li><li>Google’s convertible notes converted into preferred shares at discounts to the round price (for example $233.22 versus $259.14 for the Series G-4 conversion).</li></ul>`,src:"Series G and H Financings (F-47); Note 9 (F-40); Liquidity (p.162)."})}
+  </div>`;
+};
+
+R.gov = () => {
+  const classes=[
+    ["Class A","1","All matters; election of non-Class T directors","Pro rata","Not convertible","Investors and the public; at most 49.9% of total votes in aggregate"],
+    ["Class N","0 (1 if required by law)","Generally none","Pro rata","Converts to Class A on transfer to an unaffiliated third party","Mostly strategic business partners"],
+    ["Class T","1 (single share)","Elects the Class T directors, who are a majority of authorized board seats; certain trust-related amendments","None (par value on liquidation)","None","Held by the Long-Term Benefit Trust; redeemable for no consideration on certain events"],
+    ["Class F","50.1% of total votes (single share)","All matters generally, including non-Class T directors","None","None","Founder LLC, formed by the seven co-founders"],
+    ["Class E","1 on limited matters","Redemption of Class E; limited others","None","None","To be issued to employees other than co-founders"]
+  ];
+  const vote=barChart({labels:["Total voting power"],series:[{name:"Class F (Founder LLC)",values:[50.1],color:"#a8472b"},{name:"Class A (all holders, at most)",values:[49.9],color:"#176b87"}],stacked:true,h:200,fmt:v=>v.toFixed(1)+"%",axFmt:v=>v+"%",label:"Voting power split"});
+  const board=[["Dario Amodei","43","CEO, co-founder, director","Classes A and F"],["Daniela Amodei","39","President, co-founder, chairperson","Classes A and F"],["Reed Hastings","65","Director; lead independent director","Class T"],["Christopher Liddell","68","Director; the Specified Class T Director","Class T"],["Vas Narasimhan","50","Director","Class T"],["Yasmin Razavi","37","Director","Classes A and F"]];
+  const fnd=[["Dario Amodei*",245259100],["Tom Brown",244173040],["Christopher Olah",242882420],["Jared Kaplan",242351170],["Jack Clark",242271840],["Daniela Amodei",241408940],["Sam McCandlish",231809780]];
+  const fb=hbar({rows:fnd.map(([n,v])=>({label:n,value:v,color:"#5b6b2f",text:(v/1e6).toFixed(1)+"M"})),fmt:v=>fN(v),max:300e6,label:"Beneficial ownership of Class A by co-founder",lw:150});
+  return `<h2>Governance</h2><p class="sub">Anthropic is a Delaware public benefit corporation with five classes of common stock and a trust that elects a board majority.</p>
+  <div class="grid">
+   ${card({wide:true,title:"The five classes of common stock",body:table(["Class","Votes","Votes on","Economic rights","Conversion","Held by"],classes.map(r=>r.map(esc))),take:"The filing calls this a novel structure and says it may effectively eliminate Class A holders’ ability to influence major decisions, including a change in control. The company will be a Nasdaq “controlled company.”",src:"Our Capital Structure (p.16); Prospectus cover (p.i); Risk Factors summary (p.17–18)."})}
+   ${card({title:"Who holds the votes",body:vote,take:`Class F carries a fixed 50.1% of total voting power regardless of how many Class A shares are outstanding. Class T (the trust) has no general vote but elects the Class T directors. Class T and Class F carry no economic rights.`,src:"Prospectus cover; Principal and Selling Stockholders (p.290)."})}
+   ${card({title:"Board of directors (as listed)",body:table(["Director","Age","Role","Elected by"],board),take:"Three of the six listed directors are Class T. Committees: audit (Hastings, Liddell), nominating and governance (Daniela Amodei, Hastings, Razavi), compensation (Narasimhan, Razavi), safety and risk (Liddell, Narasimhan). CFO Krishna Rao is an officer, not a director.",src:"Management (p.255–256)."})}
+   ${card({wide:true,title:"Co-founder holdings of Class A stock (shares, before the offering)",body:fb,take:"Seven co-founders (the two Amodeis, Brown, Clark, Kaplan, McCandlish, Olah) will form the Founder LLC. Five are named as selling stockholders. Figures include options and RSUs vesting within 60 days of Sep 30, 2026. *Dario Amodei’s figure includes 4.6M shares he can vote under proxies. Ownership percentages and the number of shares each will sell are blank in this draft, so none are estimated here.",data:table(["Holder","Class A shares beneficially owned"],fnd.map(([n,v])=>[n,fN(v)])),src:"Principal and Selling Stockholders (p.290)."})}
+  </div>`;
+};
+
+const fK = v => v>=1000 ? "$"+(v/1000).toFixed(2).replace(/0+$/,"").replace(/\.$/,"")+"M" : "$"+v+"K";
+R.pay = () => {
+  const M = v => "$"+(v/1e6).toFixed(2)+"M";
+  const eq = i => (NEO.stock[i]+NEO.option[i])/NEO.total[i]*100;
+  const neo = barChart({labels:NEO.names,series:[
+    {name:"Salary",values:NEO.salary.map(v=>v/1e6),color:"#176b87"},
+    {name:"Stock awards (grant-date value)",values:NEO.stock.map(v=>v/1e6),color:"#a8472b"},
+    {name:"Option awards (grant-date value)",values:NEO.option.map(v=>v/1e6),color:"#c99a2e"},
+    {name:"All other compensation",values:NEO.other.map(v=>v/1e6),color:"#7b3f61"}],
+    stacked:true,h:320,fmt:v=>"$"+v.toFixed(2)+"M",axFmt:v=>"$"+v+"M",label:"2025 compensation of the three named executives"});
+  const sal = barChart({labels:SAL.labels,series:[{name:"Dario and Daniela Amodei (each)",values:SAL.amodei,color:"#a8472b"},{name:"Krishna Rao",values:SAL.rao,color:"#176b87"}],h:300,fmt:fK,axFmt:fK,label:"Annual base salary over time"});
+  const oc = barChart({labels:["Dario Amodei","Daniela Amodei"],series:OTHERC.labels.map((l,i)=>({name:l,values:[OTHERC.dario[i]/1e6,OTHERC.daniela[i]/1e6],color:["#9a968a","#176b87","#c99a2e","#a8472b","#3d4a57"][i]})),stacked:true,h:300,fmt:v=>"$"+v.toFixed(2)+"M",axFmt:v=>"$"+v+"M",label:"Composition of all other compensation, 2025"});
+  const pp = hbar({rows:[
+    {label:"Jun 2025: Amodei option exercise price",value:2.38,color:"#9a968a",text:"$2.38"},
+    {label:"Jun 2025: tender offer",value:5.60865,color:"#c99a2e",text:"$5.61"},
+    {label:"Dec 31, 2025: board fair value (also Feb 2026 option price)",value:17.66,color:"#176b87",text:"$17.66"},
+    {label:"Apr 2026: tender offer",value:25.91364,color:"#c99a2e",text:"$25.91"},
+    {label:"Series H price ÷ 10 (derived)",value:58.90095,color:"#7b3f61",text:"$58.90"}],fmt:v=>"$"+v.toFixed(2),max:70,label:"Price points per Class A share",lw:300});
+  const spark = barChart({labels:SPARK.map(s=>s[0]),series:[{name:"Spark Capital purchases ($M)",values:SPARK.map(s=>s[1]),color:"#5b6b2f"}],h:260,fmt:fM,axFmt:fAx,label:"Spark Capital purchases by series"});
+  const grants=[
+    ["Jun 12, 2025","Dario and Daniela Amodei (each)","992,500 options at $2.38","1,717,000 RSUs"],
+    ["Feb 20, 2026","Dario and Daniela Amodei (each)","1,431,490 options at $17.66","2,374,010 RSUs"],
+    ["Feb 20, 2026","Krishna Rao","1,122,840 options at $17.66","1,862,140 RSUs"],
+    ["Jul 15, 2026","Dario and Daniela Amodei (each)","–","537,430 RSUs"]
+  ];
+  return `<h2>Pay &amp; insiders</h2><p class="sub">Executive and director compensation, equity plans, and deals between the company and its insiders. Compensation covers the three named executive officers (NEOs) for 2025, plus later changes the filing discloses.</p>
+  <div class="grid">
+   ${card({wide:true,title:"What the three named executives were paid in 2025",body:neo,take:`Dario Amodei’s reported total was ${M(NEO.total[0])}, of which ${fPct(eq(0))} is the grant-date value of equity ${D()}; Daniela Amodei’s was ${M(NEO.total[1])} (${fPct(eq(1))} equity ${D()}); Krishna Rao’s was ${M(NEO.total[2])}, with no 2025 equity grants (his 14,000,000-share option grant dates from his 2024 offer letter). Equity amounts are accounting grant-date values, not cash received.`,data:table(["Executive","Salary","Stock awards","Option awards","All other","Total"],NEO.names.map((n,i)=>[n,"$"+fN(NEO.salary[i]),NEO.stock[i]?"$"+fN(NEO.stock[i]):"–",NEO.option[i]?"$"+fN(NEO.option[i]):"–","$"+fN(NEO.other[i]),"$"+fN(NEO.total[i])])),src:"Summary Compensation Table (p.271)."})}
+   ${card({title:"Base salary has risen sharply",body:sal,take:`The filing says the two co-founder executives are paid equally. Their base salary went from $600K to $1.38M in 18 months (${(1380/600).toFixed(1)}× ${D()}); the CFO’s from $700K to $1.25M. The board cites market data and parity with technical leadership. The company says it targets the 90th percentile of the AI development market.`,data:table(["Date","Amodeis (each)","Rao"],SAL.labels.map((l,i)=>[l,fK(SAL.amodei[i]),fK(SAL.rao[i])])),src:"Compensation Discussion and Analysis (p.265, 268); Post-Fiscal Year End Changes (p.272)."})}
+   ${card({title:"What “all other compensation” contains",body:oc,take:`Most of it is company-paid personal security: ${M(OTHERC.dario[1])} for Dario Amodei and ${M(OTHERC.daniela[1])} for Daniela Amodei, based on third-party security studies and board requirement. Each also shows ${M(OTHERC.dario[3])} for the spread between price paid and fair market value on shares the company repurchased in the June 2025 tender offer. Dario Amodei’s also includes $97K of personal private-air travel.`,data:table(["Item","Dario","Daniela"],OTHERC.labels.map((l,i)=>[l,OTHERC.dario[i]?"$"+fN(OTHERC.dario[i]):"–","$"+fN(OTHERC.daniela[i])])),src:"Summary Compensation Table footnotes (p.271–272); Security Services (p.269)."})}
+   ${card({wide:true,title:"Equity grants to the named executives",body:table(["Grant date","Executive","Options","RSUs"],grants)+`<p class="take">All of the executives’ RSUs vest only when both a service condition and a performance condition are met, and the performance condition is satisfied when this registration statement becomes effective. Options vest monthly over a year. Pre-IPO the board’s fair value of a Class A share was $17.66 at Dec 31, 2025 (the Feb 2026 option exercise price).</p>`,src:"Long-Term Equity Incentive Program (p.268); Post-Fiscal Year End Changes (p.272–273); Grants of Plan-Based Awards (p.273)."})}
+   ${card({title:"Severance, protections and perquisites",body:`<ul class="facts"><li><b>Oct 2026 severance agreements:</b> if terminated without cause or on resignation for good reason, the Amodeis get 24 months of base salary (about $2.76M at $1.38M ${D()}) and Rao gets 12 months (about $1.25M ${D()}); all get 12 months of COBRA and 12 months of equity vesting acceleration.</li><li><b>Change of control:</b> only the CFO has double-trigger protection. His full unvested option acceleration was valued at $133.6M at Dec 31, 2025.</li><li><b>Filing fees:</b> the company paid the $2.5M antitrust (HSR) filing fee for each Amodei in Oct 2026.</li><li><b>Not offered:</b> excise-tax gross-ups, single-trigger change-of-control benefits, pensions, guaranteed pay or fixed-term contracts.</li><li><b>Clawback policy</b> will apply from effectiveness; compensation consultant: Semler Brossy.</li></ul>`,src:"Severance Benefits (p.273); Potential Payments (p.275); Compensation Governance Highlights (p.266)."})}
+   ${card({title:"Directors",body:`<ul class="facts"><li><b>2025 paid:</b> only Jay Kreps ($200,000 cash; he left the board in May 2026). Hastings, Razavi and the two Amodeis took no director pay; Liddell and Narasimhan joined in 2026.</li><li><b>New policy:</b> $100,000 annual retainer, extra for chairs and committees, plus RSUs worth $325,000 a year, or $400,000 on joining, fully vesting on a change in control.</li></ul>`,src:"Non-Employee Director Compensation (p.262–264)."})}
+   ${card({wide:true,title:"Share prices before the IPO",sub:"Per Class A share (after the Sep 2026 10-for-1 split).",body:pp,take:`Both tender offers were priced exactly at the then-latest preferred price ÷ 10 ($56.0865 → $5.60865; $259.1364 → $25.91364), which implies 10 Class A shares per preferred share. On that basis Series H ($589.0095) is about $58.90 per Class A share ${D()}. This is an inference, not a stated IPO price or valuation.`,src:"Tender Offers (p.285); Executive Compensation (p.268, 272, 275); Preferred stock note (F-46)."})}
+   ${card({title:"Insider deals since 2023",body:`<ul class="facts"><li><b>Tender offers:</b> Jun 2025: 27.9M shares for $157M; Apr 2026: 179.9M shares for $4.66B. Sellers in 2025 were both Amodeis; in 2026 they were joined by Rao and Daniela Amodei’s spouse.</li><li><b>Spouse employment:</b> Holden Karnofsky has worked at the company since Jan 2025, with $430,213 of 2025 cash pay and grants of 179,500 options and 761,700 RSUs.</li><li><b>Proxies:</b> Dario Amodei votes shares held by two donor-advised funds.</li><li><b>Trust funding:</b> the company paid the Long-Term Benefit Trust $2.7M (2023), $0 (2024), $0.9M (2025) and $8.4M in nine months of 2026.</li><li><b>Director-linked investments:</b> Spark Capital (director Razavi) bought preferred stock in every round from Series C, and director Narasimhan’s Bodhi LLC bought $10M of Series H-1.</li></ul>`,src:"Certain Relationships and Related Person Transactions (p.283–287)."})}
+   ${card({title:"Spark Capital’s purchases",body:spark,take:`Spark’s Series H-1 purchase (${fM(440)}) is about 1% of that round ($45.7B) ${D()}. All amounts are from the related-person tables.`,src:"Related Person Transactions (p.283–285)."})}
+   ${card({wide:true,title:"Equity overhang and plans",body:`<ul class="facts"><li><b>Granted since Nov 2023 (gross, not net of forfeitures):</b> options on 2,066,876,470 Class A shares (exercise prices $0.642 to $57.536) and 1,171,364,280 RSUs.</li><li><b>Exercised:</b> 409,116,603 shares at a weighted-average price of $1.2043.</li><li><b>2026 Equity Incentive Plan</b> (effective the day before the registration takes effect): the initial share reserve is blank, with an automatic increase each year from 2027 to 2036 of up to 5% of shares outstanding.</li><li><b>ESPP:</b> purchases at 85% of fair market value (lower of offering-date and purchase-date), payroll deductions up to 15% of earnings, offerings up to 27 months; reserve blank, with annual increases of up to 1%.</li><li>For comparison, Class A shares outstanding at Jun 30, 2026 were 2,157,398,000, before preferred stock and notes convert.</li></ul>`,src:"Recent Sales of Unregistered Securities (II-5); 2026 Plan (p.276–277); ESPP (p.281–282); Balance Sheet (F-7)."})}
+  </div>`;
+};
+
+function lockChart(){
+  const keys=Object.keys(LOCK).filter(k=>state.lock[k]);
+  return stepChart({ticks:MS,series:keys.map(k=>({name:LOCK[k].name,color:LOCK[k].color,vals:lockCum(LOCK[k])})),label:"Cumulative share of locked-up holdings that can be sold, by milestone"});
+}
+R.ipo = () => {
+  const ctrl=`<div class="btnrow" id="k-ctrl" role="group" aria-label="Show groups">${Object.entries(LOCK).map(([k,g])=>`<label style="color:${g.color}"><input type="checkbox" data-lock="${k}" ${state.lock[k]?"checked":""}> ${esc(g.name)}</label>`).join("")}</div>`;
+  const cums=Object.fromEntries(Object.keys(LOCK).map(k=>[k,lockCum(LOCK[k])]));
+  const ledger=table(["Milestone",...Object.keys(LOCK).map(k=>"Group "+k+" (cumulative)")],MS.map((m,i)=>[m,...Object.keys(LOCK).map(k=>cums[k][i]+"%")]));
+  const withRole=UW.filter(u=>u[2]!=="None disclosed").length;
+  return `<h2>IPO mechanics: underwriting &amp; lock-ups</h2><p class="sub">Who is selling the shares, what they are paid (blank in this draft), and when insiders can sell after the IPO.</p>
+  <div class="grid">
+   ${card({title:"Underwriting terms",body:`<ul class="facts"><li><b>${UW.length} underwriters;</b> Goldman Sachs and Morgan Stanley are the representatives. Morgan Stanley is the stabilization agent (it may buy or short shares to steady the price).</li><li><b>Over-allotment option:</b> 30 days to buy additional shares from the company at the IPO price less the discount, solely to cover over-allotments. Sales to discretionary accounts are not expected to exceed 5%.</li><li><b>Price:</b> set by negotiation among the company, selling stockholders and representatives, weighing performance, prospects, management and comparable companies.</li><li><b>Blank in this draft:</b> per-share and total discounts, shares per underwriter, offering expenses, FINRA expense reimbursement, and the form of underwriting agreement (Exhibit 1.1, to be filed by amendment).</li><li><b>Sellers:</b> Tom Brown, Jack Clark, Jared Kaplan, Sam McCandlish and Christopher Olah are listed as “other selling stockholders”; the shares-offered column is blank for everyone, so whether the Amodeis sell is not stated. The company receives no money from stockholder sales.</li></ul>`,src:"Underwriting (p.317–325); Exhibit Index (II-6)."})}
+   ${card({title:"Banks are also lenders",body:`<p class="sub" style="margin:0 0 8px"><b>${withRole} of ${UW.length}</b> underwriters have affiliates acting as arrangers or agents on the company’s amended and restated credit agreement (the revolving facility; $3.2B was undrawn at Jun 30, 2026). Some underwriters and affiliates are also customers.</p>${table(["Underwriter","Role in this offering","Role in the credit facility (affiliate)"],UW.map(u=>u.map(esc)))}`,take:"The filing notes these relationships in its “Other Relationships” disclosure; they are common for large offerings but mean the banks have more than one interest in the company.",src:"Underwriting: Other Relationships (p.325)."})}
+   ${card({wide:true,title:"When insiders can sell: the lock-up ladder",sub:"Cumulative share of each group’s locked-up holdings that is released, step by step.",body:ctrl+`<div id="k-chart">${lockChart()}</div>`,take:`Releases are staggered, not a single cliff. Non-founder directors and officers may sell up to 10% on the first trading day and a further 35% after FY2026 results. Founders may sell up to 29% from the Q1 ’27 earnings release (or day 180, whichever is first) and the rest at the Q3 ’27 earnings release or day 365. Holders of over 0.5% of fully diluted shares are locked up for 365 days with a slower ladder. All cumulative totals are summed here ${D()}; the “rest” at each group’s final step is the remainder to 100% ${D()}.`,data:ledger,src:"Lock-Up and Market Standoff Agreements (p.318–324); Shares Eligible for Future Sale (p.308–309). ERD = second trading day after the earnings release. Step order follows the filing’s table; the prospectus date and share counts are blank."})}
+   ${card({title:"More supply the lock-ups don’t cover",body:`<ul class="facts"><li><b>Convertible notes:</b> notes convert into shares at the IPO up to each holder’s ownership cap; the rest convert at intervals afterwards.</li><li><b>Class N stock</b> (strategic partners) converts to Class A when sold to an unaffiliated party, and holders have registration rights.</li><li><b>Registration rights</b> under the investors’ rights agreement and a Google agreement could allow large block sales after lock-ups.</li><li><b>Form S-8</b> will register shares under the equity plans promptly after the IPO, subject to vesting and lock-ups. Rule 701 holders must wait 90 days.</li><li><b>Lock-up exceptions</b> include gifts, estate planning, pledges to lenders, and 10b5-1 plans that do not trade during the lock-up.</li></ul>`,src:"Shares Eligible for Future Sale (p.309–311)."})}
+   ${card({title:"Who can release shares early",body:`<ul class="facts"><li>The representatives can release locked-up securities in whole or in part at any time.</li><li>In certain circumstances a release for one holder triggers a pro rata release for certain other holders.</li><li>The company also agrees not to issue or register new shares during its own lock-up period (to the Q1 ’27 earnings release or day 180, whichever is first), with exceptions for employee plans, note conversions, donation matching, acquisitions and other listed items.</li></ul>`,src:"Underwriting: Lock-Up and Market Standoff Agreements (p.318–324)."})}
+  </div>`;
+};
+
+R.risks = () => {
+  const cats=["All",...new Set(RISKS.map(r=>r[0]))];
+  return `<h2>Risks</h2><p class="sub">The filing’s own summary of 18 headline risks (the full Risk Factors section runs far longer). Category tags are this explorer’s grouping, not the filing’s.</p>
+  <div class="card"><div class="btnrow" id="r-cats" role="group" aria-label="Risk category">${cats.map((c,i)=>`<button type="button" data-cat="${c}" aria-pressed="${i===0}">${c}</button>`).join("")}</div>
+  <input id="r-q" type="search" placeholder="Search the risks" aria-label="Search risks">
+  <div id="r-list">${RISKS.map((r,i)=>`<div class="risk" data-cat="${r[0]}"><span class="n">${i+1}</span><span>${esc(r[1])}</span><span class="chipcell"><span class="chip">${r[0]}</span></span></div>`).join("")}</div>
+  <p class="src">Source: Risk Factors Summary (p.17–18). Paraphrased; read the full text in the filing.</p></div>
+  <div class="grid" style="margin-top:14px">
+   ${card({title:"Disclosures worth a closer read",body:`<ul class="facts"><li>A $1.5B settlement (Bartz) was expensed in Q3 2025.</li><li>Partners can be investor, vendor, competitor and customer at once.</li><li>5%–7% of nine-month 2026 revenue came from customers later found to violate usage terms.</li><li>The company says it may need more financing sooner than expected and that capital spending will rise significantly.</li><li>Growth rates are expected to decline, possibly significantly and faster than anticipated.</li></ul>`,src:"MD&A (p.146, p.162–163); Risk Factors."})}
+   ${card({title:"How the risks line up with the numbers",body:`<ul class="facts"><li><b>Compute</b> risk: three of 18 headline risks. Largest expense line; disclosed commitments in the hundreds of billions.</li><li><b>Customer</b> risk: top five were ~25% of nine-month 2026 revenue.</li><li><b>Governance</b> risk: three headline risks about control, votes and the PBC purpose.</li></ul>`,take:"Counts are of the filing’s 18 summary headlines as grouped here."})}
+  </div>`;
+};
+
+R.gaps = () => {
+  const g=[
+    ["IPO price range, shares offered by the company and by selling stockholders, underwriters’ option","Cover page; The Offering","p.i, p.19"],
+    ["Net proceeds and use-of-proceeds amounts","The Offering; Use of Proceeds","p.19"],
+    ["Pro forma and pro forma as adjusted balance sheet (cash, working capital, assets, liabilities, deficit)","Summary Balance Sheet Data","p.25"],
+    ["Pro forma net loss per share and the stock-compensation pro forma adjustments","Summary Financial Data","p.24"],
+    ["Run-Rate Revenue as of October 31, 2026","Business; Prospectus Summary","p.195"],
+    ["TTM revenue from customers at ≥ $100K at Sep 30, 2026 and its share of revenue","MD&A Key Factors","p.143"],
+    ["Total contractual obligations, the by-year schedule, and the amounts of convertible notes outstanding","Contractual Obligations","p.170–171"],
+    ["Ownership percentages and the number of shares each selling stockholder will sell","Principal and Selling Stockholders","p.290"],
+    ["Prospectus date and expected closing date","Cover page","p.i"],
+    ["Underwriting discounts (per share and total), shares per underwriter, offering expenses, FINRA reimbursement cap","Underwriting","p.317–325"],
+    ["Share counts and percentages at each lock-up release step, and the share of fully diluted shares under lock-up","Shares Eligible for Future Sale; Lock-Up","p.308–309, p.319"],
+    ["Initial share reserves for the 2026 Equity Incentive Plan and the ESPP","Equity Plans","p.276, p.281"],
+    ["Karnofsky’s 2026 cash compensation and the legal fees the company will reimburse the Founder LLC","Related Person Transactions","p.286–287"],
+    ["Form of underwriting agreement (Exhibit 1.1) and expense table totals, to be filed by amendment","Exhibit Index; Item 13","II-2, II-6"]
+  ];
+  return `<h2>Left blank in this draft</h2><p class="sub">This is a preliminary filing. These items appear as blanks in the document, so this explorer shows no value for them, and does not estimate an IPO price, valuation or ownership percentage.</p>
+  <div class="grid">${g.map(x=>`<div class="gap"><b>${x[0]}</b><br><span class="src">${x[1]} · ${x[2]}</span></div>`).join("")}</div>
+  <p class="take" style="margin-top:16px">Later amendments (Form S-1/A) normally fill these in. If one exists, it will supersede the figures here.</p>`;
+};
+
+/* ---------- Integrity checks ---------- */
+function runChecks(){
+  const out=[];const ok=(name,a,b,tol=0)=>out.push({name,a,b,pass:Math.abs(a-b)<=tol});
+  const cols=(D2,idx,lab)=>idx.forEach(i=>{
+    ok(`${lab[i]}: expense lines sum to total operating expenses`,D2.compute[i]+D2.personnel[i]+D2.bartz[i]+D2.sm[i]+D2.other[i],D2.opex[i]);
+    ok(`${lab[i]}: revenue − expenses = operating income`,D2.revenue[i]-D2.opex[i],D2.opinc[i]);
+    ok(`${lab[i]}: interest + fair value + other = total other`,D2.interest[i]+D2.fv[i]+D2.oth[i],D2.totalOther[i]);
+    ok(`${lab[i]}: operating income + total other = pre-tax loss`,D2.opinc[i]+D2.totalOther[i],D2.pretax[i]);
+    ok(`${lab[i]}: pre-tax loss − taxes = net loss`,D2.pretax[i]-D2.tax[i],D2.net[i]);
+  });
+  cols(QD,[0,1,2,3,4,5],Q);cols(PD,[0,1,2,3,4],P);
+  ok("Quarterly revenue Q1–Q4 ’25 sums to FY2025",sum(QD.revenue.slice(0,4)),PD.revenue[2]);
+  ok("Quarterly revenue Q1–Q2 ’26 sums to H1 ’26",sum(QD.revenue.slice(4)),PD.revenue[4]);
+  ok("Quarterly compute Q1–Q4 ’25 sums to FY2025",sum(QD.compute.slice(0,4)),PD.compute[2]);
+  ok("Quarterly net loss Q1–Q4 ’25 sums to FY2025",sum(QD.net.slice(0,4)),PD.net[2]);
+  ok("Quarterly net loss Q1–Q2 ’26 sums to H1 ’26",sum(QD.net.slice(4)),PD.net[4]);
+  ok("Quarterly fair-value change Q1–Q4 ’25 sums to FY2025",sum(QD.fv.slice(0,4)),PD.fv[2]);
+  ok("QoQ growth Q4 ’25 matches filing’s 48%",Math.round((QD.revenue[3]/QD.revenue[2]-1)*100),48);
+  ok("QoQ growth Q1 ’26 matches filing’s 132%",Math.round((QD.revenue[4]/QD.revenue[3]-1)*100),132);
+  ok("H1 revenue change matches filing’s 1,300%",Math.round((PD.revenue[4]/PD.revenue[3]-1)*100),1300,1);
+  ok("H1 ’26 compute is 55% of revenue (filing)",Math.round(PD.compute[4]/PD.revenue[4]*100),55);
+  ok("Q1 ’25 compute is 251% of revenue (filing)",Math.round(QD.compute[0]/QD.revenue[0]*100),251);
+  PD.revenue.forEach((_,i)=>ok(`${P[i]}: functional expenses sum to total operating expenses`,PD.fCost[i]+PD.fRD[i]+PD.fSM[i]+PD.fBartz[i]+PD.fGA[i],PD.opex[i]));
+  BS.d.forEach((d,i)=>{
+    ok(`${d}: current assets add up`,BS.cash[i]+BS.sti[i]+BS.ar[i]+BS.prepaid[i],BS.curAssets[i]);
+    ok(`${d}: total assets add up`,BS.curAssets[i]+BS.restricted[i]+BS.ppe[i]+BS.rou[i]+BS.goodwill[i]+BS.otherNC[i],BS.assets[i]);
+    ok(`${d}: total liabilities add up`,BS.curLiab[i]+BS.leaseNC[i]+BS.conv[i]+BS.otherNCL[i],BS.liab[i]);
+    ok(`${d}: assets = liabilities + preferred + stockholders’ deficit`,BS.liab[i]+BS.pref[i]+BS.equity[i],BS.assets[i]);
+  });
+  ok("H1 ’26 cash + short-term investments = $131,651M (filing)",BS.cash[2]+BS.sti[2],131651);
+  ok("H1 ’26 net loss bridge sums to net loss",PD.opinc[4]+PD.interest[4]+PD.fv[4]+PD.oth[4]-PD.tax[4],PD.net[4]);
+  ok("Customers ≥$100K share FY2024 ≈ 57%",Math.round(220/386*100),57);
+  ok("Customers ≥$100K share FY2025 ≈ 76%",Math.round(3500/4585*100),76);
+  ok("Customers ≥$100K share FY2023 ≈ 90%",Math.round(37/41*100),90);
+  ok("Adjusted operating margin H1 ’26 ≈ 10%",Math.round(PD.adjOp[4]/PD.revenue[4]*100),10);
+  ok("Series G + H cash raised ≈ H1 ’26 financing cash flow (within $1B)",30.2+15.0+65.2,PD.cff[4]/1000,1);
+  ok("Series G-1 + G-2 raised ≈ $45.2B (filing, within $0.1B)",23454.545698+21700,45200,100);
+  ok("Series H-1 + H-2 raised ≈ $65.2B (filing, within $0.1B)",45729.447703+19500,65200,100);
+  NEO.names.forEach((n,i)=>ok(`${n}: 2025 pay components sum to reported total`,NEO.salary[i]+NEO.stock[i]+NEO.option[i]+NEO.other[i],NEO.total[i]));
+  ok("Dario Amodei: ‘all other’ items sum to reported amount",sum(OTHERC.dario),NEO.other[0]);
+  ok("Daniela Amodei: ‘all other’ items sum to reported amount",sum(OTHERC.daniela),NEO.other[1]);
+  ok("Amodei 2025 salary: $600K for 5.5 months + $700K for 6.5 months",Math.round(600000*5.5/12+700000*6.5/12),NEO.salary[0]);
+  ok("Rao 2025 salary: $700K for 11.5 months + $850K for 0.5 month",Math.round(700000*11.5/12+850000*0.5/12),NEO.salary[2]);
+  [["Series E-1",63610106,56.0865,3567668210],["Series F-1",92219720,140.9676,12999992602],["Series G-1",90510425,259.1364,23454545698],["Series H-1",77637878,589.0095,45729447703]].forEach(([n,sh,p,t])=>ok(`${n}: shares × price = stated purchase price (within $10K)`,sh*p,t,10000));
+  ok("Jun 2025 tender price = Series E-1 price ÷ 10 (to the cent)",Math.round(56.0865/10*100)/100,5.61);
+  ok("Apr 2026 tender price = Series G-1 price ÷ 10 (to $0.0001)",Math.round(259.1364/10*10000)/10000,25.9136);
+  ok("Apr 2026 tender: 179,883,540 shares × $25.91364 = $4,661,437,298 (within $10)",179883540*25.91364,4661437298,10);
+  ok("Jun 2025 tender: 27,942,000 shares × $5.60865 = $156,716,898 (within $10)",27942000*5.60865,156716898,10);
+  const cB=lockCum(LOCK.B),cC=lockCum(LOCK.C);
+  ok("Lock-up group B releases 86% before the Q1 ’27 step",cB[10],86);
+  ok("Lock-up group C’s first ten steps equal 30% of group B’s",+(cC[10]).toFixed(2),+(cB[10]*0.3).toFixed(2),0.01);
+  ok("Lock-up group C releases 90.9% before the final step",cC[21],90.9,0.01);
+  ok("22 underwriters listed",UW.length,22);
+  ok("16 underwriters have affiliates on the credit facility",UW.filter(u=>u[2]!=="None disclosed").length,16);
+  return out;
+}
+const LEDGER=[
+ ["Registrant","Anthropic, PBC; Delaware PBC; incorporated Jan 2021","Cover; Corporate Information","p.i, p.18"],
+ ["Filing date","October 26, 2026 (Registration No. 333- )","Cover","p.i"],
+ ["Proposed listing","Class A common stock, Nasdaq Global Select Market, symbol “ANT”","Cover","p.i"],
+ ["Underwriters","22 named, led by Goldman Sachs & Co. LLC, Morgan Stanley, J.P. Morgan, Citigroup","Cover","p.i"],
+ ["Auditor","Grant Thornton LLP, San Francisco (2023–2025); report dated Jun 1, 2026","Auditor’s report","F-5"],
+ ["Employees","~5,300 at Sep 30, 2026; TTM revenue per employee over $6.6M","Business","p.196"],
+ ["Revenue FY2023 / FY2024 / FY2025","$41M / $386M / $4,585M","Summary Financial Data","p.23"],
+ ["Revenue H1 2025 / H1 2026","$1,163M / $16,286M","Summary Financial Data","p.23"],
+ ["Net loss FY2025; H1 2026","$41,965M; $80,748M","Summary Financial Data","p.23"],
+ ["Cash and equivalents; short-term investments (Jun 30, 2026)","$112,389M; $19,262M","Balance Sheet","F-6"],
+ ["Accumulated deficit (Jun 30, 2026)","$132,902M, including $113.2B from fair-value changes since 2023","Balance Sheet; MD&A","F-7, p.162"],
+ ["Operating cash flow H1 2026","+$3,929M","Cash Flows","p.169"],
+ ["Credit facility availability (Jun 30, 2026)","$3.2B","Liquidity","p.162"],
+ ["Series G price; raised","$259.1364 per share; $30.2B (Q1 ’26) + $15.0B (Q2 ’26)","Series G and H Financings","F-47"],
+ ["Series H price; raised","$589.0095 per share; $65.2B (Q2 ’26)","Series G and H Financings","F-47"],
+ ["Stock split","10-for-1 (Class A and N) on Sep 17, 2026; 1-for-1,000 reverse split of Class T","Note 1","F-15"],
+ ["Customers ≥ $100K TTM","~20 (Dec ’23); ~200 (Dec ’24); ~1,500 (Dec ’25); > 6,000 (Jun ’26); > 11,900 (Sep ’26)","MD&A","p.143, p.149"],
+ ["Customers ≥ $1M / ≥ $10M (Sep 30, 2026)","> 1,900 / ~250","MD&A","p.143"],
+ ["Net revenue retention","~900% at Sep 30, 2026","Business","p.196"],
+ ["Top-five customer share","~25% of nine-month 2026 revenue; ~36% Q1 ’26 and ~21% Q3 ’26","Risk Factors; MD&A","p.144"],
+ ["Revenue from policy-violating customers","~5%–7% of nine-month 2026 revenue (estimate)","MD&A","p.146"],
+ ["Microsoft commitment","≥ $44.9B, Nov 2026–May 2033","Contractual Obligations","p.171"],
+ ["Google commitment","≥ ~$114.5B, Apr 2026–Jul 2033; plus est. $125–150B additional TPU (2028–2031)","Contractual Obligations","p.171"],
+ ["Amazon commitment","≥ $110.0B, May 2026–Apr 2036","Contractual Obligations","p.172"],
+ ["SpaceXAI arrangements","Up to $120.5B into 2029","Contractual Obligations","p.172"],
+ ["Nscale / Lambda","Up to ~$44.6B (to 2033) / ~$41.3B (to 2034)","Contractual Obligations","p.172"],
+ ["AMD hardware supply","Expected > $20.0B if the initial tranche is fully procured (2027)","Contractual Obligations","p.172"],
+ ["Broadcom equipment leases","Rent ≈ $161.2B excluding interest; five-year finance leases","Contractual Obligations","p.172"],
+ ["Class F voting power","Fixed 50.1% of total votes; no economic rights","Capital Structure","p.16"],
+ ["Directors","Six listed (three Class T-elected); CFO Krishna Rao is an officer","Management","p.255"],
+ ["2025 pay: Dario Amodei / Daniela Amodei / Krishna Rao","$17,958,298 / $16,408,998 / $720,250","Summary Compensation Table","p.271"],
+ ["Base salary, co-founder executives","$600K → $700K (Jun 2025) → $915K (Jan 2026) → $1.38M (Jul 2026)","CD&A; Post-Fiscal Year End Changes","p.268, p.272"],
+ ["Base salary, CFO","$700K → $850K (Dec 2025) → $1.25M (Feb 2026)","CD&A; Post-Fiscal Year End Changes","p.268, p.272"],
+ ["Severance (Oct 2026)","Amodeis 24 months’ salary; Rao 12 months; 12 months COBRA and equity acceleration","Post-Fiscal Year End Changes","p.273"],
+ ["Director pay policy","$100K retainer; RSUs of $325K a year ($400K on joining)","Non-Employee Director Compensation","p.262–263"],
+ ["Equity granted since Nov 2023","2,066,876,470 options; 1,171,364,280 RSUs; 409,116,603 shares exercised at $1.2043","Recent Sales of Unregistered Securities","II-5"],
+ ["Tender offers","Jun 2025: $5.61 × 27.9M shares = $157M; Apr 2026: $25.9136 × 179.9M = $4.66B","Related Person Transactions","p.285"],
+ ["Priced rounds (proceeds; investors)","D $1.2B (54); E-1 $3.6B (72); F-1 $13.0B (202); G-1 $23.5B (261); H-1 $45.7B (305)","Related Person Transactions; Item 15","p.283–284, II-4"],
+ ["Spark Capital, Series H-1 purchase","$439,999,521 (director Razavi’s firm); Bodhi LLC (director Narasimhan) $9,999,614","Related Person Transactions","p.283"],
+ ["Payments to the Long-Term Benefit Trust","$2.72M (2023); $0 (2024); $0.91M (2025); $8.43M (nine months 2026)","Transactions with the LTBT","p.287"],
+ ["Underwriters","22; representatives Goldman Sachs and Morgan Stanley (stabilization agent); 30-day option; ≤5% discretionary accounts","Underwriting","p.317, p.324"],
+ ["Lock-up lengths","180 days (most holders); 365 days (founders and holders over 0.5% of fully diluted shares)","Lock-Up and Market Standoff Agreements","p.318–324"]
+];
+R.checks = () => {
+  const res=runChecks(),pass=res.filter(r=>r.pass).length;
+  return `<h2>Checks &amp; ledger</h2><p class="sub">Cross-checks run in your browser against the transcribed data, plus a ledger of the key facts used in text with their location in the filing.</p>
+  <div class="grid">
+   ${card({title:`Arithmetic checks: <span class="${pass===res.length?"pass":"fail"}">${pass} of ${res.length} pass</span>`,body:`<p class="sub" style="margin:0">Each row recomputes a figure from the components the filing gives (and compares with the filing’s own total or percentage).</p>`,data:`<div class="tablewrap"><table><thead><tr><th class="l">Check</th><th class="n">Computed</th><th class="n">Filing</th><th></th></tr></thead><tbody>${res.map(r=>`<tr><td class="l">${esc(r.name)}</td><td class="n">${r.a.toLocaleString(undefined,{maximumFractionDigits:2})}</td><td class="n">${r.b.toLocaleString(undefined,{maximumFractionDigits:2})}</td><td class="${r.pass?"pass":"fail"}">${r.pass?"✓":"✗"}</td></tr>`).join("")}</tbody></table></div>`})}
+   ${card({title:"What was and wasn’t read",body:`<ul class="facts"><li>Read closely: cover, prospectus summary, summary financial data, MD&amp;A, the financial statements and key notes, capital structure, management, beneficial ownership, executive and director compensation, related-person transactions, equity plans, underwriting, lock-ups and shares eligible for future sale, and the recent-sales item in Part II.</li><li>Used only as headlines: the Risk Factors (summary list of 18) and the rest of the Business section.</li><li>Not analyzed: the full Description of Capital Stock, tax consequences for non-U.S. holders, and the exhibits.</li></ul>`})}
+  </div>
+  <div class="card" style="margin-top:14px"><h3>Fact ledger</h3><input id="l-q" type="search" placeholder="Search the ledger" aria-label="Search ledger"><div class="tablewrap"><table id="l-t"><thead><tr><th class="l">Fact</th><th class="l">Value</th><th class="l">Section</th><th class="l">Page</th></tr></thead><tbody>${LEDGER.map(r=>`<tr><td class="l">${esc(r[0])}</td><td class="l">${esc(r[1])}</td><td class="l">${esc(r[2])}</td><td class="l">${esc(r[3])}</td></tr>`).join("")}</tbody></table></div></div>`;
+};
+
+/* ---------- Render + wiring ---------- */
+const main=$("#main"),tabsEl=$("#tabs");
+tabsEl.innerHTML=TABS.map(([id,l])=>`<button type="button" role="tab" id="tab-${id}" data-tab="${id}" aria-selected="false" aria-controls="panel">${l}</button>`).join("");
+function show(id,push=true){
+  if(!R[id])id="overview";state.tab=id;
+  $$("[data-tab]",tabsEl).forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===id));
+  main.innerHTML=`<section class="panel" id="panel" role="tabpanel" aria-labelledby="tab-${id}">${R[id]()}</section>`;
+  if(push)history.replaceState(null,"","#"+id);
+  window.scrollTo({top:Math.min(window.scrollY,main.offsetTop-70)});
+}
+tabsEl.addEventListener("click",e=>{const b=e.target.closest("[data-tab]");if(b)show(b.dataset.tab)});
+tabsEl.addEventListener("keydown",e=>{
+  if(!["ArrowRight","ArrowLeft"].includes(e.key))return;
+  const ids=TABS.map(t=>t[0]),i=ids.indexOf(state.tab),n=ids[(i+(e.key==="ArrowRight"?1:ids.length-1))%ids.length];
+  show(n);$("#tab-"+n).focus();
+});
+main.addEventListener("click",e=>{
+  const t=e.target.closest("[data-tg]");
+  if(t){state[t.dataset.tg]=t.dataset.v;show(state.tab,false);return}
+  const c=e.target.closest("[data-cat]");
+  if(c&&c.closest("#r-cats")){$$("#r-cats button").forEach(b=>b.setAttribute("aria-pressed",b===c));filterRisks();return}
+});
+main.addEventListener("change",e=>{
+  const k=e.target.dataset&&e.target.dataset.kind;
+  if(k){state.commit[k]=e.target.checked;$("#c-chart").innerHTML=commitChart();$("#c-sum").innerHTML=commitSummary()}
+  const lk=e.target.dataset&&e.target.dataset.lock;
+  if(lk){state.lock[lk]=e.target.checked;$("#k-chart").innerHTML=lockChart()}
+});
+main.addEventListener("input",e=>{
+  if(e.target.id==="r-q")filterRisks();
+  if(e.target.id==="l-q"){const q=e.target.value.toLowerCase();$$("#l-t tbody tr").forEach(r=>r.hidden=!r.textContent.toLowerCase().includes(q))}
+});
+function filterRisks(){
+  const cat=($("#r-cats [aria-pressed=true]")||{dataset:{cat:"All"}}).dataset.cat,q=$("#r-q").value.toLowerCase();
+  $$("#r-list .risk").forEach(r=>r.hidden=!((cat==="All"||r.dataset.cat===cat)&&r.textContent.toLowerCase().includes(q)));
+}
+window.addEventListener("hashchange",()=>show(location.hash.slice(1),false));
+show(location.hash.slice(1)||"overview",false);
+</script>
+<script data-goatcounter="https://jessejinnaruiz.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
