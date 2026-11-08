@@ -1,0 +1,630 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Warm Paths: a LinkedIn network job campaign</title>
+    <meta
+      name="description"
+      content="Load your own LinkedIn Connections.csv export and turn your network into a ranked, week-by-week outreach plan. Everything runs in your browser."
+    />
+    <style>
+      :root {
+        --ink: #14213d;
+        --paper: #f7f4ee;
+        --navy: #1b2f57;
+        --copper: #c2643a;
+        --sage: #3f7d6b;
+        --line: #d5cfc2;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font: 16px/1.5 Arial, sans-serif;
+      }
+      header,
+      main,
+      footer {
+        max-width: 1160px;
+        margin: auto;
+        padding: 24px;
+      }
+      nav {
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+      a {
+        color: var(--navy);
+      }
+      .hero {
+        border-bottom: 1px solid var(--ink);
+      }
+      h1 {
+        font: 400 clamp(3rem, 8vw, 6.2rem) / 0.9 Georgia, serif;
+        max-width: 11ch;
+        margin: 8vh 0 18px;
+      }
+      .lede {
+        max-width: 720px;
+        font: 18px/1.55 Georgia, serif;
+      }
+      .eyebrow {
+        font-size: 12px;
+        font-weight: 800;
+        text-transform: uppercase;
+        color: var(--copper);
+        margin-top: 7vh;
+      }
+      h2 {
+        font: 400 1.7rem Georgia, serif;
+        margin: 0 0 10px;
+      }
+      section.step {
+        margin-top: 34px;
+        border-top: 4px solid var(--navy);
+        padding-top: 14px;
+      }
+      .note {
+        padding: 12px 14px;
+        border-left: 5px solid var(--copper);
+        background: #fff;
+        font-size: 14px;
+        margin: 22px 0;
+      }
+      label {
+        display: block;
+        font-size: 13px;
+        font-weight: 700;
+        margin: 12px 0 5px;
+      }
+      input[type="text"],
+      input[type="number"],
+      select,
+      textarea {
+        width: 100%;
+        min-height: 42px;
+        padding: 8px 10px;
+        font: 15px Arial, sans-serif;
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        background: #fff;
+      }
+      textarea {
+        min-height: 130px;
+        resize: vertical;
+      }
+      .cols {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 4px 20px;
+      }
+      button,
+      .btn {
+        border: 0;
+        background: var(--navy);
+        color: #fff;
+        font: 700 14px Arial, sans-serif;
+        padding: 10px 16px;
+        min-height: 44px;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      button.ghost {
+        background: transparent;
+        color: var(--ink);
+        border: 1px solid var(--ink);
+      }
+      button.small {
+        min-height: 36px;
+        padding: 6px 12px;
+      }
+      button:disabled {
+        background: #a2abbd;
+        cursor: not-allowed;
+      }
+      button:focus-visible,
+      input:focus-visible,
+      select:focus-visible,
+      textarea:focus-visible,
+      summary:focus-visible {
+        outline: 3px solid var(--copper);
+        outline-offset: 2px;
+      }
+      .actions {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 14px;
+      }
+      .status {
+        font-size: 14px;
+        min-height: 22px;
+        margin: 8px 0;
+      }
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 14px;
+        margin: 14px 0;
+      }
+      .stat {
+        border-top: 4px solid var(--copper);
+        padding: 8px 0;
+      }
+      .stat b {
+        display: block;
+        font: 400 2rem Georgia, serif;
+      }
+      .bars {
+        display: grid;
+        gap: 6px;
+        margin: 10px 0;
+        font-size: 14px;
+      }
+      .bar {
+        display: grid;
+        grid-template-columns: minmax(90px, 220px) minmax(0, 1fr) 36px;
+        gap: 10px;
+        align-items: center;
+      }
+      .bar i {
+        display: block;
+        height: 12px;
+        background: var(--sage);
+        border-radius: 2px;
+      }
+      .card {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        padding: 14px;
+        margin: 10px 0;
+      }
+      .card header {
+        padding: 0;
+        max-width: none;
+        display: grid;
+        grid-template-columns: 34px minmax(0, 1fr) auto;
+        gap: 12px;
+        align-items: start;
+      }
+      .rank {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--navy);
+        color: #fff;
+        display: grid;
+        place-items: center;
+        font-weight: 700;
+        font-size: 13px;
+      }
+      .who {
+        font-weight: 700;
+      }
+      .meta {
+        color: #4a5368;
+        font-size: 14px;
+        overflow-wrap: anywhere;
+      }
+      .tier {
+        font-size: 12px;
+        font-weight: 800;
+        text-transform: uppercase;
+        padding: 3px 8px;
+        border-radius: 12px;
+        color: #fff;
+        white-space: nowrap;
+      }
+      .t-warm {
+        background: var(--copper);
+      }
+      .t-note {
+        background: var(--sage);
+      }
+      .t-later {
+        background: #7b8394;
+      }
+      .chips span {
+        display: inline-block;
+        margin: 6px 6px 0 0;
+        padding: 2px 8px;
+        background: #ebe6da;
+        border-radius: 10px;
+        font-size: 12px;
+      }
+      .cardtools {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        align-items: center;
+        margin-top: 10px;
+      }
+      .cardtools select {
+        width: auto;
+        min-height: 36px;
+        padding: 4px 8px;
+      }
+      .draft {
+        margin-top: 10px;
+      }
+      .draft textarea {
+        min-height: 150px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+        background: #fff;
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 8px;
+        border-top: 1px solid var(--line);
+        vertical-align: top;
+      }
+      th {
+        background: #ebe6da;
+        font-size: 12px;
+        text-transform: uppercase;
+      }
+      .tw {
+        overflow-x: auto;
+        border: 1px solid var(--line);
+      }
+      .source {
+        margin: 38px 0;
+        border-top: 1px solid var(--ink);
+        padding-top: 18px;
+        font-size: 14px;
+      }
+      footer {
+        font-size: 12px;
+        color: #4a5368;
+      }
+      [hidden] {
+        display: none !important;
+      }
+      @media (max-width: 800px) {
+        .cols {
+          grid-template-columns: 1fr;
+        }
+        .stats {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .card header {
+          grid-template-columns: 34px minmax(0, 1fr);
+        }
+        .tier {
+          grid-column: 2;
+          justify-self: start;
+        }
+        .bar {
+          grid-template-columns: minmax(70px, 120px) minmax(0, 1fr) 30px;
+        }
+        h1 {
+          margin-top: 50px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="hero">
+      <nav>
+        <a href="../index.html">&larr; Jesse J Ruiz</a>
+      </nav>
+      <p class="eyebrow">Search your network, not job boards</p>
+      <h1>Find the warm paths you already have.</h1>
+      <p class="lede">
+        Load the Connections file from your own LinkedIn data export, say who
+        and where you are aiming for, and get a ranked list, a week-by-week
+        outreach plan, and short drafts you send yourself.
+      </p>
+    </header>
+    <main>
+      <div class="note">
+        <b>Private by design:</b> your file is read by this page only. Nothing
+        is uploaded, stored, or sent anywhere, and closing the tab clears it.
+        This is not LinkedIn software: it does not log in, scrape, or send
+        messages. You copy a draft and send it yourself, one thoughtful message
+        at a time.
+      </div>
+
+      <section class="step" aria-labelledby="s1">
+        <h2 id="s1">1. Load your connections</h2>
+        <details>
+          <summary>How to get the file</summary>
+          <p>
+            On LinkedIn: Settings &amp; Privacy, Data privacy, Get a copy of
+            your data. Choose Connections, request the archive, then download
+            and unzip it when LinkedIn emails you. Upload
+            <code>Connections.csv</code> here.
+          </p>
+        </details>
+        <label for="file">Connections.csv</label>
+        <input id="file" type="file" accept=".csv,text/csv,text/plain" />
+        <div class="actions">
+          <button type="button" class="ghost" id="sample">
+            Use a fictional sample instead
+          </button>
+        </div>
+        <p class="status" id="loadstatus" role="status" aria-live="polite"></p>
+      </section>
+
+      <section class="step" id="setup" aria-labelledby="s2" hidden>
+        <h2 id="s2">2. Describe your campaign</h2>
+        <div class="cols">
+          <div>
+            <label for="roles">Roles you want (comma separated)</label>
+            <input id="roles" type="text" placeholder="product manager, program manager" />
+          </div>
+          <div>
+            <label for="companies">Target companies (comma separated)</label>
+            <input id="companies" type="text" placeholder="Brightloom, Harbor Labs" />
+          </div>
+          <div>
+            <label for="topics">Industry or topic words (optional)</label>
+            <input id="topics" type="text" placeholder="health, climate, fintech" />
+          </div>
+          <div>
+            <label for="me">Your first name (for drafts)</label>
+            <input id="me" type="text" placeholder="Alex" maxlength="40" />
+          </div>
+          <div>
+            <label for="per">Messages per week</label>
+            <select id="per">
+              <option>3</option>
+              <option selected>5</option>
+              <option>8</option>
+              <option>10</option>
+            </select>
+          </div>
+          <div>
+            <label for="weeks">Campaign length (weeks)</label>
+            <select id="weeks">
+              <option>2</option>
+              <option selected>4</option>
+              <option>6</option>
+              <option>8</option>
+            </select>
+          </div>
+        </div>
+        <div class="actions">
+          <button type="button" id="run">Build my campaign</button>
+        </div>
+      </section>
+
+      <section class="step" id="results" aria-labelledby="s3" hidden>
+        <h2 id="s3">3. Your network at a glance</h2>
+        <div class="stats" id="stats"></div>
+        <div id="companybars" class="bars" aria-label="Top companies in your network"></div>
+
+        <h2 style="margin-top: 34px">4. Week-by-week plan</h2>
+        <div class="tw"><table><thead><tr><th scope="col">Week</th><th scope="col">Reach out to</th></tr></thead><tbody id="plan"></tbody></table></div>
+        <div class="actions">
+          <button type="button" id="csv">Download plan as CSV</button>
+        </div>
+        <p class="status">
+          The CSV contains your contacts' names and profile links. Keep it
+          private.
+        </p>
+
+        <h2 style="margin-top: 34px">5. Ranked contacts and drafts</h2>
+        <div id="list"></div>
+        <div class="actions"><button type="button" class="ghost" id="more">Show more</button></div>
+      </section>
+
+      <section class="source">
+        <h2>How the ranking works, and what it cannot know</h2>
+        <p>
+          Each contact gets a transparent score from only what is in your
+          Connections file: a match to a target company (+40), a role keyword in
+          their title (+20), recruiter or talent titles (+15), director, VP,
+          head, chief, or founder titles (+10), manager or lead titles (+6), an
+          industry or topic word in company or title (+8), connected within the
+          last 12 months (+8) or earlier (+4), and a shared email address (+3).
+          Tiers are only ranges of that score. It cannot tell who is hiring,
+          how well you know someone, or whether they will reply, and job titles
+          in the export may be out of date.
+        </p>
+        <p>
+          Be kind with other people's inboxes: a few specific, honest requests
+          beat a volume blast. Respect LinkedIn's terms and each person's
+          answer.
+        </p>
+      </section>
+    </main>
+    <footer>
+      Independent tool, not affiliated with or endorsed by LinkedIn.
+      Page views are counted anonymously — no cookies, no personal data.
+    </footer>
+    <script>
+      const $ = (s) => document.querySelector(s);
+      const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+      let people = [], ranked = [], shown = 25, camp = {};
+      const STATUS = ["To contact", "Message sent", "Replied", "Intro or call booked", "Not now"];
+
+      function parseCSV(t) {
+        const rows = [];
+        let r = [], f = "", q = false;
+        t = t.replace(/^\uFEFF/, "");
+        for (let i = 0; i < t.length; i++) {
+          const c = t[i];
+          if (q) {
+            if (c === '"') { if (t[i + 1] === '"') { f += '"'; i++; } else q = false; }
+            else f += c;
+          } else if (c === '"') q = true;
+          else if (c === ",") { r.push(f); f = ""; }
+          else if (c === "\n" || c === "\r") { if (c === "\r" && t[i + 1] === "\n") i++; r.push(f); rows.push(r); r = []; f = ""; }
+          else f += c;
+        }
+        if (f !== "" || r.length) { r.push(f); rows.push(r); }
+        return rows;
+      }
+      const MONS = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+      function parseWhen(s) {
+        const m = /(\d{1,2})\s+([A-Za-z]{3})[a-z]*\s+(\d{4})/.exec(s || "");
+        if (!m || MONS.indexOf(m[2].toLowerCase()) < 0) return null;
+        return new Date(+m[3], MONS.indexOf(m[2].toLowerCase()), +m[1]);
+      }
+      function loadFromCSV(text) {
+        const rows = parseCSV(text);
+        const h = rows.findIndex((r) => (r[0] || "").trim() === "First Name");
+        if (h < 0) return 0;
+        const col = {};
+        rows[h].forEach((n, i) => (col[n.trim()] = i));
+        people = rows.slice(h + 1).filter((r) => r.length > 2 && (r[col["First Name"]] || r[col["Last Name"]])).map((r) => {
+          const g = (n) => ((col[n] !== undefined ? r[col[n]] : "") || "").trim();
+          const url = g("URL");
+          return { first: g("First Name"), last: g("Last Name"), url: /^https:\/\/([a-z]+\.)?linkedin\.com\//i.test(url) ? url : "", email: g("Email Address"), company: g("Company"), position: g("Position"), when: parseWhen(g("Connected On")), status: STATUS[0] };
+        });
+        return people.length;
+      }
+      function sampleData() {
+        const F = ["Ari", "Bea", "Cam", "Dev", "Eli", "Fay", "Gus", "Hana", "Ira", "Jo", "Kai", "Lou", "Mia", "Noa", "Oz"];
+        const L = ["Alder", "Birch", "Cole", "Dunn", "Ember", "Frost", "Grove", "Hale", "Ives", "Jun"];
+        const Co = ["Brightloom", "Harbor Labs", "Quillworks", "Tessera Health", "Northgate Systems", "Pinecrest Cloud", "Marlow Foods", "Sunfield Energy"];
+        const P = ["Senior Product Manager", "Technical Recruiter", "Director of Engineering", "Program Manager", "Talent Acquisition Partner", "Software Engineer", "Head of Product", "Marketing Lead", "Data Analyst", "Founder", "VP Operations", "Product Designer"];
+        let s = 7;
+        const rnd = (n) => { s = (s * 1103515245 + 12345) % 2147483648; return s % n; };
+        const now = Date.now();
+        return Array.from({ length: 120 }, () => ({ first: F[rnd(F.length)], last: L[rnd(L.length)], url: "", email: rnd(6) === 0 ? "sample@example.com" : "", company: Co[rnd(Co.length)], position: P[rnd(P.length)], when: new Date(now - rnd(1800) * 864e5), status: STATUS[0] }));
+      }
+
+      const list = (s) => s.split(/[,\n]/).map((x) => x.trim().toLowerCase()).filter((x) => x.length > 1);
+      function score(p) {
+        const co = p.company.toLowerCase(), pos = p.position.toLowerCase(), both = co + " " + pos;
+        let sc = 0;
+        const why = [];
+        if (camp.companies.some((t) => co.includes(t))) { sc += 40; why.push("Works at a target company"); }
+        if (camp.roles.some((t) => pos.includes(t))) { sc += 20; why.push("Title matches a target role"); }
+        if (/recruit|talent|sourc|hiring|human resources|people ops|\bhr\b/.test(pos)) { sc += 15; why.push("Recruiting or talent role"); }
+        else if (/director|\bvp\b|vice president|head of|chief|founder|\bceo\b|\bcto\b|owner|partner/.test(pos)) { sc += 10; why.push("Senior, likely to know who is hiring"); }
+        else if (/manager|\blead\b|principal|staff/.test(pos)) { sc += 6; why.push("Manager or lead"); }
+        if (camp.topics.some((t) => both.includes(t))) { sc += 8; why.push("Matches your topic words"); }
+        if (p.when) {
+          const months = (Date.now() - p.when.getTime()) / (30.44 * 864e5);
+          if (months <= 12) { sc += 8; why.push("Connected in the last 12 months"); } else { sc += 4; why.push("Long-standing connection"); }
+        }
+        if (p.email) { sc += 3; why.push("Shared an email address"); }
+        return { sc, why };
+      }
+      const tierOf = (s) => (s >= 50 ? ["Warm path", "t-warm"] : s >= 25 ? ["Worth a note", "t-note"] : ["Later", "t-later"]);
+
+      function draft(p) {
+        const me = $("#me").value.trim() || "[Your name]";
+        const role = camp.rolesRaw[0] || "the roles I'm targeting";
+        const first = p.first || "there";
+        if (p.kind === "recruiter") return `Hi ${first}, I'm looking for ${role} roles${camp.companiesRaw.length ? " at companies like " + camp.companiesRaw.slice(0, 3).join(", ") : ""}. If you're the right person, could I send a short summary of my background? If not, I'd appreciate a pointer to who is. Thank you either way.\n\n${me}`;
+        if (p.kind === "target") return `Hi ${first}, I came across your profile while learning more about ${p.company}. I'm exploring ${role} roles and would be grateful for 10 minutes to hear what working there is like. Happy to send a short note about my background first if easier. Thanks for considering it.\n\n${me}`;
+        return `Hi ${first}, I saw you work as ${p.position || "a professional"}${p.company ? " at " + p.company : ""}. I'm exploring a move toward ${role} and would value your perspective on how you got started, if you have 10 minutes in the coming weeks. No pressure at all.\n\n${me}`;
+      }
+
+      function build() {
+        camp = { roles: list($("#roles").value), companies: list($("#companies").value), topics: list($("#topics").value), rolesRaw: $("#roles").value.split(",").map((x) => x.trim()).filter(Boolean), companiesRaw: $("#companies").value.split(",").map((x) => x.trim()).filter(Boolean), per: +$("#per").value, weeks: +$("#weeks").value };
+        ranked = people.map((p) => {
+          const r = score(p);
+          const pos = p.position.toLowerCase(), co = p.company.toLowerCase();
+          p.score = r.sc;
+          p.why = r.why;
+          p.kind = /recruit|talent|sourc|hiring|human resources|people ops|\bhr\b/.test(pos) ? "recruiter" : camp.companies.some((t) => co.includes(t)) ? "target" : "peer";
+          return p;
+        }).sort((a, b) => b.score - a.score);
+        shown = 25;
+        $("#results").hidden = false;
+        render();
+        $("#results").scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+
+      function render() {
+        const targets = ranked.filter((p) => p.kind === "target").length;
+        const rec = ranked.filter((p) => /recruit|talent|sourc|hiring|human resources|people ops|\bhr\b/i.test(p.position)).length;
+        const warm = ranked.filter((p) => p.score >= 50).length;
+        $("#stats").innerHTML = [["Connections", ranked.length], ["At target companies", targets], ["Recruiting or talent", rec], ["Warm-path tier", warm]].map(([k, v]) => `<div class="stat"><b>${v}</b>${esc(k)}</div>`).join("");
+        const counts = {};
+        ranked.forEach((p) => { const c = p.company.trim(); if (c) counts[c] = (counts[c] || 0) + 1; });
+        const top = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 8);
+        const max = top.length ? top[0][1] : 1;
+        $("#companybars").innerHTML = "<b>Where your connections work</b>" + top.map(([c, n]) => `<div class="bar"><span>${esc(c)}</span><i style="width:${(n / max) * 100}%"></i><span>${n}</span></div>`).join("");
+        const total = camp.per * camp.weeks, pickd = ranked.slice(0, total);
+        let rows = "";
+        for (let w = 0; w < camp.weeks; w++) {
+          const g = pickd.slice(w * camp.per, (w + 1) * camp.per);
+          if (g.length) rows += `<tr><td>Week ${w + 1}</td><td>${g.map((p) => esc(`${p.first} ${p.last}`.trim())).join(", ")}</td></tr>`;
+        }
+        $("#plan").innerHTML = rows || '<tr><td colspan="2">No contacts to plan.</td></tr>';
+        $("#list").innerHTML = ranked.slice(0, shown).map((p, i) => {
+          const [tn, tc] = tierOf(p.score);
+          const name = esc(`${p.first} ${p.last}`.trim() || "Unnamed");
+          const link = p.url ? ` · <a href="${esc(p.url)}" target="_blank" rel="noreferrer">Profile</a>` : "";
+          return `<article class="card"><header><span class="rank">${i + 1}</span><div><div class="who">${name}</div><div class="meta">${esc(p.position || "No title listed")}${p.company ? " · " + esc(p.company) : ""}${link}</div></div><span class="tier ${tc}">${tn} · ${p.score}</span></header><div class="chips">${p.why.map((w) => `<span>${esc(w)}</span>`).join("")}</div><div class="cardtools"><button type="button" class="ghost small" data-draft="${ranked.indexOf(p)}" aria-expanded="false">Draft message</button><label style="margin:0">Status <select data-status="${ranked.indexOf(p)}" aria-label="Status for ${name}">${STATUS.map((s) => `<option ${s === p.status ? "selected" : ""}>${s}</option>`).join("")}</select></label></div><div class="draft" id="d${ranked.indexOf(p)}" hidden></div></article>`;
+        }).join("");
+        $("#more").hidden = shown >= ranked.length;
+      }
+
+      $("#file").addEventListener("change", async (e) => {
+        const f = e.target.files[0];
+        if (!f) return;
+        if (f.size > 30e6) { $("#loadstatus").textContent = "That file is over 30 MB. Use the Connections.csv file only."; return; }
+        const n = loadFromCSV(await f.text());
+        $("#loadstatus").textContent = n ? `Loaded ${n} connections. They stay in this tab.` : "That does not look like Connections.csv (no First Name header found).";
+        $("#setup").hidden = !n;
+        $("#results").hidden = true;
+      });
+      $("#sample").addEventListener("click", () => {
+        people = sampleData();
+        $("#loadstatus").textContent = "Loaded 120 fictional sample connections.";
+        $("#roles").value = "product manager, program manager";
+        $("#companies").value = "Brightloom, Harbor Labs";
+        $("#topics").value = "health";
+        $("#setup").hidden = false;
+        $("#results").hidden = true;
+      });
+      $("#run").addEventListener("click", build);
+      $("#more").addEventListener("click", () => { shown += 25; render(); });
+      $("#list").addEventListener("click", (e) => {
+        const b = e.target.closest("[data-draft]");
+        if (b) {
+          const i = +b.dataset.draft, box = $("#d" + i);
+          box.hidden = !box.hidden;
+          b.setAttribute("aria-expanded", String(!box.hidden));
+          if (!box.hidden && !box.innerHTML) {
+            box.innerHTML = `<label for="t${i}">Edit before sending</label><textarea id="t${i}"></textarea><div class="actions"><button type="button" class="small" data-copy="${i}">Copy message</button></div>`;
+            $("#t" + i).value = draft(ranked[i]);
+          }
+        }
+        const c = e.target.closest("[data-copy]");
+        if (c) {
+          const t = $("#t" + c.dataset.copy);
+          (navigator.clipboard ? navigator.clipboard.writeText(t.value) : Promise.reject()).then(() => (c.textContent = "Copied"), () => { t.select(); c.textContent = "Select and copy"; });
+        }
+      });
+      $("#list").addEventListener("change", (e) => {
+        if (e.target.dataset.status !== undefined) ranked[+e.target.dataset.status].status = e.target.value;
+      });
+      const cell = (v) => {
+        let s = String(v ?? "");
+        if (/^[=+\-@\t\r]/.test(s)) s = "'" + s;
+        return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+      };
+      $("#csv").addEventListener("click", () => {
+        const rows = [["Week", "Rank", "First name", "Last name", "Position", "Company", "Score", "Why", "Profile", "Status"]];
+        ranked.slice(0, camp.per * camp.weeks).forEach((p, i) => rows.push([Math.floor(i / camp.per) + 1, i + 1, p.first, p.last, p.position, p.company, p.score, p.why.join("; "), p.url, p.status]));
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(new Blob([rows.map((r) => r.map(cell).join(",")).join("\r\n")], { type: "text/csv;charset=utf-8" }));
+        a.download = "warm-paths-plan.csv";
+        a.click();
+        URL.revokeObjectURL(a.href);
+      });
+    </script>
+    <script data-goatcounter="https://jessejinnaruiz.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
