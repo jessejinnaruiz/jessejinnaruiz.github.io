@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Ikigai Overlap Map</title>
+    <meta
+      name="description"
+      content="Place your own examples on a four-circle overlap map, then turn one into a small two-week experiment. Everything stays in your browser."
+    />
+    <style>
+      :root {
+        --ink: #232a36;
+        --paper: #f4f1ea;
+        --coral: #d3604d;
+        --gold: #e6bd58;
+        --indigo: #506f8b;
+        --line: #cfcabc;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        color: var(--ink);
+        font: 16px/1.5 Georgia, serif;
+        background:
+          radial-gradient(circle at 15% 0%, #fbe9d9 0, transparent 38%),
+          radial-gradient(circle at 90% 20%, #dcebe8 0, transparent 34%),
+          var(--paper);
+      }
+      header,
+      main,
+      footer {
+        max-width: 1120px;
+        margin: auto;
+        padding: 24px;
+      }
+      nav {
+        display: flex;
+        justify-content: space-between;
+        font: 700 12px Arial, sans-serif;
+        text-transform: uppercase;
+      }
+      a {
+        color: #315f77;
+      }
+      h1 {
+        font: 400 clamp(3rem, 8vw, 6rem) / 0.9 Georgia, serif;
+        max-width: 10ch;
+        margin: 8vh 0 18px;
+      }
+      .lede {
+        max-width: 680px;
+        font: 18px/1.55 Arial, sans-serif;
+      }
+      .hero {
+        border-bottom: 1px solid var(--ink);
+      }
+      .eyebrow {
+        font: 700 12px Arial, sans-serif;
+        text-transform: uppercase;
+        color: var(--coral);
+      }
+      .caveat {
+        margin: 26px 0;
+        padding: 14px 16px;
+        border-left: 5px solid var(--coral);
+        background: #fffdf8;
+        font: 14px Arial, sans-serif;
+      }
+      .stage {
+        display: grid;
+        grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+        gap: 32px;
+        align-items: start;
+      }
+      .venn {
+        background: #fffdf8;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 8px;
+      }
+      .venn svg {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+      .tools {
+        margin-top: 10px;
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      fieldset {
+        border: 0;
+        border-top: 3px solid var(--indigo);
+        padding: 10px 0;
+        margin: 0 0 14px;
+      }
+      legend {
+        font: 700 14px Arial, sans-serif;
+        padding-right: 8px;
+      }
+      .chips {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        margin: 10px 0;
+      }
+      .chip {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 10px;
+        min-height: 44px;
+        border: 2px solid var(--c);
+        border-radius: 22px;
+        font: 14px Arial, sans-serif;
+        background: #fff;
+        cursor: pointer;
+      }
+      .chip input {
+        width: 18px;
+        height: 18px;
+        accent-color: var(--c);
+      }
+      input[type="text"],
+      select {
+        width: 100%;
+        min-height: 46px;
+        padding: 10px;
+        font: 15px Arial, sans-serif;
+        border: 1px solid var(--line);
+        background: #fff;
+        border-radius: 4px;
+      }
+      label.l {
+        display: block;
+        font: 700 13px Arial, sans-serif;
+        margin: 12px 0 5px;
+      }
+      button {
+        border: 0;
+        background: var(--indigo);
+        color: #fff;
+        padding: 11px 16px;
+        min-height: 44px;
+        font: 700 14px Arial, sans-serif;
+        border-radius: 22px;
+        cursor: pointer;
+      }
+      button.ghost {
+        background: transparent;
+        color: var(--ink);
+        border: 1px solid var(--ink);
+      }
+      button:focus-visible,
+      input:focus-visible,
+      select:focus-visible {
+        outline: 3px solid var(--coral);
+        outline-offset: 2px;
+      }
+      ol.items {
+        list-style: none;
+        margin: 14px 0 0;
+        padding: 0;
+      }
+      ol.items li {
+        display: grid;
+        grid-template-columns: 28px minmax(0, 1fr) auto;
+        gap: 10px;
+        align-items: start;
+        padding: 9px 0;
+        border-top: 1px solid var(--line);
+        font: 14px Arial, sans-serif;
+      }
+      .num {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: var(--ink);
+        color: #fff;
+        display: grid;
+        place-items: center;
+        font: 700 12px Arial;
+      }
+      .where {
+        display: block;
+        color: #5b6270;
+        font-size: 12px;
+      }
+      .rm {
+        min-height: 34px;
+        padding: 4px 10px;
+        background: transparent;
+        color: #7a3f35;
+        border: 1px solid #c9a79f;
+      }
+      .readout {
+        margin-top: 24px;
+        font: 14px Arial, sans-serif;
+      }
+      .plan {
+        margin-top: 44px;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 32px;
+        border-top: 1px solid var(--ink);
+        padding-top: 22px;
+      }
+      .plan h2 {
+        font: 400 2rem Georgia, serif;
+        margin: 6px 0 12px;
+      }
+      .output {
+        padding: 20px;
+        border: 1px solid var(--line);
+        background: #fffdf8;
+        border-radius: 8px;
+        min-height: 240px;
+      }
+      .experiment {
+        border-top: 2px solid var(--gold);
+        margin-top: 14px;
+        padding-top: 10px;
+      }
+      .source {
+        margin: 38px 0;
+        border-top: 1px solid var(--ink);
+        padding-top: 18px;
+        font: 14px Arial, sans-serif;
+      }
+      @media (max-width: 800px) {
+        .stage,
+        .plan {
+          grid-template-columns: 1fr;
+        }
+        h1 {
+          margin-top: 50px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="hero">
+      <nav>
+        <a href="../index.html">&larr; Jesse J Ruiz</a>
+      </nav>
+      <p class="eyebrow" style="margin-top: 7vh">Four circles, your examples</p>
+      <h1>Map where your reasons overlap.</h1>
+      <p class="lede">
+        Add small, real examples and tag the circles each one touches. They land
+        in the overlaps, so you can see where things cluster, then turn one into
+        a two-week experiment. No score, no verdict.
+      </p>
+    </header>
+    <main>
+      <div class="caveat">
+        <b>A note on context:</b> Ikigai has varied meanings in Japanese life
+        and culture. The four-circle diagram is a popular modern adaptation that
+        circulates mostly outside Japan, not a traditional or validated model.
+        This tool uses it as a visual reflection aid only: an empty centre is
+        normal, and nothing here measures purpose or suggests a career formula.
+      </div>
+      <div class="stage">
+        <div>
+          <div class="venn"><div id="venn"></div></div>
+          <div class="tools">
+            <button type="button" class="ghost" id="example">
+              Try an example map
+            </button>
+            <button type="button" class="ghost" id="download">
+              Download as SVG
+            </button>
+            <button type="button" class="ghost" id="clear">Clear all</button>
+          </div>
+          <p class="readout" id="readout" aria-live="polite"></p>
+        </div>
+        <div>
+          <form id="add">
+            <fieldset>
+              <legend>Add an example</legend>
+              <label class="l" for="text">A small, specific thing</label>
+              <input
+                id="text"
+                type="text"
+                maxlength="80"
+                placeholder="e.g. Explaining a tricky idea to a friend"
+                autocomplete="off"
+              />
+              <div class="l" id="chipslabel">Which circles does it touch?</div>
+              <div
+                class="chips"
+                role="group"
+                aria-labelledby="chipslabel"
+                id="chips"
+              ></div>
+              <button type="submit">Place on the map</button>
+              <span id="msg" class="where" role="status"></span>
+            </fieldset>
+          </form>
+          <ol class="items" id="items" aria-label="Your examples"></ol>
+        </div>
+      </div>
+      <section class="plan">
+        <form id="planform">
+          <div class="eyebrow">Turn one into a small test</div>
+          <h2>Pick an example and shrink it.</h2>
+          <label class="l" for="pick">Which example to try?</label>
+          <select id="pick"></select>
+          <label class="l" for="constraint"
+            >One real constraint to plan around</label
+          >
+          <input
+            id="constraint"
+            type="text"
+            placeholder="Time, energy, money, care duties, access"
+          />
+          <label class="l" for="step">A tiny action for the next 14 days</label>
+          <input
+            id="step"
+            type="text"
+            placeholder="A 10-minute, low-stakes experiment"
+          />
+          <p><button type="submit">Make my two-week plan</button></p>
+        </form>
+        <section class="output" id="output" aria-live="polite">
+          <p class="eyebrow">Your plan</p>
+          <h2>A gentle experiment, not a life verdict.</h2>
+          <p>Add examples, choose one, and make one small action concrete.</p>
+        </section>
+      </section>
+      <section class="source">
+        <h2>Use with care</h2>
+        <p>
+          Ikigai meanings and popular interpretations vary. This tool makes no
+          clinical or scientific claim and does not rank, score, or diagnose.
+          The named overlaps (passion, mission, vocation, profession) are labels
+          from the popular diagram, shown here as reflection prompts. Your
+          answers stay in this tab and are never uploaded or saved.
+        </p>
+        <ul>
+          <li>
+            <a
+              href="https://pubmed.ncbi.nlm.nih.gov/?term=ikigai"
+              target="_blank"
+              rel="noreferrer"
+              >PubMed search: research on ikigai</a
+            >
+          </li>
+        </ul>
+      </section>
+    </main>
+    <footer style="font: 12px Arial, sans-serif">
+      Nothing is uploaded, saved, or scored.
+    </footer>
+    <script>
+      const R = 120;
+      const C = [
+        { bit: 1, label: ["What you", "love"], name: "What you love", x: 260, y: 170, c: "#d3604d", lx: 260, ly: 92 },
+        { bit: 2, label: ["What you’re", "good at"], name: "What you’re good at", x: 170, y: 260, c: "#e6bd58", lx: 94, ly: 254 },
+        { bit: 4, label: ["What the", "world needs"], name: "What the world needs", x: 350, y: 260, c: "#4a8f86", lx: 426, ly: 254 },
+        { bit: 8, label: ["What you can", "be paid for"], name: "What you can be paid for", x: 260, y: 350, c: "#506f8b", lx: 260, ly: 424 },
+      ];
+      const SHORT = { 1: "Love", 2: "Good at", 4: "World needs", 8: "Paid for" };
+      const NAMED = { 3: "Passion", 5: "Mission", 12: "Vocation", 10: "Profession", 15: "Ikigai" };
+      let items = [];
+
+      const esc = (s) =>
+        String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+      const maskOf = (x, y) => C.reduce((m, c) => ((x - c.x) ** 2 + (y - c.y) ** 2 <= R * R ? m | c.bit : m), 0);
+      const margin = (x, y) => Math.min(...C.map((c) => Math.abs(Math.hypot(x - c.x, y - c.y) - R)));
+      const pop = (m) => [1, 2, 4, 8].filter((b) => m & b).length;
+
+      const pts = {};
+      for (let x = 20; x <= 500; x += 6)
+        for (let y = 20; y <= 500; y += 6) {
+          const m = maskOf(x, y);
+          if (m) (pts[m] = pts[m] || []).push([x, y]);
+        }
+      function regionPoints(mask) {
+        if (pts[mask]) return pts[mask];
+        const keys = Object.keys(pts).map(Number).filter((m) => (m & mask) === mask).sort((a, b) => pop(a) - pop(b));
+        return keys.length ? pts[keys[0]] : [];
+      }
+      function centroid(mask) {
+        const p = regionPoints(mask);
+        return [p.reduce((s, q) => s + q[0], 0) / p.length, p.reduce((s, q) => s + q[1], 0) / p.length];
+      }
+      function maskName(m) {
+        if (NAMED[m]) return NAMED[m];
+        return [1, 2, 4, 8].filter((b) => m & b).map((b) => SHORT[b]).join(" + ");
+      }
+      function spread(mask, n, avoid) {
+        let p = regionPoints(mask);
+        const roomy = p.filter((q) => margin(q[0], q[1]) >= 14);
+        if (roomy.length > n * 4) p = roomy;
+        const placed = avoid.slice(), out = [];
+        const [cx, cy] = centroid(mask);
+        for (let i = 0; i < n; i++) {
+          let best = null, bd = -Infinity;
+          for (const q of p) {
+            const d = placed.length ? Math.min(...placed.map((a) => Math.hypot(q[0] - a[0], q[1] - a[1]))) : -Math.hypot(q[0] - cx, q[1] - cy);
+            if (d > bd) { bd = d; best = q; }
+          }
+          if (!best) break;
+          placed.push(best);
+          out.push(best);
+        }
+        return out;
+      }
+
+      function drawVenn() {
+        const groups = {}, pos = {};
+        items.forEach((it, i) => (groups[it.mask] = groups[it.mask] || []).push(i));
+        for (const m in groups) {
+          const spots = spread(+m, groups[m].length, NAMED[m] ? [centroid(+m)] : []);
+          groups[m].forEach((idx, k) => (pos[idx] = spots[k] || centroid(+m)));
+        }
+        let s = `<svg id="vennsvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 520" role="img" aria-label="Four overlapping circles: what you love, what you are good at, what the world needs, what you can be paid for. ${items.length} examples placed."><rect width="520" height="520" fill="#fffdf8"/>`;
+        s += C.map((c) => `<circle cx="${c.x}" cy="${c.y}" r="${R}" fill="${c.c}" fill-opacity=".42" stroke="${c.c}" stroke-width="2" style="mix-blend-mode:multiply"/>`).join("");
+        s += C.map((c) => `<text x="${c.lx}" y="${c.ly}" text-anchor="middle" font-family="Georgia,serif" font-size="14" font-weight="700" fill="#232a36">${c.label.map((t, i) => `<tspan x="${c.lx}" dy="${i ? 16 : 0}">${esc(t)}</tspan>`).join("")}</text>`).join("");
+        for (const m of [3, 5, 12, 10, 15]) {
+          const [x, y] = centroid(m);
+          s += `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" font-family="Arial,sans-serif" font-size="${m === 15 ? 13 : 10}" font-weight="700" letter-spacing=".08em" fill="#232a36" fill-opacity=".62">${NAMED[m].toUpperCase()}</text>`;
+        }
+        items.forEach((it, i) => {
+          const [x, y] = pos[i];
+          s += `<g><title>${i + 1}. ${esc(it.text)} (${esc(maskName(it.mask))})</title><circle cx="${x}" cy="${y}" r="11" fill="#232a36" stroke="#fff" stroke-width="2"/><text x="${x}" y="${y + 4}" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#fff">${i + 1}</text></g>`;
+        });
+        document.querySelector("#venn").innerHTML = s + "</svg>";
+      }
+
+      function renderList() {
+        document.querySelector("#items").innerHTML = items
+          .map((it, i) => `<li><span class="num">${i + 1}</span><span>${esc(it.text)}<span class="where">${esc(maskName(it.mask))}</span></span><button type="button" class="rm" data-i="${i}" aria-label="Remove ${esc(it.text)}">Remove</button></li>`)
+          .join("");
+        document.querySelector("#pick").innerHTML = items.length
+          ? items.map((it, i) => `<option value="${i}">${i + 1}. ${esc(it.text)}</option>`).join("")
+          : '<option value="">Add an example first</option>';
+        const counts = {};
+        items.forEach((it) => (counts[it.mask] = (counts[it.mask] || 0) + 1));
+        const rows = Object.keys(counts).map(Number).sort((a, b) => pop(b) - pop(a)).map((m) => `${esc(maskName(m))}: ${counts[m]}`);
+        document.querySelector("#readout").innerHTML = items.length
+          ? `<b>Where your examples sit:</b> ${rows.join(" · ")}. ${counts[15] ? "Some touch all four circles." : "Nothing touches all four circles right now, which is common and fine."}`
+          : "Add a few examples to see where they overlap.";
+      }
+      function refresh() { drawVenn(); renderList(); }
+
+      document.querySelector("#chips").innerHTML = C.map((c) => `<label class="chip" style="--c:${c.c}"><input type="checkbox" value="${c.bit}">${esc(c.name)}</label>`).join("");
+      document.querySelector("#add").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const text = document.querySelector("#text").value.trim();
+        const mask = [...document.querySelectorAll("#chips input:checked")].reduce((m, i) => m | +i.value, 0);
+        const msg = document.querySelector("#msg");
+        if (!text) return (msg.textContent = "Write a short example first.");
+        if (!mask) return (msg.textContent = "Tick at least one circle.");
+        if (items.length >= 24) return (msg.textContent = "That is plenty for one map. Remove one to add another.");
+        msg.textContent = "";
+        items.push({ text, mask });
+        document.querySelector("#text").value = "";
+        document.querySelectorAll("#chips input").forEach((i) => (i.checked = false));
+        refresh();
+      });
+      document.querySelector("#items").addEventListener("click", (e) => {
+        const b = e.target.closest(".rm");
+        if (b) { items.splice(+b.dataset.i, 1); refresh(); }
+      });
+      document.querySelector("#clear").addEventListener("click", () => { items = []; refresh(); });
+      document.querySelector("#example").addEventListener("click", () => {
+        items = [
+          { text: "Teaching a friend something I just learned", mask: 3 },
+          { text: "Cooking for neighbours on Sundays", mask: 5 },
+          { text: "Untangling messy spreadsheets", mask: 10 },
+          { text: "Fixing small things for older relatives", mask: 12 },
+          { text: "Organising a community clean-up", mask: 7 },
+          { text: "Long walks with no plan", mask: 1 },
+        ];
+        refresh();
+      });
+      document.querySelector("#download").addEventListener("click", () => {
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(new Blob([document.querySelector("#vennsvg").outerHTML], { type: "image/svg+xml" }));
+        a.download = "ikigai-overlap-map.svg";
+        a.click();
+        URL.revokeObjectURL(a.href);
+      });
+      document.querySelector("#planform").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const it = items[+document.querySelector("#pick").value];
+        const out = document.querySelector("#output");
+        const step = document.querySelector("#step").value.trim();
+        const con = document.querySelector("#constraint").value.trim();
+        if (!it) { out.innerHTML = '<p class="eyebrow">Your plan</p><h2>Add an example first.</h2><p>Place at least one example on the map, then pick it here.</p>'; return; }
+        const missing = C.filter((c) => !(it.mask & c.bit)).map((c) => c.name.toLowerCase());
+        out.innerHTML = `<p class="eyebrow">Your 14-day experiment</p><h2>${esc(step || "Make room for one small thing.")}</h2><p><b>Why this one:</b> ${esc(it.text)} (${esc(maskName(it.mask))}).</p><p><b>Constraint to respect:</b> ${esc(con || "Keep it short and adjustable.")}</p>${missing.length ? `<p><b>A curious question, not a goal:</b> this example does not yet touch ${esc(missing.join(" or "))}. Is there a small way to notice that, or is it fine as it is?</p>` : ""}<div class="experiment"><b>Day 1</b><p>Try it once. Notice what helped and what got in the way.</p><b>Day 7</b><p>Repeat, shrink, or change it based on your experience.</p><b>Day 14</b><p>Ask: did this add something worthwhile? Keep it, revise it, or let it go.</p></div><p>No outcome is a failure. This is a prompt for reflection, not advice or a measure of your life.</p>`;
+      });
+      refresh();
+    </script>
+    <script data-goatcounter="https://jessejinnaruiz.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
