@@ -1,0 +1,576 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Data Broker Opt-Out Kit</title>
+    <meta
+      name="description"
+      content="Build deletion, opt-out, and access requests for data brokers, track follow-up dates, and see what California's DROP does. Runs entirely in your browser."
+    />
+    <style>
+      :root {
+        --ink: #101418;
+        --paper: #f3f1ec;
+        --amber: #f2b705;
+        --red: #b3261e;
+        --green: #1f6f4a;
+        --line: #cfcabd;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font: 16px/1.5 Arial, sans-serif;
+      }
+      header,
+      main,
+      footer {
+        max-width: 1120px;
+        margin: auto;
+        padding: 24px;
+      }
+      nav {
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+      a {
+        color: #0b4f8a;
+      }
+      .hero {
+        border-bottom: 1px solid var(--ink);
+      }
+      h1 {
+        font: 400 clamp(3rem, 8vw, 6rem) / 0.92 Georgia, serif;
+        max-width: 11ch;
+        margin: 8vh 0 18px;
+      }
+      .redact {
+        background: var(--ink);
+        color: var(--amber);
+        padding: 0 0.15em;
+        border-radius: 2px;
+      }
+      .lede {
+        max-width: 720px;
+        font: 18px/1.55 Georgia, serif;
+      }
+      .eyebrow {
+        font-size: 12px;
+        font-weight: 800;
+        text-transform: uppercase;
+        color: var(--red);
+        margin-top: 7vh;
+      }
+      h2 {
+        font: 400 1.7rem Georgia, serif;
+        margin: 0 0 10px;
+      }
+      section.step {
+        margin-top: 34px;
+        border-top: 6px solid var(--ink);
+        padding-top: 14px;
+      }
+      .drop {
+        margin: 26px 0;
+        padding: 16px 18px;
+        background: var(--amber);
+        border: 2px solid var(--ink);
+        font-size: 15px;
+      }
+      .drop h2 {
+        font-size: 1.3rem;
+      }
+      .note {
+        padding: 12px 14px;
+        border-left: 5px solid var(--red);
+        background: #fff;
+        font-size: 14px;
+        margin: 22px 0;
+      }
+      label {
+        display: block;
+        font-size: 13px;
+        font-weight: 700;
+        margin: 12px 0 5px;
+      }
+      input[type="text"],
+      input[type="email"],
+      input[type="date"],
+      select,
+      textarea {
+        width: 100%;
+        min-height: 42px;
+        padding: 8px 10px;
+        font: 15px Arial, sans-serif;
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        background: #fff;
+      }
+      textarea {
+        min-height: 260px;
+        font: 13px/1.5 Consolas, monospace;
+        resize: vertical;
+      }
+      .cols {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 4px 20px;
+      }
+      .checks {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 6px 14px;
+        margin: 8px 0;
+      }
+      .check {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        font-weight: 400;
+        margin: 0;
+        min-height: 36px;
+      }
+      .check input {
+        width: 18px;
+        height: 18px;
+        accent-color: var(--ink);
+      }
+      button {
+        border: 0;
+        background: var(--ink);
+        color: #fff;
+        font: 700 14px Arial, sans-serif;
+        padding: 10px 16px;
+        min-height: 44px;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      button.ghost {
+        background: transparent;
+        color: var(--ink);
+        border: 1px solid var(--ink);
+      }
+      button.small {
+        min-height: 36px;
+        padding: 6px 12px;
+      }
+      button:focus-visible,
+      input:focus-visible,
+      select:focus-visible,
+      textarea:focus-visible,
+      summary:focus-visible {
+        outline: 3px solid var(--amber);
+        outline-offset: 2px;
+      }
+      .actions {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 14px;
+        align-items: center;
+      }
+      .addrow {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+        gap: 10px;
+        align-items: end;
+        margin-top: 8px;
+      }
+      .letter {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        margin: 10px 0;
+        padding: 4px 14px 14px;
+      }
+      .letter summary {
+        cursor: pointer;
+        font-weight: 700;
+        padding: 12px 0;
+      }
+      .tw {
+        overflow-x: auto;
+        border: 1px solid var(--line);
+        background: #fff;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+        min-width: 640px;
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 8px;
+        border-top: 1px solid var(--line);
+        vertical-align: middle;
+      }
+      th {
+        background: #e7e3d8;
+        font-size: 12px;
+        text-transform: uppercase;
+      }
+      td select,
+      td input[type="date"] {
+        min-height: 36px;
+        padding: 4px 6px;
+        font-size: 14px;
+      }
+      .due {
+        font-weight: 700;
+      }
+      .over {
+        color: var(--red);
+      }
+      .status {
+        font-size: 14px;
+        min-height: 22px;
+        margin: 8px 0;
+      }
+      .source {
+        margin: 38px 0;
+        border-top: 1px solid var(--ink);
+        padding-top: 18px;
+        font-size: 14px;
+      }
+      footer {
+        font-size: 12px;
+        color: #4f544f;
+      }
+      @media (max-width: 800px) {
+        .cols,
+        .checks,
+        .addrow {
+          grid-template-columns: 1fr;
+        }
+        h1 {
+          margin-top: 50px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="hero">
+      <nav>
+        <a href="../index.html">&larr; Jesse J Ruiz</a>
+      </nav>
+      <p class="eyebrow">Take your name off the list</p>
+      <h1>Opt out of the people who sell <span class="redact">you</span>.</h1>
+      <p class="lede">
+        Data brokers collect and sell personal information about people who
+        never dealt with them. Pick the brokers, build ready-to-send deletion,
+        opt-out, or access requests, and track follow-ups. Your details never
+        leave this page.
+      </p>
+    </header>
+    <main>
+      <aside class="drop">
+        <h2>California residents: start with DROP</h2>
+        <p>
+          California's Delete Request and Opt-out Platform lets you send one
+          deletion request to over 600 registered data brokers, for free. It
+          launched January 1, 2026. Brokers had to begin processing requests on
+          August 1, 2026 and must check for new ones at least every 45 days, so
+          status updates can take up to 90 days.
+          <a
+            href="https://privacy.ca.gov/drop/"
+            target="_blank"
+            rel="noreferrer"
+            >Official DROP page</a
+          >
+          ·
+          <a
+            href="https://cppa.ca.gov/data_broker_registry/"
+            target="_blank"
+            rel="noreferrer"
+            >Data broker registry (603 brokers, updated July 29, 2026)</a
+          >. Use the letters below for brokers outside California's reach or
+          for follow-up.
+        </p>
+      </aside>
+
+      <section class="step" aria-labelledby="s1">
+        <h2 id="s1">1. About the requests</h2>
+        <p class="status">
+          Used only to fill in the letters. Give brokers the least they need to
+          find you; never include a Social Security number or financial account
+          number.
+        </p>
+        <div class="cols">
+          <div>
+            <label for="name">Your full name</label>
+            <input id="name" type="text" maxlength="80" autocomplete="name" />
+          </div>
+          <div>
+            <label for="aliases">Other names you use (optional)</label>
+            <input id="aliases" type="text" maxlength="120" />
+          </div>
+          <div>
+            <label for="email">Email for replies</label>
+            <input id="email" type="email" maxlength="120" autocomplete="email" />
+          </div>
+          <div>
+            <label for="phone">Phone (optional)</label>
+            <input id="phone" type="text" maxlength="30" autocomplete="tel" />
+          </div>
+          <div>
+            <label for="addr">Address brokers may list (optional)</label>
+            <input id="addr" type="text" maxlength="160" autocomplete="street-address" />
+          </div>
+          <div>
+            <label for="state">Where you live</label>
+            <select id="state">
+              <option value="CA">California</option>
+              <option value="TX" selected>Texas</option>
+              <option value="VA">Virginia</option>
+              <option value="CO">Colorado</option>
+              <option value="OTHER">Another state or country</option>
+            </select>
+          </div>
+        </div>
+        <fieldset style="border: 0; padding: 0; margin: 12px 0 0">
+          <legend style="font-size: 13px; font-weight: 700">What to ask for</legend>
+          <div class="checks">
+            <label class="check"><input type="checkbox" id="r-delete" checked />Delete my information</label>
+            <label class="check"><input type="checkbox" id="r-optout" checked />Stop selling or sharing it</label>
+            <label class="check"><input type="checkbox" id="r-access" />Tell me what you hold</label>
+          </div>
+        </fieldset>
+      </section>
+
+      <section class="step" aria-labelledby="s2">
+        <h2 id="s2">2. Choose brokers</h2>
+        <p class="status">
+          These names are widely known people-search and data companies. This is
+          not a complete list and contact details change, so find each
+          company's current privacy contact on its site or in the registry
+          before sending.
+        </p>
+        <div class="checks" id="presets"></div>
+        <div class="actions">
+          <button type="button" class="ghost small" id="selpeople">Select all</button>
+          <button type="button" class="ghost small" id="selnone">Clear</button>
+        </div>
+        <div class="addrow">
+          <div>
+            <label for="cname">Add another broker</label>
+            <input id="cname" type="text" maxlength="80" placeholder="Company name" />
+          </div>
+          <div>
+            <label for="ccontact">Privacy email or form link (optional)</label>
+            <input id="ccontact" type="text" maxlength="200" placeholder="privacy@example.com" />
+          </div>
+          <button type="button" id="cadd">Add</button>
+        </div>
+      </section>
+
+      <section class="step" aria-labelledby="s3">
+        <h2 id="s3">3. Your letters</h2>
+        <div class="actions" style="margin-top: 0">
+          <button type="button" id="build">Build letters for selected brokers</button>
+          <span class="status" id="buildstatus" role="status" aria-live="polite"></span>
+        </div>
+        <div id="letters"></div>
+      </section>
+
+      <section class="step" aria-labelledby="s4">
+        <h2 id="s4">4. Follow-up tracker</h2>
+        <p class="status">
+          Many state privacy laws give businesses about 45 days to answer, and
+          some allow an extension. Check the law that applies to you; the date
+          below is a prompt to follow up, not a legal deadline.
+        </p>
+        <div class="tw">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Broker</th>
+                <th scope="col">Status</th>
+                <th scope="col">Date sent</th>
+                <th scope="col">Follow up on</th>
+              </tr>
+            </thead>
+            <tbody id="track"></tbody>
+          </table>
+        </div>
+        <div class="actions">
+          <button type="button" class="ghost" id="export">Save tracker (.json)</button>
+          <label class="ghost" style="margin: 0; display: inline-block; padding: 10px 16px; border: 1px solid var(--ink); border-radius: 4px; cursor: pointer; min-height: 44px">
+            Load saved tracker
+            <input id="import" type="file" accept=".json,application/json" style="position: absolute; left: -9999px" />
+          </label>
+          <span class="status" id="trackstatus" role="status" aria-live="polite"></span>
+        </div>
+        <p class="status">
+          The tracker file holds broker names and dates only, not your personal
+          details. Nothing is saved unless you download it.
+        </p>
+      </section>
+
+      <div class="note">
+        <b>Not legal advice.</b> Rights, deadlines, and exemptions differ by
+        state and by company, and some brokers may ask you to verify your
+        identity or may decline. Opt-outs often need repeating because brokers
+        re-collect data, so re-check every few months. Be wary of paid removal
+        services you did not research, and send requests only to a company's
+        official privacy contact.
+      </div>
+
+      <section class="source">
+        <h2>Sources and limits</h2>
+        <p>
+          DROP dates and eligibility come from the California Privacy Protection
+          Agency's pages below. The letter templates cite the California
+          Consumer Privacy Act, Texas Data Privacy and Security Act, Virginia
+          Consumer Data Protection Act, and Colorado Privacy Act by name; confirm
+          current text and how they apply to a given company with the state's
+          attorney general or a qualified adviser. Some brokers fall outside
+          these laws, and credit bureaus are covered by separate rules.
+        </p>
+        <ul>
+          <li><a href="https://privacy.ca.gov/drop/" target="_blank" rel="noreferrer">California DROP (CalPrivacy)</a></li>
+          <li><a href="https://cppa.ca.gov/data_broker_registry/" target="_blank" rel="noreferrer">California Data Broker Registry</a></li>
+        </ul>
+      </section>
+    </main>
+    <footer>
+      Independent tool, not affiliated with any government agency or data broker.
+      Nothing you type is uploaded. Page views are counted anonymously — no cookies, no personal data.
+    </footer>
+    <script>
+      const $ = (s) => document.querySelector(s);
+      const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+      const STATUSES = ["Not sent", "Request sent", "Confirmed deleted", "Needs follow-up", "Declined or no reply"];
+      const LAW = {
+        CA: ["California", "the California Consumer Privacy Act (CCPA), as amended"],
+        TX: ["Texas", "the Texas Data Privacy and Security Act"],
+        VA: ["Virginia", "the Virginia Consumer Data Protection Act"],
+        CO: ["Colorado", "the Colorado Privacy Act"],
+        OTHER: ["my state or country", "any privacy rights available to me under applicable law"],
+      };
+      const PRESETS = ["Spokeo", "Whitepages", "BeenVerified", "Intelius", "TruthFinder", "Radaris", "PeopleFinders", "MyLife", "FastPeopleSearch", "TruePeopleSearch", "Acxiom", "LiveRamp", "Epsilon"];
+      let brokers = PRESETS.map((n) => ({ name: n, contact: "", sel: false, status: STATUSES[0], sent: "" }));
+
+      const emailOk = (s) => /^[^\s@<>"',;]+@[^\s@<>"',;]+\.[A-Za-z]{2,}$/.test(s);
+      const addDays = (d, n) => { const t = new Date(d + "T00:00:00"); t.setDate(t.getDate() + n); return t.toISOString().slice(0, 10); };
+      const today = () => { const t = new Date(); return `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, "0")}-${String(t.getDate()).padStart(2, "0")}`; };
+
+      function drawPresets() {
+        $("#presets").innerHTML = brokers.map((b, i) => `<label class="check"><input type="checkbox" data-i="${i}" ${b.sel ? "checked" : ""}>${esc(b.name)}</label>`).join("");
+      }
+      function buildLetter(b) {
+        const [place, law] = LAW[$("#state").value];
+        const asks = [];
+        if ($("#r-delete").checked) asks.push("Delete the personal information you hold about me, and keep it suppressed so it is not collected again.");
+        if ($("#r-optout").checked) asks.push("Stop selling or sharing my personal information, including for targeted advertising.");
+        if ($("#r-access").checked) asks.push("Tell me what categories and specific pieces of personal information you hold about me, and where it came from.");
+        if (!asks.length) asks.push("Delete the personal information you hold about me.");
+        const who = (k, v) => (v ? `- ${k}: ${v}\n` : "");
+        const g = (id) => $(id).value.trim();
+        const subj = $("#r-delete").checked ? "Request to delete my personal information" : "Privacy request regarding my personal information";
+        const body = `Hello ${b.name} privacy team,\n\nI am a resident of ${place}. Under ${law}, I am making the following request(s) about personal information you hold about me:\n\n${asks.map((a, i) => `${i + 1}. ${a}`).join("\n")}\n\nTo help you find my records:\n${who("Name", g("#name") || "[Your name]")}${who("Other names", g("#aliases"))}${who("Email", g("#email"))}${who("Phone", g("#phone"))}${who("Address", g("#addr"))}\nPlease use these details only to process this request. Confirm in writing when it is complete, or tell me what minimal additional information you need to verify it.\n\nThank you,\n${g("#name") || "[Your name]"}`;
+        return { subj, body };
+      }
+      function drawLetters() {
+        const sel = brokers.filter((b) => b.sel);
+        $("#buildstatus").textContent = sel.length ? `${sel.length} letter(s) built. Edit before sending.` : "Select at least one broker in step 2.";
+        $("#letters").innerHTML = sel.map((b) => {
+          const i = brokers.indexOf(b);
+          return `<details class="letter" ${sel.length === 1 ? "open" : ""}><summary>${esc(b.name)}${b.contact ? " · " + esc(b.contact) : ""}</summary><label for="sub${i}">Subject</label><input type="text" id="sub${i}"><label for="bod${i}">Message</label><textarea id="bod${i}"></textarea><div class="actions"><button type="button" class="small" data-copy="${i}">Copy message</button>${emailOk(b.contact) ? `<button type="button" class="ghost small" data-mail="${i}">Open in my email app</button>` : ""}<button type="button" class="ghost small" data-sent="${i}">Mark as sent today</button></div></details>`;
+        }).join("");
+        sel.forEach((b) => {
+          const i = brokers.indexOf(b), l = buildLetter(b);
+          $("#sub" + i).value = l.subj;
+          $("#bod" + i).value = l.body;
+        });
+        drawTracker();
+      }
+      function drawTracker() {
+        const sel = brokers.filter((b) => b.sel);
+        $("#track").innerHTML = sel.length
+          ? sel.map((b) => {
+              const i = brokers.indexOf(b);
+              const due = b.sent ? addDays(b.sent, 45) : "";
+              const over = due && due < today() && b.status !== STATUSES[2];
+              return `<tr><td>${esc(b.name)}</td><td><select data-st="${i}" aria-label="Status for ${esc(b.name)}">${STATUSES.map((s) => `<option ${s === b.status ? "selected" : ""}>${s}</option>`).join("")}</select></td><td><input type="date" data-sent-date="${i}" value="${esc(b.sent)}" aria-label="Date sent to ${esc(b.name)}"></td><td class="due ${over ? "over" : ""}">${due ? esc(due) + (over ? " (past due)" : "") : "Set a date sent"}</td></tr>`;
+            }).join("")
+          : '<tr><td colspan="4">Select brokers to track them.</td></tr>';
+      }
+
+      $("#presets").addEventListener("change", (e) => { const i = e.target.dataset.i; if (i !== undefined) brokers[i].sel = e.target.checked; drawTracker(); });
+      $("#selpeople").addEventListener("click", () => { brokers.forEach((b) => (b.sel = true)); drawPresets(); drawTracker(); });
+      $("#selnone").addEventListener("click", () => { brokers.forEach((b) => (b.sel = false)); drawPresets(); drawTracker(); });
+      $("#cadd").addEventListener("click", () => {
+        const name = $("#cname").value.trim().slice(0, 80);
+        if (!name) return;
+        const ex = brokers.find((b) => b.name.toLowerCase() === name.toLowerCase());
+        const contact = $("#ccontact").value.trim().slice(0, 200);
+        if (ex) { ex.sel = true; if (contact) ex.contact = contact; }
+        else brokers.push({ name, contact, sel: true, status: STATUSES[0], sent: "" });
+        $("#cname").value = $("#ccontact").value = "";
+        drawPresets();
+        drawTracker();
+      });
+      $("#build").addEventListener("click", drawLetters);
+      $("#letters").addEventListener("click", async (e) => {
+        const c = e.target.closest("[data-copy]"), m = e.target.closest("[data-mail]"), s = e.target.closest("[data-sent]");
+        if (c) {
+          const t = $("#bod" + c.dataset.copy);
+          try { await navigator.clipboard.writeText(t.value); c.textContent = "Copied"; } catch (_) { t.select(); c.textContent = "Select and copy"; }
+        }
+        if (m) {
+          const i = m.dataset.mail;
+          location.href = `mailto:${brokers[i].contact}?subject=${encodeURIComponent($("#sub" + i).value)}&body=${encodeURIComponent($("#bod" + i).value)}`;
+        }
+        if (s) { const b = brokers[s.dataset.sent]; b.status = STATUSES[1]; b.sent = today(); drawTracker(); s.textContent = "Marked sent"; }
+      });
+      $("#track").addEventListener("change", (e) => {
+        if (e.target.dataset.st !== undefined) brokers[e.target.dataset.st].status = e.target.value;
+        if (e.target.dataset.sentDate !== undefined) brokers[e.target.dataset.sentDate].sent = /^\d{4}-\d{2}-\d{2}$/.test(e.target.value) ? e.target.value : "";
+        drawTracker();
+      });
+      $("#export").addEventListener("click", () => {
+        const data = brokers.filter((b) => b.sel).map(({ name, contact, status, sent }) => ({ name, contact, status, sent }));
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(new Blob([JSON.stringify({ tracker: data }, null, 2)], { type: "application/json" }));
+        a.download = "broker-optout-tracker.json";
+        a.click();
+        URL.revokeObjectURL(a.href);
+      });
+      $("#import").addEventListener("change", async (e) => {
+        const f = e.target.files[0];
+        if (!f) return;
+        try {
+          if (f.size > 1e6) throw 0;
+          const rows = JSON.parse(await f.text()).tracker;
+          if (!Array.isArray(rows)) throw 0;
+          rows.slice(0, 200).forEach((r) => {
+            const name = String(r.name || "").trim().slice(0, 80);
+            if (!name) return;
+            const status = STATUSES.includes(r.status) ? r.status : STATUSES[0];
+            const sent = /^\d{4}-\d{2}-\d{2}$/.test(r.sent) ? r.sent : "";
+            const contact = String(r.contact || "").slice(0, 200);
+            const ex = brokers.find((b) => b.name.toLowerCase() === name.toLowerCase());
+            if (ex) Object.assign(ex, { sel: true, status, sent, contact: contact || ex.contact });
+            else brokers.push({ name, contact, sel: true, status, sent });
+          });
+          $("#trackstatus").textContent = "Tracker loaded.";
+          drawPresets();
+          drawTracker();
+        } catch (_) { $("#trackstatus").textContent = "That file is not a tracker saved by this tool."; }
+        e.target.value = "";
+      });
+      drawPresets();
+      drawTracker();
+    </script>
+    <script data-goatcounter="https://jessejinnaruiz.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>

@@ -1,0 +1,889 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>BTS On Tour: Dates & Box Office</title>
+    <style>
+      :root {
+        --ink: #211b25;
+        --paper: #f4eef3;
+        --pink: #dc4e91;
+        --blue: #355782;
+        --gold: #e1bb55;
+        --line: #cfc3d0;
+        --muted: #675b69;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font:
+          16px/1.45 Arial,
+          sans-serif;
+      }
+      header,
+      main,
+      footer {
+        max-width: 1240px;
+        margin: auto;
+        padding: 24px;
+      }
+      nav {
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+      a {
+        color: var(--blue);
+      }
+      h1 {
+        font:
+          400 clamp(3rem, 8vw, 6.5rem)/0.88 Georgia,
+          serif;
+        max-width: 9ch;
+        margin: 9vh 0 18px;
+      }
+      .lede {
+        font:
+          18px/1.5 Georgia,
+          serif;
+        max-width: 770px;
+      }
+      .hero {
+        border-bottom: 1px solid var(--ink);
+      }
+      .mode {
+        display: flex;
+        gap: 8px;
+        margin: 28px 0;
+      }
+      .mode button,
+      .filters button {
+        min-height: 44px;
+        padding: 8px 14px;
+        border: 1px solid var(--ink);
+        background: transparent;
+        color: var(--ink);
+        font-weight: 800;
+        cursor: pointer;
+      }
+      .mode button[aria-pressed="true"],
+      .filters button[aria-pressed="true"] {
+        background: var(--ink);
+        color: white;
+      }
+      .view[hidden] {
+        display: none;
+      }
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+        margin: 22px 0;
+      }
+      .stat {
+        border-top: 4px solid var(--pink);
+        padding: 12px 0;
+      }
+      .stat b {
+        display: block;
+        font: 400 2rem Georgia;
+      }
+      .controls {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 220px 180px;
+        gap: 10px;
+        margin: 18px 0;
+        min-width: 0;
+      }
+      .controls input,
+      .controls select {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        min-height: 46px;
+        border: 1px solid var(--line);
+        background: white;
+        padding: 10px;
+        font: inherit;
+      }
+      .filters {
+        display: flex;
+        gap: 7px;
+        flex-wrap: wrap;
+        margin: 14px 0;
+      }
+      .schedule {
+        border-top: 1px solid var(--ink);
+      }
+      .date {
+        display: grid;
+        grid-template-columns: 140px 1.15fr 1fr 1.1fr 120px;
+        gap: 12px;
+        align-items: center;
+        padding: 13px 8px;
+        border-bottom: 1px solid var(--line);
+        font-size: 14px;
+      }
+      .date:hover {
+        background: #fff;
+      }
+      .date time {
+        font-weight: 800;
+      }
+      .tour {
+        font-weight: 800;
+      }
+      .status {
+        font-size: 10px;
+        text-transform: uppercase;
+        font-weight: 800;
+        color: var(--blue);
+      }
+      .status.cancelled {
+        color: var(--pink);
+      }
+      .empty {
+        padding: 28px 0;
+        color: var(--muted);
+      }
+      .reports {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0 24px;
+      }
+      .coverage-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0 18px;
+        margin-top: 20px;
+      }
+      .coverage-item {
+        border-top: 1px solid var(--line);
+        padding: 12px 0;
+        font-size: 13px;
+      }
+      .coverage-item b {
+        display: block;
+        font-size: 14px;
+      }
+      .coverage-item .missing {
+        color: var(--pink);
+        font-weight: 700;
+      }
+      .report {
+        border-top: 1px solid var(--ink);
+        padding: 17px 0;
+      }
+      .report h3 {
+        margin: 0;
+        font: 700 16px Arial;
+      }
+      .report .when {
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .bar {
+        height: 9px;
+        background: #e7dfe7;
+        margin: 10px 0;
+      }
+      .bar i {
+        display: block;
+        height: 100%;
+        background: var(--pink);
+      }
+      .metrics {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px 14px;
+        font-size: 14px;
+      }
+      .metrics b {
+        font: 700 14px Arial;
+      }
+      .source {
+        font-size: 12px;
+        margin-top: 9px;
+      }
+      .note {
+        margin: 22px 0;
+        padding: 13px 15px;
+        border-left: 5px solid var(--gold);
+        background: #fff9e9;
+        font-size: 13px;
+      }
+      .legend {
+        font-size: 12px;
+        color: var(--muted);
+        margin: 10px 0;
+      }
+      .method {
+        margin-top: 42px;
+        padding-top: 20px;
+        border-top: 1px solid var(--ink);
+        font-size: 14px;
+      }
+      .method li {
+        margin: 8px 0;
+      }
+      .load {
+        padding: 30px;
+        border: 1px dashed var(--line);
+      }
+      footer {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      @media (max-width: 850px) {
+        .date {
+          grid-template-columns: 110px 1fr 1fr;
+        }
+        .date .venue {
+          grid-column: 2/4;
+        }
+        .date .venue a {
+          font-size: 11px;
+        }
+        .controls {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .controls input {
+          grid-column: 1/-1;
+        }
+        .reports {
+          grid-template-columns: 1fr;
+        }
+        .coverage-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+      @media (max-width: 560px) {
+        .stats {
+          grid-template-columns: 1fr;
+        }
+        .coverage-grid {
+          grid-template-columns: 1fr;
+        }
+        .date {
+          grid-template-columns: 1fr 1fr;
+          gap: 3px 10px;
+        }
+        .date .tour {
+          grid-column: 2;
+        }
+        .date .venue {
+          grid-column: 1/-1;
+        }
+        .date .status {
+          grid-column: 1/-1;
+        }
+        .controls {
+          grid-template-columns: minmax(0, 1fr);
+        }
+        .controls input {
+          grid-column: auto;
+        }
+        h1 {
+          margin-top: 55px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="hero">
+      <nav>
+        <a href="../index.html">&larr; Jesse J Ruiz</a
+        >
+      </nav>
+      <p
+        style="
+          margin-top: 8vh;
+          color: var(--pink);
+          font-weight: 800;
+          text-transform: uppercase;
+          font-size: 12px;
+        "
+      >
+        Dates and reported box office
+      </p>
+      <h1>BTS On Tour.</h1>
+      <p class="lede">
+        Explore the group tour schedule and the ticket-sales figures that
+        box-office sources have actually reported. Schedules are much more
+        complete than sales data; missing numbers stay missing.
+      </p>
+      <div class="mode" role="group" aria-label="Choose a view">
+        <button id="datesTab" aria-pressed="true">Tour dates</button
+        ><button id="salesTab" aria-pressed="false">
+          Ticket sales reports
+        </button>
+      </div>
+    </header>
+    <main>
+      <div id="loading" class="load">
+        Loading the embedded tour-date archive...
+      </div>
+      <section id="datesView" class="view" hidden>
+        <div class="stats">
+          <div class="stat"><b id="dateCount">0</b>dated schedule rows</div>
+          <div class="stat">
+            <b id="tourCount">0</b>tour / concert-series labels
+          </div>
+          <div class="stat">
+            <b id="cancelCount">0</b>cancelled Map of the Soul dates
+          </div>
+        </div>
+        <div class="controls">
+          <input
+            id="dateSearch"
+            type="search"
+            placeholder="Search city, venue, country, tour"
+            aria-label="Search tour dates"
+          /><select id="tourFilter" aria-label="Filter by tour">
+            <option value="all">All tour labels</option></select
+          ><select id="statusFilter" aria-label="Filter by status">
+            <option value="all">All schedule states</option>
+            <option value="performed">Performed</option>
+            <option value="scheduled">Scheduled</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+        </div>
+        <div class="legend">
+          The date index is compiled from public tour tables, snapshot October
+          12, 2026. Fan meetings, festivals, one-off TV/award appearances, and
+          member-solo dates are outside this tour-date scope.
+        </div>
+        <div class="schedule" id="schedule" aria-live="polite"></div>
+        <div class="controls">
+          <button
+            class="filters"
+            id="prev"
+            type="button"
+            aria-label="Previous schedule page"
+          >
+            Previous</button
+          ><span
+            id="pageStatus"
+            style="align-self: center; text-align: center"
+          ></span
+          ><button
+            class="filters"
+            id="next"
+            type="button"
+            aria-label="Next schedule page"
+          >
+            Next
+          </button>
+        </div>
+      </section>
+      <section id="salesView" class="view" hidden>
+        <div class="stats">
+          <div class="stat">
+            <b id="reportCount">0</b>public box-office records
+          </div>
+          <div class="stat">
+            <b>Not a complete ledger</b>trade reports cover selected markets and
+            periods
+          </div>
+          <div class="stat">
+            <b>No invented splits</b>multi-night totals remain at their reported
+            scope
+          </div>
+        </div>
+        <div class="controls">
+          <input
+            id="salesSearch"
+            type="search"
+            placeholder="Search tour, venue, source"
+            aria-label="Search sales reports"
+          /><select
+            id="salesTourFilter"
+            aria-label="Filter sales reports by tour"
+          >
+            <option value="all">All tour labels</option></select
+          ><select id="metricSort" aria-label="Sort reports">
+            <option value="gross">Sort by reported gross</option>
+            <option value="tickets">Sort by reported tickets</option>
+          </select>
+        </div>
+        <div class="note">
+          <b>Do not add these records together.</b> Venue runs are included in
+          regional/monthly totals, and monthly Boxscore periods can overlap. A
+          blank value means the cited public source did not disclose it, not
+          zero sales.
+        </div>
+        <div class="reports" id="reports" aria-live="polite"></div>
+        <h2 style="margin-top: 34px">Coverage by tour</h2>
+        <p class="legend">
+          “No public sales report located” means none was found in this research
+          snapshot. It does not mean there were no ticket sales.
+        </p>
+        <div class="coverage-grid" id="coverageGrid"></div>
+      </section>
+      <section class="method">
+        <h2>Coverage and provenance</h2>
+        <ul>
+          <li>
+            Tour dates were extracted from public Wikipedia schedule tables
+            using the Wikimedia API and normalized as factual event records. The
+            date dataset is attributed to
+            <a
+              href="https://en.wikipedia.org/wiki/List_of_BTS_live_performances"
+              target="_blank"
+              rel="noreferrer"
+              >List of BTS live performances</a
+            >
+            and linked tour pages under
+            <a
+              href="https://creativecommons.org/licenses/by-sa/4.0/"
+              target="_blank"
+              rel="noreferrer"
+              >CC BY-SA 4.0</a
+            >. Snapshot: October 12, 2026.
+          </li>
+          <li>
+            Ticket counts and grosses below come from publicly accessible
+            Pollstar and Billboard reporting. We did not scrape Pollstar's
+            subscriber-only database. Some records are venue engagements or
+            reporting windows, not single-show figures.
+          </li>
+          <li>
+            “Sold out” is not a ticket count. Attendance is not automatically
+            equal to tickets sold. Online viewers and cinema audiences are not
+            mixed with in-person tickets.
+          </li>
+          <li>
+            This is a sourced research index, not an official BTS/HYBE product.
+            No resale transaction data, private purchase data, logos, images, or
+            ticketing page layouts are included.
+          </li>
+        </ul>
+        <p>
+          Known sales-data gap: complete per-date box-office reporting for every
+          tour, region, and year is not publicly available in the sources
+          reviewed. The app exposes which tours have sourced ticket counts and
+          which have no located public report.
+        </p>
+      </section>
+    </main>
+    <footer>
+      Unofficial factual index. Tour schedule facts are a historical snapshot;
+      check artist, venue, and promoter notices for current changes.
+    </footer>
+    <script>
+      const DATE_DATA_B64 = `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`;
+      const SALES = [
+        {
+          tour: "Love Yourself: Speak Yourself",
+          period: "May 4-June 8, 2019",
+          scope: "12 shows / six city engagements",
+          place: "Six reported markets",
+          shows: 12,
+          tickets: 606409,
+          gross: 78800000,
+          grossLabel: "$78.8M (rounded)",
+          source: "Pollstar Boxoffice reporting",
+          url: "https://news.pollstar.com/2019/07/16/k-pops-star-turn-bts-tour-reaches-stratospheric-heights/",
+          note: "Excludes Japan dates; the six city totals below are included in this record.",
+        },
+        {
+          tour: "Love Yourself: Speak Yourself",
+          period: "May 4-5, 2019",
+          scope: "Two-show venue engagement",
+          place: "Rose Bowl / Pasadena",
+          shows: 2,
+          tickets: 113040,
+          gross: 16557515,
+          grossLabel: "$16.56M",
+          source: "Pollstar",
+          url: "https://news.pollstar.com/2019/07/16/k-pops-star-turn-bts-tour-reaches-stratospheric-heights/",
+          note: "Included in the 12-show six-market total.",
+        },
+        {
+          tour: "Love Yourself: Speak Yourself",
+          period: "May 11-12, 2019",
+          scope: "Two-show venue engagement",
+          place: "Soldier Field / Chicago",
+          shows: 2,
+          tickets: 88156,
+          gross: 13300000,
+          grossLabel: "$13.3M (rounded)",
+          source: "Pollstar",
+          url: "https://news.pollstar.com/2019/07/16/k-pops-star-turn-bts-tour-reaches-stratospheric-heights/",
+          note: "Included in the 12-show six-market total.",
+        },
+        {
+          tour: "Love Yourself: Speak Yourself",
+          period: "May 18-19, 2019",
+          scope: "Two-show venue engagement",
+          place: "MetLife Stadium / East Rutherford",
+          shows: 2,
+          tickets: 98574,
+          gross: 14100000,
+          grossLabel: "$14.1M (rounded)",
+          source: "Pollstar",
+          url: "https://news.pollstar.com/2019/07/16/k-pops-star-turn-bts-tour-reaches-stratospheric-heights/",
+          note: "Included in the 12-show six-market total.",
+        },
+        {
+          tour: "Love Yourself: Speak Yourself",
+          period: "May 25-26, 2019",
+          scope: "Two-show venue engagement",
+          place: "Allianz Parque / Sao Paulo",
+          shows: 2,
+          tickets: 84728,
+          gross: 7900000,
+          grossLabel: "$7.9M (rounded)",
+          source: "Pollstar",
+          url: "https://news.pollstar.com/2019/07/16/k-pops-star-turn-bts-tour-reaches-stratospheric-heights/",
+          note: "Included in the 12-show six-market total.",
+        },
+        {
+          tour: "Love Yourself: Speak Yourself",
+          period: "June 1-2, 2019",
+          scope: "Two-show venue engagement",
+          place: "Wembley Stadium / London",
+          shows: 2,
+          tickets: 114583,
+          gross: 13500000,
+          grossLabel: "$13.5M (rounded)",
+          source: "Pollstar",
+          url: "https://news.pollstar.com/2019/07/16/k-pops-star-turn-bts-tour-reaches-stratospheric-heights/",
+          note: "Included in the 12-show six-market total.",
+        },
+        {
+          tour: "Love Yourself: Speak Yourself",
+          period: "June 7-8, 2019",
+          scope: "Two-show venue engagement",
+          place: "Stade de France / Paris",
+          shows: 2,
+          tickets: 107328,
+          gross: 13400000,
+          grossLabel: "$13.4M (rounded)",
+          source: "Pollstar",
+          url: "https://news.pollstar.com/2019/07/16/k-pops-star-turn-bts-tour-reaches-stratospheric-heights/",
+          note: "Included in the 12-show six-market total.",
+        },
+        {
+          tour: "Love Yourself: Speak Yourself",
+          period: "May-October 2019",
+          scope: "20-show extension total",
+          place: "Worldwide reported box office",
+          shows: 20,
+          tickets: 976283,
+          gross: 115749851,
+          grossLabel: "$115.75M",
+          source: "Billboard Boxscore",
+          url: "https://www.billboard.com/articles/business/chart-beat/8543647/bts-love-yourself-speak-tour-earnings",
+          note: "Later/full-run reporting window; overlaps the earlier 12-show Pollstar report.",
+        },
+        {
+          tour: "Permission to Dance on Stage",
+          period: "November 27-December 2, 2021",
+          scope: "Four-show venue engagement",
+          place: "SoFi Stadium / Inglewood",
+          shows: 4,
+          tickets: 214000,
+          gross: 33300000,
+          grossLabel: "$33.3M",
+          source: "Billboard Boxscore",
+          url: "https://www.billboard.com/music/chart-beat/bts-boxscore-sofi-stadium-1235005581/",
+          note: "In-person tickets; do not mix with the online Seoul event.",
+        },
+        {
+          tour: "Permission to Dance on Stage",
+          period: "April 8-16, 2022",
+          scope: "Four-show venue engagement",
+          place: "Allegiant Stadium / Las Vegas",
+          shows: 4,
+          tickets: 200000,
+          ticketsLabel: "about 200,000",
+          gross: 35900000,
+          grossLabel: "$35.9M",
+          source: "Billboard Boxscore",
+          url: "https://www.billboard.com/pro/bts-top-april-2022-tour-earnings/",
+          note: "Reported as the April four-show engagement; separate from other audience/viewing totals.",
+        },
+        {
+          tour: "Love Yourself World Tour",
+          period: "2018-2019",
+          scope: "Career Boxscore benchmark",
+          place: "Reported tour gross",
+          shows: null,
+          tickets: null,
+          gross: 213900000,
+          grossLabel: "$213.9M",
+          source: "Billboard Boxscore retrospective",
+          url: "https://www.billboard.com/pro/bts-boxscore-record-rolling-stones/",
+          note: "Gross only in this source excerpt; no ticket count supplied here. Reported coverage is not every performance.",
+        },
+        {
+          tour: "Arirang World Tour",
+          period: "May 2-28, 2026",
+          scope: "12-show monthly reporting window",
+          place: "North America",
+          shows: 12,
+          tickets: 641000,
+          gross: 127800000,
+          grossLabel: "$127.8M",
+          source: "Billboard Boxscore",
+          url: "https://www.billboard.com/pro/bts-boxscore-record-rolling-stones/",
+          note: "May Boxscore window; includes sub-engagements listed below.",
+        },
+        {
+          tour: "Arirang World Tour",
+          period: "May 23-28, 2026",
+          scope: "Four-show venue engagement",
+          place: "Allegiant Stadium / Las Vegas",
+          shows: 4,
+          tickets: 246000,
+          gross: 49500000,
+          grossLabel: "$49.5M",
+          source: "Billboard Boxscore",
+          url: "https://www.billboard.com/pro/bts-boxscore-record-rolling-stones/",
+          note: "Included in May reporting window above; dates are May 23-24 and 27-28.",
+        },
+        {
+          tour: "Arirang World Tour",
+          period: "May 2026",
+          scope: "Career reported Boxscore snapshot",
+          place: "BTS career total",
+          shows: 87,
+          tickets: 3300000,
+          ticketsLabel: "about 3.3 million",
+          gross: 503100000,
+          grossLabel: "$503.1M",
+          source: "Billboard Boxscore",
+          url: "https://www.billboard.com/pro/bts-boxscore-record-rolling-stones/",
+          note: "Career snapshot reported in the June 29, 2026 article; not a sum of every event in this archive.",
+        },
+        {
+          tour: "Arirang World Tour",
+          period: "August 1-2, 2026",
+          scope: "Two-show venue engagement",
+          place: "MetLife Stadium / East Rutherford",
+          shows: 2,
+          tickets: 157798,
+          gross: 31800000,
+          grossLabel: "$31.8M",
+          source: "Pollstar box-office report",
+          url: "https://news.pollstar.com/2026/09/08/top-tours-bts-earns-top-debut-on-weekly-charts-with-stadium-ticket-sales/",
+          note: "Included in Pollstar's six-show U.S. stadium sample.",
+        },
+        {
+          tour: "Arirang World Tour",
+          period: "August 5-6, 2026",
+          scope: "Two-show venue engagement",
+          place: "Gillette Stadium / Foxborough",
+          shows: 2,
+          tickets: 132943,
+          gross: null,
+          grossLabel: "Not disclosed in cited article",
+          source: "Pollstar box-office report",
+          url: "https://news.pollstar.com/2026/09/08/top-tours-bts-earns-top-debut-on-weekly-charts-with-stadium-ticket-sales/",
+          note: "Included in Pollstar's six-show U.S. stadium sample.",
+        },
+        {
+          tour: "Arirang World Tour",
+          period: "August 10-11, 2026",
+          scope: "Two-show venue engagement",
+          place: "M&T Bank Stadium / Baltimore",
+          shows: 2,
+          tickets: 141288,
+          gross: null,
+          grossLabel: "Not disclosed in cited article",
+          source: "Pollstar box-office report",
+          url: "https://news.pollstar.com/2026/09/08/top-tours-bts-earns-top-debut-on-weekly-charts-with-stadium-ticket-sales/",
+          note: "Included in Pollstar's six-show U.S. stadium sample.",
+        },
+      ];
+      const datesView = document.querySelector("#datesView"),
+        salesView = document.querySelector("#salesView"),
+        loading = document.querySelector("#loading");
+      document.querySelector("#datesTab").onclick = () => setView(false);
+      document.querySelector("#salesTab").onclick = () => setView(true);
+      function setView(s) {
+        datesView.hidden = s;
+        salesView.hidden = !s;
+        document
+          .querySelector("#datesTab")
+          .setAttribute("aria-pressed", String(!s));
+        document
+          .querySelector("#salesTab")
+          .setAttribute("aria-pressed", String(s));
+      }
+      function esc(s) {
+        return String(s || "").replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[c],
+        );
+      }
+      let allDates = [],
+        page = 0;
+      const pageSize = 40;
+      function normalizedStatus(x) {
+        if (x.status === "Cancelled") return "cancelled";
+        const d = new Date(x.date);
+        return d > new Date() ? "scheduled" : "performed";
+      }
+      function renderDates() {
+        const q = document
+            .querySelector("#dateSearch")
+            .value.trim()
+            .toLowerCase(),
+          tour = document.querySelector("#tourFilter").value,
+          status = document.querySelector("#statusFilter").value;
+        const rows = allDates.filter(
+          (x) =>
+            (tour === "all" || x.tour === tour) &&
+            (status === "all" || normalizedStatus(x) === status) &&
+            `${x.tour} ${x.date} ${x.city} ${x.country} ${x.venue}`
+              .toLowerCase()
+              .includes(q),
+        );
+        const pages = Math.max(1, Math.ceil(rows.length / pageSize));
+        page = Math.min(page, pages - 1);
+        const start = page * pageSize;
+        document.querySelector("#schedule").innerHTML =
+          rows
+            .slice(start, start + pageSize)
+            .map(
+              (x) =>
+                `<article class="date"><time>${esc(x.date)}</time><div class="tour">${esc(x.tour)}</div><div>${esc(x.city)}, ${esc(x.country)}</div><div class="venue">${esc(x.venue)}<br><a href="${esc(x.source)}" target="_blank" rel="noreferrer">Date source</a></div><div class="status ${normalizedStatus(x)}">${normalizedStatus(x)}</div></article>`,
+            )
+            .join("") ||
+          '<div class="empty">No tour dates match this search.</div>';
+        document.querySelector("#pageStatus").textContent =
+          `${rows.length ? start + 1 : 0}-${Math.min(start + pageSize, rows.length)} of ${rows.length} dates / page ${page + 1} of ${pages}`;
+        document.querySelector("#prev").disabled = page === 0;
+        document.querySelector("#next").disabled = page >= pages - 1;
+      }
+      function renderSales() {
+        const q = document
+            .querySelector("#salesSearch")
+            .value.trim()
+            .toLowerCase(),
+          tour = document.querySelector("#salesTourFilter").value,
+          sort = document.querySelector("#metricSort").value;
+        let rows = SALES.filter(
+          (x) =>
+            (tour === "all" || x.tour === tour) &&
+            `${x.tour} ${x.period} ${x.place} ${x.source} ${x.scope}`
+              .toLowerCase()
+              .includes(q),
+        );
+        rows.sort((a, b) =>
+          sort === "gross"
+            ? (b.gross || 0) - (a.gross || 0)
+            : (b.tickets || 0) - (a.tickets || 0),
+        );
+        const max = Math.max(
+          1,
+          ...rows.map((x) =>
+            sort === "gross" ? x.gross || 0 : x.tickets || 0,
+          ),
+        );
+        document.querySelector("#reports").innerHTML =
+          rows
+            .map((x) => {
+              const val = sort === "gross" ? x.gross || 0 : x.tickets || 0;
+              const width = val
+                ? Math.max(4, Math.round((val / max) * 100))
+                : 0;
+              return `<article class="report"><h3>${esc(x.tour)} / ${esc(x.place)}</h3><div class="when">${esc(x.period)} / ${esc(x.scope)}</div><div class="bar"><i style="width:${width}%"></i></div><div class="metrics"><span>Shows</span><b>${x.shows ?? "Not stated"}</b><span>Tickets reported</span><b>${x.ticketsLabel || (x.tickets ? x.tickets.toLocaleString() : "Not disclosed")}</b><span>Gross reported</span><b>${esc(x.grossLabel)}</b></div><p>${esc(x.note)}</p><div class="source"><a href="${esc(x.url)}" target="_blank" rel="noreferrer">Source: ${esc(x.source)}</a></div></article>`;
+            })
+            .join("") ||
+          '<div class="empty">No box-office records match.</div>';
+      }
+      async function loadData() {
+              function renderCoverage(tours) {
+                document.querySelector("#coverageGrid").innerHTML = tours
+                  .map((tour) => {
+                    const dates = allDates.filter((x) => x.tour === tour).length;
+                    const reports = SALES.filter((x) => x.tour === tour);
+                    const ticketReports = reports.filter((x) => x.tickets !== null).length;
+                    const grossReports = reports.filter((x) => x.gross !== null).length;
+                    const coverage = reports.length
+                      ? `${reports.length} sourced records / ${ticketReports} with ticket counts / ${grossReports} with gross`
+                      : '<span class="missing">No public sales report located in this snapshot</span>';
+                    return `<article class="coverage-item"><b>${esc(tour)}</b>${dates} schedule dates<br>${coverage}</article>`;
+                  })
+                  .join("");
+              }
+        try {
+          const raw = atob(DATE_DATA_B64),
+            bytes = Uint8Array.from(raw, (c) => c.charCodeAt(0)),
+            stream = new Blob([bytes])
+              .stream()
+              .pipeThrough(new DecompressionStream("gzip"));
+          allDates = await new Response(stream).json();
+          const tours = [...new Set(allDates.map((x) => x.tour))].sort();
+          renderCoverage(tours);
+          document.querySelector("#dateCount").textContent =
+            allDates.length.toLocaleString();
+          document.querySelector("#tourCount").textContent = tours.length;
+          document.querySelector("#cancelCount").textContent = allDates
+            .filter((x) => x.status === "Cancelled")
+            .length.toLocaleString();
+          for (const id of ["tourFilter", "salesTourFilter"])
+            for (const t of tours)
+              document
+                .querySelector("#" + id)
+                .insertAdjacentHTML("beforeend", `<option>${esc(t)}</option>`);
+          for (const id of ["dateSearch", "tourFilter", "statusFilter"])
+            document
+              .querySelector("#" + id)
+              .addEventListener(
+                id === "dateSearch" ? "input" : "change",
+                () => {
+                  page = 0;
+                  renderDates();
+                },
+              );
+          document
+            .querySelector("#salesSearch")
+            .addEventListener("input", renderSales);
+          document
+            .querySelector("#salesTourFilter")
+            .addEventListener("change", renderSales);
+          document
+            .querySelector("#metricSort")
+            .addEventListener("change", renderSales);
+          document.querySelector("#prev").onclick = () => {
+            page--;
+            renderDates();
+          };
+          document.querySelector("#next").onclick = () => {
+            page++;
+            renderDates();
+          };
+          loading.hidden = true;
+          datesView.hidden = false;
+          document.querySelector("#reportCount").textContent = SALES.length;
+          renderDates();
+          renderSales();
+        } catch (e) {
+          loading.textContent =
+            "The embedded tour archive could not be decoded in this browser. Please use a current browser; no network request was made.";
+          console.error(e);
+        }
+      }
+      loadData();
+    </script>
+    <script data-goatcounter="https://jessejinnaruiz.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
